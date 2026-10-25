@@ -92,6 +92,10 @@ header nav a:hover{color:var(--fg)}
 .step2 p:nth-child(2){margin:0;color:var(--muted);font-size:14px;max-width:70ch}
 .paybtns{display:flex;flex-wrap:wrap;gap:10px}
 .paybtns .btn{margin-top:14px}
+.payfine{margin:10px 0 0;color:var(--muted);font-size:13px;max-width:70ch}
+.payfine b{color:var(--fg);font-weight:500}
+.payalt{margin:8px 0 0;color:var(--muted);font-size:13px}
+.payalt a{color:var(--fg)}
 .about{color:var(--muted);font-size:15px;max-width:65ch;margin:0}
 .brief-lead a{color:var(--fg)}
 ol li b{font-weight:500}
@@ -153,7 +157,7 @@ ol li b{font-weight:500}
   <li><b>By day 5.</b> You get a watermarked preview. <span>Send all notes in one reply; two rounds included.</span></li>
   <li><b>When it's right.</b> You send the other half and the clean MP4 lands in your inbox. <span>Yours to use anywhere.</span></li>
 </ol>
-<p class="pay">Venmo <strong>@David-Mba-1</strong> · Cash App <strong>$Dmba04</strong> · <a href="https://www.paypal.com/qrcodes/p2pqrc/UCVZMGSZRDEVY">PayPal</a>. Email is answered within one business day.</p>
+<p class="pay">Venmo <strong>@David-Mba-1</strong> · Cash App <strong>$Dmba04</strong> · <a href="https://www.paypal.com/qrcodes/p2pqrc/YC22N3RWSYA86">PayPal</a>. Email is answered within one business day.</p>
 
 
 <h2 id="start">Start a clip: tell me what should move</h2>
@@ -225,7 +229,7 @@ ol li b{font-weight:500}
     <span class="hint">Attach your AI, SVG, PDF or DXF to the email (Revit or AutoCAD: export DXF or PDF, or send the DWG). If no email opens, copy the brief and paste it into a message to dmba04@gmail.com.</span>
   </div>
   <pre class="preview" id="preview"></pre>
-  <div class="step2"><p class="step2-head" id="step2head">Then send half to start</p><p id="step2text">Your clip starts the business day the brief, the file and the payment have all landed; the other half is due before the clean file. Need an invoice for your books? Say so in the notes and I'll send a PayPal invoice within a business day.</p><div class="paybtns"><a class="btn small" href="https://venmo.com/u/David-Mba-1">Venmo @David-Mba-1</a><a class="btn small" href="https://cash.app/$Dmba04">Cash App $Dmba04</a><a class="btn small" href="https://www.paypal.com/qrcodes/p2pqrc/UCVZMGSZRDEVY">PayPal</a></div></div>
+  <div class="step2"><p class="step2-head" id="step2head">Then send half to start</p><p id="step2text">Your clip starts the business day the brief, the file and the payment have all landed; the other half is due before the clean file. Need an invoice for your books? Say so in the notes and I'll send a PayPal invoice within a business day.</p><div class="paybtns"><a class="btn" id="paybtn" href="https://www.paypal.com/qrcodes/p2pqrc/YC22N3RWSYA86" target="_blank" rel="noopener">Pay $225 by card or PayPal</a></div><p class="payfine">Secure checkout by PayPal, paid to DM Motion. No PayPal account needed; enter <b id="payamt">$225</b> and put your firm name in the note. You get an emailed receipt.</p><p class="payalt">Or pay by app: Venmo <a href="https://venmo.com/u/David-Mba-1">@David-Mba-1</a> · Cash App <a href="https://cash.app/$Dmba04">$Dmba04</a></p></div>
 </form>
 <script>
 (function(){
@@ -261,7 +265,7 @@ ol li b{font-weight:500}
   }
   function refresh(){
     var t=build(); pv.textContent=t;
-    var q=quote(document.getElementById('code').value); document.getElementById('step2head').textContent=q.upfront?'Then send $'+q.start:'Then send $'+q.start+' to start';
+    var q=quote(document.getElementById('code').value); document.getElementById('step2head').textContent=q.upfront?'Then send $'+q.start:'Then send $'+q.start+' to start'; document.getElementById('paybtn').textContent='Pay $'+q.start+' by card or PayPal'; document.getElementById('payamt').textContent='$'+q.start; document.getElementById('step2text').textContent=(q.upfront?'Paid in full up front. Your order starts the business day the brief, the file and the payment have all landed.':'Your clip starts the business day the brief, the file and the payment have all landed; the other $'+q.balance+' is due before the clean file.')+' Need an invoice for your books? Say so in the notes and I\'ll send a PayPal invoice within a business day.';
     var firm=document.getElementById('firm').value.trim();
     mb.href='mailto:dmba04@gmail.com?subject='+encodeURIComponent('DM Motion brief - '+quote(document.getElementById('code').value).label+(firm?' - '+firm:''))+'&body='+encodeURIComponent(t);
   }
