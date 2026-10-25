@@ -80,7 +80,7 @@ ol li span{color:var(--muted)}
 <header><img src="dm-logo.png" alt="DM"><div class="name">David Mba <span>· DM Motion</span></div></header>
 
 <h1>Your drawing, in motion.</h1>
-<p class="lead">Send the Illustrator, SVG or PDF you already have. Get back a short animated clip for your website, a listing, social, or a presentation. Drawn from your vector file, so every line is yours and the result is the same every time.</p>
+<p class="lead">Send the Illustrator, SVG, PDF or DXF you already have. Get back a short animated clip for your website, a listing, social, or a presentation. Drawn from your own file, so every line is yours and the result is the same every time. From Revit or AutoCAD, just export to DXF or PDF; a DWG works too.</p>
 
 <figure class="feature"><video src="floorplan.mp4" autoplay muted loop playsinline preload="auto"></video><figcaption>Floor plan build-up: walls, then openings, fixtures, labels, dimensions. 20 s, 1080p, from a single layered vector file.</figcaption></figure>
 
@@ -92,7 +92,7 @@ ol li span{color:var(--muted)}
 <h2>What it costs</h2>
 <div class="grid">
   <div class="card"><p class="price">Free</p><p class="what">Logo write-on, as a trial</p><p>Send your logo as AI, SVG or a clean PNG and get a 5-second write-on back, no charge, no obligation.</p></div>
-  <div class="card"><p class="price">$450</p><p class="what">Animated plan, elevation or diagram</p><p>Up to 30 seconds from your vector file. Lines draw on, layers build, labels land. 1080p MP4, two rounds of notes, five business days. Half up front, half before the clean file.</p></div>
+  <div class="card"><p class="price">$450</p><p class="what">Animated plan, elevation or diagram</p><p>Up to 30 seconds from your vector or CAD file. Lines draw on, layers build, labels land. 1080p MP4, two rounds of notes, five business days. Half up front, half before the clean file.</p></div>
   <div class="card"><p class="price">$200</p><p class="what">Logo package</p><p>Write-on in light and dark versions, 4K, with a transparent-background version for video intros.</p></div>
 </div>
 
@@ -154,9 +154,10 @@ ol li span{color:var(--muted)}
       <label><input type="radio" name="fmt" value="1:1 square"> 1:1 square</label>
       <label><input type="radio" name="fmt" value="9:16 vertical (+$75)"> 9:16 vertical (+$75)</label>
       <label><input type="radio" name="fmt" value="4K (+$75)"> 4K (+$75)</label>
-      <label class="gap"><input type="radio" name="end" value="Hold on the finished drawing with my logo" checked> End: hold with my logo</label>
+      <label class="gap"><input type="radio" name="end" value="Hold on the finished drawing" checked> End: hold on the finished drawing</label>
       <label><input type="radio" name="end" value="Hold with my address and website"> End: hold with address + website</label>
       <label><input type="radio" name="end" value="Loop"> End: loop</label>
+      <label><input type="radio" name="end" value="Logo end card (+$20)"> End: my logo card (+$20)</label>
     </fieldset>
   </div>
   <div class="brow">
@@ -167,7 +168,7 @@ ol li span{color:var(--muted)}
   <div class="bact">
     <a class="btn" id="mailbtn" href="#">Email me this brief</a>
     <button class="btn ghost" id="copybtn" type="button">Copy the brief</button>
-    <span class="hint">Attach your AI, SVG or PDF to the email. Clips are silent; add your own music.</span>
+    <span class="hint">Attach your AI, SVG, PDF or DXF to the email (Revit or AutoCAD: export DXF or PDF, or send the DWG). Clips are silent; add your own music.</span>
   </div>
   <pre class="preview" id="preview"></pre>
 </form>
@@ -188,7 +189,7 @@ ol li span{color:var(--muted)}
       'Ending: '+val('end')];
     if(code) lines.push('Code: '+code);
     if(notes) lines.push('Notes: '+notes);
-    lines.push('','File attached: (attach your AI, SVG or PDF)');
+    lines.push('','File attached: (attach your AI, SVG, PDF, DXF or DWG)');
     return lines.join('\n');
   }
   function refresh(){
@@ -211,7 +212,7 @@ ol li span{color:var(--muted)}
 
 <h2>How it works</h2>
 <ol>
-  <li>You send the file and a few lines on what should move and in what order. <span>A site plan that builds up from the lot line, an elevation that draws floor by floor, a diagram that reveals one system at a time.</span></li>
+  <li>You send the file and a few lines on what should move and in what order. <span>A site plan that builds up from the lot line, an elevation that draws floor by floor, a diagram that reveals one system at a time. AI, SVG, PDF or DXF; from Revit or AutoCAD, export to DXF or PDF, or send the DWG.</span></li>
   <li>You get a watermarked preview within five business days. <span>Send all notes in one reply.</span></li>
   <li>After two rounds, the clean MP4 lands in your inbox. <span>Yours to use anywhere.</span></li>
 </ol>
@@ -220,7 +221,7 @@ ol li span{color:var(--muted)}
 <div class="contact">
   <span>David Mba</span><span>980-226-6504</span><a href="mailto:dmba04@gmail.com">dmba04@gmail.com</a><a href="https://dmba1.myportfolio.com/work">dmba1.myportfolio.com</a>
 </div>
-<p class="fine">Add-ons: each extra 15 seconds $150; 4K delivery $75; vertical cut for social $75. The MOTION offer applies once per firm and can't be combined with the three-clip card or the monthly plan. Clips are marketing material, not construction documents. Charlotte, NC.</p>
+<p class="fine">Add-ons: each extra 15 seconds $150; 4K delivery $75; vertical cut for social $75; logo end card $20. The MOTION offer applies once per firm and can't be combined with the three-clip card or the monthly plan. Clips are marketing material, not construction documents. Charlotte, NC.</p>
 </div>
 
 </body>
