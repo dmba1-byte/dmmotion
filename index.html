@@ -96,6 +96,17 @@ header nav a:hover{color:var(--fg)}
 .brief-lead a{color:var(--fg)}
 ol li b{font-weight:500}
 @media (max-width:640px){header{flex-wrap:wrap}header nav{margin-left:0;width:100%;gap:14px}}
+.products{margin-bottom:14px}
+.products label{align-items:center}
+.products b{font-weight:500}
+.mid{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:0 0 8px}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:50;transform:translateY(110%);transition:transform .25s ease;background:rgba(20,20,20,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-left,0px)) calc(10px + env(safe-area-inset-bottom,0px))}
+.bar.show{transform:none}
+.bar-in{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.bar-txt{font-size:13px;color:var(--muted);margin-right:auto}
+.bar-txt b{color:var(--fg);font-weight:500}
+.bar .btn.small{margin-top:0}
+@media (max-width:640px){.bar-txt{display:none}.bar-in{justify-content:stretch}.bar .btn{flex:1;text-align:center}}
 @media (max-width:640px){.videos{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -114,24 +125,26 @@ ol li b{font-weight:500}
   <figure><video src="writeon-light.mp4" autoplay muted loop playsinline></video><figcaption>Logo write-on, black on white. Same file, same timing.</figcaption></figure>
 </div>
 
+<p class="mid"><a class="btn choose" data-product="clip" href="#start">Order a clip · $225 to start</a><span class="hint">Or scroll for prices, the brief and answers.</span></p>
+
 <h2 id="pricing">What it costs</h2>
 <div class="grid">
   <div class="card"><p class="price">Free</p><p class="what">Logo write-on, as a trial</p><p>Send your logo as AI, SVG or a clean PNG and get a 5-second write-on back, no charge, no obligation.</p><a class="btn small" href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">Email your logo</a></div>
-  <div class="card"><p class="price">$450</p><p class="what">Animated plan, elevation or diagram</p><p>Up to 30 seconds from your vector or CAD file. Lines draw on, layers build, labels land. 1080p MP4, two rounds of notes. Preview in five business days. $225 to start, $225 when it's right.</p><a class="btn small" href="#start">Start a clip</a></div>
-  <div class="card"><p class="price">$200</p><p class="what">Logo package</p><p>Write-on in light and dark versions, 4K, with a transparent-background version for video intros.</p></div>
+  <div class="card"><p class="price">$450</p><p class="what">Animated plan, elevation or diagram</p><p>Up to 30 seconds from your vector or CAD file. Lines draw on, layers build, labels land. 1080p MP4, two rounds of notes. Preview in five business days. $225 to start, $225 when it's right.</p><a class="btn small choose" data-product="clip" href="#start">Order a clip · $225 to start</a></div>
+  <div class="card"><p class="price">$200</p><p class="what">Logo package</p><p>Write-on in light and dark versions, 4K, with a transparent-background version for video intros.</p><a class="btn small choose" data-product="logo" href="#start">Order the logo package · $200</a></div>
 </div>
 
 <div class="offer">
   <p class="offer-head">$50 off your first clip, and the logo package free with it</p>
   <p>Reply <strong>MOTION</strong> to any email from me, or send the word to <a href="mailto:dmba04@gmail.com?subject=MOTION">dmba04@gmail.com</a>. You'll get a code worth $50 off your first animated clip ($400 instead of $450) plus the $200 logo package at no charge, and one email a month from me with a new clip and an idea worth animating. Reply "stop" anytime and you're off the list.</p>
-  <a class="btn small" href="mailto:dmba04@gmail.com?subject=MOTION&body=MOTION">Send MOTION</a>
+  <a class="btn small choose" data-product="clip" data-code="MOTION" href="#start">Use MOTION on a clip · $200 to start</a>
 </div>
 
 <h2>If you'll want more than one</h2>
 <div class="grid">
-  <div class="card"><p class="price">$1,100</p><p class="what">Three-clip card</p><p>Three animated clips, any time within six months. $367 each instead of $450, no re-quoting, same five-day turnaround.</p></div>
-  <div class="card"><p class="price">$350<span>/mo</span></p><p class="what">One clip a month</p><p>A fresh animated plan, elevation or diagram every month for your site, listings and social. Cancel any time after three months.</p></div>
-  <div class="card"><p class="price">$50</p><p class="what">Off per referral</p><p>Send a colleague my way; when they book a clip, $50 comes off your next one. No limit.</p></div>
+  <div class="card"><p class="price">$1,100</p><p class="what">Three-clip card</p><p>Three animated clips, any time within six months. $367 each instead of $450, no re-quoting, same five-day turnaround.</p><a class="btn small choose" data-product="card" href="#start">Buy the card · $1,100</a></div>
+  <div class="card"><p class="price">$350<span>/mo</span></p><p class="what">One clip a month</p><p>A fresh animated plan, elevation or diagram every month for your site, listings and social. Cancel any time after three months.</p><a class="btn small choose" data-product="monthly" href="#start">Start monthly · $350</a></div>
+  <div class="card"><p class="price">$50</p><p class="what">Off per referral</p><p>Send a colleague my way; when they book a clip, $50 comes off your next one. No limit.</p><a class="btn small ghost" href="mailto:?subject=Animated%20clips%20from%20your%20drawings&body=Worth%20a%20look%3A%20https%3A%2F%2Fdmba1-byte.github.io%2Fdmmotion%2F">Send this page to a colleague</a></div>
 </div>
 
 <h2>How it works</h2>
@@ -146,6 +159,12 @@ ol li b{font-weight:500}
 <h2 id="start">Start a clip: tell me what should move</h2>
 <p class="brief-lead">Tick what fits. It writes the brief for you; send it with your file attached. Not sure? Leave the defaults and I'll take it from there. Just want the free logo write-on? Skip this and <a href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">email your logo</a>.</p>
 <form class="brief" id="brief" onsubmit="return false">
+  <fieldset class="products"><legend>What you're ordering</legend>
+    <label><input type="radio" name="product" value="clip" checked> <span><b>Animated plan, elevation or diagram</b> · $450 · $225 to start</span></label>
+    <label><input type="radio" name="product" value="logo"> <span><b>Logo package</b> · $200 · paid up front</span></label>
+    <label><input type="radio" name="product" value="card"> <span><b>Three-clip card</b> · $1,100 · paid up front, this brief is clip one</span></label>
+    <label><input type="radio" name="product" value="monthly"> <span><b>One clip a month</b> · $350 · first month up front, this brief is month one</span></label>
+  </fieldset>
   <div class="bgrid">
     <fieldset><legend>The drawing</legend>
       <label><input type="radio" name="type" value="Floor plan" checked> Floor plan</label>
@@ -215,7 +234,7 @@ ol li b{font-weight:500}
   function build(){
     var moves=[].slice.call(f.querySelectorAll('input[name="move"]:checked')).map(function(e){return e.value});
     var firm=document.getElementById('firm').value.trim(), code=document.getElementById('code').value.trim(), notes=document.getElementById('notes').value.trim();
-    var lines=['DM Motion brief'+(firm?' - '+firm:''),'',
+    var lines=['DM Motion brief - '+quote(code).label+(firm?' - '+firm:''),'',
       'Drawing: '+val('type'),
       'What happens: '+(moves.length?moves.join('; '):'Lines draw on'),
       'Build order: '+val('order'),
@@ -223,23 +242,28 @@ ol li b{font-weight:500}
       'Pace: '+val('pace')+', '+val('len'),
       'Format: '+val('fmt'),
       'Ending: '+val('end')];
-    var q=quote(code); lines.push('Total: $'+q.total+(q.note?' ('+q.note+')':'')+' · To start: $'+q.half+' · Balance before the clean file: $'+q.half);
+    var q=quote(code); lines.splice(2,0,'Ordering: '+q.label); lines.push('Total: $'+q.total+(q.note?' ('+q.note+')':'')+(q.upfront?' · Paid up front: $'+q.start:' · To start: $'+q.start+' · Balance before the clean file: $'+q.balance));
     if(code) lines.push('Code: '+code);
     if(notes) lines.push('Notes: '+notes);
     lines.push('','File attached: (attach your AI, SVG, PDF, DXF or DWG)');
     return lines.join('\n');
   }
+  function money(n){return (n%1?n.toFixed(2):String(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
   function quote(code){
     var c=(code||'').toUpperCase().replace(/\s+/g,''); var motion=(c==='MOTION'||c==='MOTION50');
-    var logo=val('type')==='Logo'; var base=logo?200:(motion?400:450); var note=logo?'logo package':(motion?'MOTION: $50 off, logo package included free':'');
-    var fmt=val('fmt'); var add=0; if(fmt.indexOf('+$75')>-1) add+=75; if(val('end').indexOf('+$20')>-1) add+=20;
-    var total=base+add; return {total:total, half:(total/2)%1?(total/2).toFixed(2):total/2, note:note};
+    var prod=val('product'); var fmt=val('fmt'); var add=0; if(fmt.indexOf('+$75')>-1) add+=75; if(val('end').indexOf('+$20')>-1) add+=20;
+    var total, start, note='', label;
+    if(prod==='logo'){ total=200+add; start=total; label='Logo package'; }
+    else if(prod==='card'){ total=1100+add; start=total; label='Three-clip card'; note='paid up front; add-ons priced per clip'; }
+    else if(prod==='monthly'){ total=350+add; start=total; label='One clip a month'; note='first month; add-ons priced per clip'; }
+    else { total=(motion?400:450)+add; start=total/2; label='Animated clip'; note=motion?'MOTION: $50 off, logo package included free':''; }
+    return {total:money(total), start:money(start), balance:money(total-start), note:note, label:label, upfront:(start===total)};
   }
   function refresh(){
     var t=build(); pv.textContent=t;
-    var q=quote(document.getElementById('code').value); document.getElementById('step2head').textContent='Then send $'+q.half+' to start';
+    var q=quote(document.getElementById('code').value); document.getElementById('step2head').textContent=q.upfront?'Then send $'+q.start:'Then send $'+q.start+' to start';
     var firm=document.getElementById('firm').value.trim();
-    mb.href='mailto:dmba04@gmail.com?subject='+encodeURIComponent('DM Motion brief'+(firm?' - '+firm:''))+'&body='+encodeURIComponent(t);
+    mb.href='mailto:dmba04@gmail.com?subject='+encodeURIComponent('DM Motion brief - '+quote(document.getElementById('code').value).label+(firm?' - '+firm:''))+'&body='+encodeURIComponent(t);
   }
   f.addEventListener('change',function(e){
     if(e.target.name==='move'){var c=f.querySelectorAll('input[name="move"]:checked');if(c.length>3){e.target.checked=false}}
@@ -251,6 +275,15 @@ ol li b{font-weight:500}
     try{navigator.clipboard.writeText(t).then(function(){cb.textContent='Copied';setTimeout(function(){cb.textContent='Copy the brief'},1500)})}catch(err){pv.focus()}
   });
   refresh();
+  [].slice.call(document.querySelectorAll('.choose')).forEach(function(a){ a.addEventListener('click',function(){
+    var pr=f.querySelector('input[name="product"][value="'+a.getAttribute('data-product')+'"]'); if(pr) pr.checked=true;
+    if(a.getAttribute('data-code')) document.getElementById('code').value=a.getAttribute('data-code');
+    if(a.getAttribute('data-product')==='logo'){ var lg=f.querySelector('input[name="type"][value="Logo"]'); if(lg) lg.checked=true; }
+    refresh();
+  }); });
+  var hero=document.getElementById('examples'), formEl=document.getElementById('brief');
+  function barState(){ var bar=document.getElementById('bar'); if(!bar) return; var past=window.scrollY>(hero?hero.offsetTop:400); var fr=formEl.getBoundingClientRect(); var inForm=fr.top<window.innerHeight && fr.bottom>0; bar.classList.toggle('show', past && !inForm); }
+  window.addEventListener('scroll',barState,{passive:true}); window.addEventListener('resize',barState); window.addEventListener('load',barState);
 })();
 </script>
 
@@ -273,6 +306,7 @@ ol li b{font-weight:500}
 </div>
 <p class="fine">Add-ons: each extra 15 seconds $150; 4K delivery $75; vertical cut for social $75; logo end card $20. The MOTION offer applies once per firm and can't be combined with the three-clip card or the monthly plan. Clips are marketing material, not construction documents. Charlotte, NC.</p>
 </div>
+<div class="bar" id="bar"><div class="bar-in"><span class="bar-txt"><b>DM Motion</b> · from $450 · preview in 5 business days</span><a class="btn small choose" data-product="clip" href="#start">Order a clip</a><a class="btn small ghost" href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">Free logo</a></div></div>
 
 </body>
 </html>
