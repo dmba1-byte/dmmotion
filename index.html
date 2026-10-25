@@ -46,6 +46,13 @@ h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute
 .pay{margin:18px 0 0;color:var(--muted);font-size:14px}
 .pay strong{color:var(--fg);font-family:var(--mono);font-weight:500}
 .pay a{color:var(--fg)}
+.faq details{border-top:1px solid var(--line);padding:12px 0}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{cursor:pointer;font-weight:500;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.faq summary::after{content:"+";color:var(--muted);font-size:18px;margin-left:12px}
+.faq details[open] summary::after{content:"\2013"}
+.faq p{margin:8px 0 0;color:var(--muted);font-size:14px;max-width:70ch}
+.faq strong{color:var(--fg);font-family:var(--mono);font-weight:500}
 .brief-lead{color:var(--muted);font-size:15px;margin:0 0 16px;max-width:65ch}
 .brief{display:block}
 .bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -217,6 +224,19 @@ ol li span{color:var(--muted)}
   <li>After two rounds, the clean MP4 lands in your inbox. <span>Yours to use anywhere.</span></li>
 </ol>
 <p class="pay">Pay by Venmo <strong>@David-Mba-1</strong>, Cash App <strong>$Dmba04</strong>, or <a href="https://www.paypal.com/qrcodes/p2pqrc/UCVZMGSZRDEVY">PayPal</a>. Half to start, half before the clean file.</p>
+
+
+<h2>Before you ask</h2>
+<div class="faq">
+  <details><summary>What file do you need?</summary><p>Illustrator (.ai), SVG, a vector PDF, or DXF. From Revit or AutoCAD, export to DXF or PDF, or send the DWG and I'll convert it. A JPG or PNG of a drawing isn't enough for a plan; it is enough for a clean logo.</p></details>
+  <details><summary>I only have a PDF. Does that work?</summary><p>If it came out of Revit, AutoCAD, Illustrator or a plotter, yes. If it's a scan or a photo, send the original drawing file instead.</p></details>
+  <details><summary>How long does it take?</summary><p>Watermarked preview within five business days of the first payment. Clean file after two rounds of notes, usually within a week of the preview.</p></details>
+  <details><summary>What if I want changes?</summary><p>Two rounds of notes are included. Send all notes in one reply each round. Changing the drawing itself after the first preview counts as a new file.</p></details>
+  <details><summary>How do I pay?</summary><p>Venmo <strong>@David-Mba-1</strong>, Cash App <strong>$Dmba04</strong>, or PayPal. Half to start, half before the clean file.</p></details>
+  <details><summary>Can I use the clip anywhere?</summary><p>Yes. It's yours: website, listings, social, presentations, ads. Your drawing stays yours too; I don't reuse client files.</p></details>
+  <details><summary>Does it have sound?</summary><p>No. Clips are silent so you can add your own music or voiceover without a licensing problem.</p></details>
+  <details><summary>Is it AI?</summary><p>The animation is built by software from your file, directed and reviewed by me. Nothing is generated: no line in the clip is invented. Same file in, same clip out.</p></details>
+</div>
 
 <div class="contact">
   <span>David Mba</span><span>980-226-6504</span><a href="mailto:dmba04@gmail.com">dmba04@gmail.com</a><a href="https://dmba1.myportfolio.com/work">dmba1.myportfolio.com</a>
