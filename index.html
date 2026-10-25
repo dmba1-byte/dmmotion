@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="DM Motion: short animated clips built from the Illustrator, SVG or PDF drawings you already have. Lines draw on, layers build. Charlotte, NC.">
+<meta property="og:title" content="DM Motion · Your drawing, in motion.">
+<meta property="og:description" content="Animated plans, elevations, diagrams and logos from your own vector files.">
+<meta property="og:image" content="https://dmba1-byte.github.io/dmmotion/dm-logo.png">
+<link rel="icon" type="image/png" href="dm-logo.png">
+<title>DM Motion · Your drawing, in motion.</title>
+<style>
+/* Layout: one column, video-first; a motion studio's dark screening room, single theme by choice. */
+:root{
+  --bg:#141414; --panel:#1f1f1f; --line:#2e2e2e; --fg:#f2f1ed; --muted:#9a998f; --accent:#f2f1ed;
+  --display:"Helvetica Neue",Helvetica,Arial,sans-serif; --body:"Helvetica Neue",Helvetica,Arial,sans-serif; --mono:"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);margin:0;line-height:1.55}
+.wrap{max-width:960px;margin:0 auto;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;align-items:center;gap:14px;margin-bottom:36px}
+header img{width:44px;height:44px;border-radius:8px;display:block}
+header .name{font-weight:500;font-size:15px;letter-spacing:.02em}
+header .name span{color:var(--muted);font-weight:400}
+h1{font-family:var(--display);font-size:clamp(30px,5vw,52px);line-height:1.05;letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance;font-weight:500}
+.lead{font-size:18px;color:var(--muted);max-width:60ch;margin:0 0 28px}
+.videos{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 36px}
+.videos figure{margin:0;min-width:0}
+.videos video{width:100%;max-width:100%;aspect-ratio:16/9;display:block;border-radius:10px;background:#000;border:1px solid var(--line)}
+.videos figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+.feature{margin:0 0 14px}
+.feature video{width:100%;max-width:100%;aspect-ratio:16/9;display:block;border-radius:10px;background:#fff;border:1px solid var(--line)}
+.feature figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+h2{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:36px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.card .price{font-family:var(--mono);font-size:22px;font-variant-numeric:tabular-nums;margin:0 0 4px}
+.card .what{font-weight:500;margin:0 0 8px}
+.card p{margin:0;color:var(--muted);font-size:14px}
+.card .price span{font-size:14px;color:var(--muted);margin-left:2px}
+.offer{margin:14px 0 0;padding:20px 22px;border:1px solid var(--fg);border-radius:12px}
+.offer-head{margin:0 0 8px;font-weight:500;font-size:17px}
+.offer p:last-child{margin:0;color:var(--muted);font-size:14px;max-width:70ch}
+.offer strong{color:var(--fg);font-family:var(--mono);letter-spacing:.06em}
+.offer a{color:var(--fg)}
+.pay{margin:18px 0 0;color:var(--muted);font-size:14px}
+.pay strong{color:var(--fg);font-family:var(--mono);font-weight:500}
+.pay a{color:var(--fg)}
+.brief-lead{color:var(--muted);font-size:15px;margin:0 0 16px;max-width:65ch}
+.brief{display:block}
+.bgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+fieldset{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:14px 16px 10px;margin:0;min-width:0}
+legend{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0 6px}
+legend span{text-transform:none;letter-spacing:0}
+fieldset label{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:5px 0;cursor:pointer;line-height:1.4}
+fieldset label.gap{margin-top:8px;border-top:1px solid var(--line);padding-top:10px}
+fieldset input{accent-color:var(--fg);margin-top:3px;flex:none}
+.brow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+label.text{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+label.text.wide{margin-top:14px}
+label.text input,label.text textarea{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--fg);font:inherit;font-size:14px;padding:9px 11px;width:100%;box-sizing:border-box}
+.bact{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:16px}
+.btn{display:inline-block;background:var(--fg);color:var(--bg);text-decoration:none;font-size:14px;font-weight:500;padding:10px 16px;border-radius:8px;border:1px solid var(--fg);cursor:pointer;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--fg)}
+.hint{color:var(--muted);font-size:13px}
+.preview{margin:14px 0 0;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--muted);white-space:pre-wrap;overflow-x:auto}
+@media (max-width:760px){.bgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.bgrid,.brow{grid-template-columns:1fr}}
+ol{padding-left:20px;margin:0;color:var(--fg)}
+ol li{margin:0 0 8px;max-width:65ch}
+ol li span{color:var(--muted)}
+.contact{margin-top:36px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 28px;font-size:15px}
+.contact a{color:var(--fg)}
+.fine{color:var(--muted);font-size:13px;margin-top:18px;max-width:65ch}
+@media (max-width:640px){.videos{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><img src="dm-logo.png" alt="DM"><div class="name">David Mba <span>· DM Motion</span></div></header>
+
+<h1>Your drawing, in motion.</h1>
+<p class="lead">Send the Illustrator, SVG or PDF you already have. Get back a short animated clip for your website, a listing, social, or a presentation. Drawn from your vector file, so every line is yours and the result is the same every time.</p>
+
+<figure class="feature"><video src="floorplan.mp4" autoplay muted loop playsinline preload="auto"></video><figcaption>Floor plan build-up: walls, then openings, fixtures, labels, dimensions. 20 s, 1080p, from a single layered vector file.</figcaption></figure>
+
+<div class="videos">
+  <figure><video src="writeon-dark.mp4" autoplay muted loop playsinline></video><figcaption>Logo write-on, white on black. 4.5 s, 1080p.</figcaption></figure>
+  <figure><video src="writeon-light.mp4" autoplay muted loop playsinline></video><figcaption>Logo write-on, black on white. Same file, same timing.</figcaption></figure>
+</div>
+
+<h2>What it costs</h2>
+<div class="grid">
+  <div class="card"><p class="price">Free</p><p class="what">Logo write-on, as a trial</p><p>Send your logo as AI, SVG or a clean PNG and get a 5-second write-on back, no charge, no obligation.</p></div>
+  <div class="card"><p class="price">$450</p><p class="what">Animated plan, elevation or diagram</p><p>Up to 30 seconds from your vector file. Lines draw on, layers build, labels land. 1080p MP4, two rounds of notes, five business days. Half up front, half before the clean file.</p></div>
+  <div class="card"><p class="price">$200</p><p class="what">Logo package</p><p>Write-on in light and dark versions, 4K, with a transparent-background version for video intros.</p></div>
+</div>
+
+<div class="offer">
+  <p class="offer-head">$50 off your first clip, and the logo package free with it</p>
+  <p>Reply <strong>MOTION</strong> to any email from me, or send the word to <a href="mailto:dmba04@gmail.com?subject=MOTION">dmba04@gmail.com</a>. You'll get a code worth $50 off your first animated clip ($400 instead of $450) plus the $200 logo package at no charge, and one email a month from me with a new clip and an idea worth animating. Reply "stop" anytime and you're off the list.</p>
+</div>
+
+<h2>If you'll want more than one</h2>
+<div class="grid">
+  <div class="card"><p class="price">$1,100</p><p class="what">Three-clip card</p><p>Three animated clips, any time within six months. $367 each instead of $450, no re-quoting, same five-day turnaround.</p></div>
+  <div class="card"><p class="price">$350<span>/mo</span></p><p class="what">One clip a month</p><p>A fresh animated plan, elevation or diagram every month for your site, listings and social. Cancel any time after three months.</p></div>
+  <div class="card"><p class="price">$50</p><p class="what">Off per referral</p><p>Send a colleague my way; when they book a clip, $50 comes off your next one. No limit.</p></div>
+</div>
+
+<h2>Tell me what should move</h2>
+<p class="brief-lead">Tick what fits. It writes the brief for you; send it with your file attached. Not sure? Tick the first option in each group and I'll take it from there.</p>
+<form class="brief" id="brief" onsubmit="return false">
+  <div class="bgrid">
+    <fieldset><legend>The drawing</legend>
+      <label><input type="radio" name="type" value="Site plan" checked> Site plan</label>
+      <label><input type="radio" name="type" value="Floor plan"> Floor plan</label>
+      <label><input type="radio" name="type" value="Elevation"> Elevation</label>
+      <label><input type="radio" name="type" value="Section"> Section</label>
+      <label><input type="radio" name="type" value="Diagram (phasing, systems, wayfinding)"> Diagram</label>
+      <label><input type="radio" name="type" value="Logo"> Logo</label>
+    </fieldset>
+    <fieldset><legend>What happens <span>(tick up to three)</span></legend>
+      <label><input type="checkbox" name="move" value="Lines draw on" checked> Lines draw on</label>
+      <label><input type="checkbox" name="move" value="Layers build one at a time"> Layers build one at a time</label>
+      <label><input type="checkbox" name="move" value="Fills fade in after the lines"> Fills fade in after the lines</label>
+      <label><input type="checkbox" name="move" value="Labels land last"> Labels land last</label>
+      <label><input type="checkbox" name="move" value="One area highlights"> One area highlights (tell me which)</label>
+      <label><input type="checkbox" name="move" value="Slow push-in on the finished drawing"> Slow push-in at the end</label>
+    </fieldset>
+    <fieldset><legend>Build order</legend>
+      <label><input type="radio" name="order" value="Outside in: lot line, footprint, walls, details, labels" checked> Outside in (lot line → footprint → walls → details → labels)</label>
+      <label><input type="radio" name="order" value="Bottom up, floor by floor"> Bottom up, floor by floor</label>
+      <label><input type="radio" name="order" value="By system: structure, envelope, then everything else"> By system (structure → envelope → the rest)</label>
+      <label><input type="radio" name="order" value="By phase, one phase at a time"> By phase, one at a time</label>
+      <label><input type="radio" name="order" value="However the file is layered"> However my file is layered</label>
+    </fieldset>
+    <fieldset><legend>Look</legend>
+      <label><input type="radio" name="look" value="The drawing's own colors" checked> My drawing's own colors</label>
+      <label><input type="radio" name="look" value="Black lines on white"> Black on white</label>
+      <label><input type="radio" name="look" value="White lines on black"> White on black</label>
+      <label><input type="radio" name="look" value="One accent color (named in notes)"> One accent color (name it in notes)</label>
+    </fieldset>
+    <fieldset><legend>Pace and length</legend>
+      <label><input type="radio" name="pace" value="Calm" checked> Calm</label>
+      <label><input type="radio" name="pace" value="Standard"> Standard</label>
+      <label><input type="radio" name="pace" value="Brisk"> Brisk</label>
+      <label class="gap"><input type="radio" name="len" value="10 seconds"> 10 s</label>
+      <label><input type="radio" name="len" value="20 seconds" checked> 20 s</label>
+      <label><input type="radio" name="len" value="30 seconds"> 30 s</label>
+    </fieldset>
+    <fieldset><legend>Format and ending</legend>
+      <label><input type="radio" name="fmt" value="16:9 landscape, 1080p" checked> 16:9 landscape, 1080p</label>
+      <label><input type="radio" name="fmt" value="1:1 square"> 1:1 square</label>
+      <label><input type="radio" name="fmt" value="9:16 vertical (+$75)"> 9:16 vertical (+$75)</label>
+      <label><input type="radio" name="fmt" value="4K (+$75)"> 4K (+$75)</label>
+      <label class="gap"><input type="radio" name="end" value="Hold on the finished drawing with my logo" checked> End: hold with my logo</label>
+      <label><input type="radio" name="end" value="Hold with my address and website"> End: hold with address + website</label>
+      <label><input type="radio" name="end" value="Loop"> End: loop</label>
+    </fieldset>
+  </div>
+  <div class="brow">
+    <label class="text">Your firm <input type="text" id="firm" placeholder="Firm name"></label>
+    <label class="text">Code, if you have one <input type="text" id="code" placeholder="MOTION50"></label>
+  </div>
+  <label class="text wide">Anything else (which area to highlight, the accent color, what the clip is for) <textarea id="notes" rows="2" placeholder="Optional"></textarea></label>
+  <div class="bact">
+    <a class="btn" id="mailbtn" href="#">Email me this brief</a>
+    <button class="btn ghost" id="copybtn" type="button">Copy the brief</button>
+    <span class="hint">Attach your AI, SVG or PDF to the email. Clips are silent; add your own music.</span>
+  </div>
+  <pre class="preview" id="preview"></pre>
+</form>
+<script>
+(function(){
+  var f=document.getElementById('brief'), pv=document.getElementById('preview'), mb=document.getElementById('mailbtn'), cb=document.getElementById('copybtn');
+  function val(n){var e=f.querySelector('input[name="'+n+'"]:checked');return e?e.value:''}
+  function build(){
+    var moves=[].slice.call(f.querySelectorAll('input[name="move"]:checked')).map(function(e){return e.value});
+    var firm=document.getElementById('firm').value.trim(), code=document.getElementById('code').value.trim(), notes=document.getElementById('notes').value.trim();
+    var lines=['DM Motion brief'+(firm?' - '+firm:''),'',
+      'Drawing: '+val('type'),
+      'What happens: '+(moves.length?moves.join('; '):'Lines draw on'),
+      'Build order: '+val('order'),
+      'Look: '+val('look'),
+      'Pace: '+val('pace')+', '+val('len'),
+      'Format: '+val('fmt'),
+      'Ending: '+val('end')];
+    if(code) lines.push('Code: '+code);
+    if(notes) lines.push('Notes: '+notes);
+    lines.push('','File attached: (attach your AI, SVG or PDF)');
+    return lines.join('\n');
+  }
+  function refresh(){
+    var t=build(); pv.textContent=t;
+    var firm=document.getElementById('firm').value.trim();
+    mb.href='mailto:dmba04@gmail.com?subject='+encodeURIComponent('DM Motion brief'+(firm?' - '+firm:''))+'&body='+encodeURIComponent(t);
+  }
+  f.addEventListener('change',function(e){
+    if(e.target.name==='move'){var c=f.querySelectorAll('input[name="move"]:checked');if(c.length>3){e.target.checked=false}}
+    refresh();
+  });
+  f.addEventListener('input',refresh);
+  cb.addEventListener('click',function(){
+    var t=build();
+    try{navigator.clipboard.writeText(t).then(function(){cb.textContent='Copied';setTimeout(function(){cb.textContent='Copy the brief'},1500)})}catch(err){pv.focus()}
+  });
+  refresh();
+})();
+</script>
+
+<h2>How it works</h2>
+<ol>
+  <li>You send the file and a few lines on what should move and in what order. <span>A site plan that builds up from the lot line, an elevation that draws floor by floor, a diagram that reveals one system at a time.</span></li>
+  <li>You get a watermarked preview within five business days. <span>Send all notes in one reply.</span></li>
+  <li>After two rounds, the clean MP4 lands in your inbox. <span>Yours to use anywhere.</span></li>
+</ol>
+<p class="pay">Pay by Venmo <strong>@David-Mba-1</strong>, Cash App <strong>$Dmba04</strong>, or <a href="https://www.paypal.com/qrcodes/p2pqrc/UCVZMGSZRDEVY">PayPal</a>. Half to start, half before the clean file.</p>
+
+<div class="contact">
+  <span>David Mba</span><span>980-226-6504</span><a href="mailto:dmba04@gmail.com">dmba04@gmail.com</a><a href="https://dmba1.myportfolio.com/work">dmba1.myportfolio.com</a>
+</div>
+<p class="fine">Add-ons: each extra 15 seconds $150; 4K delivery $75; vertical cut for social $75. The MOTION offer applies once per firm and can't be combined with the three-clip card or the monthly plan. Clips are marketing material, not construction documents. Charlotte, NC.</p>
+</div>
+
+</body>
+</html>
