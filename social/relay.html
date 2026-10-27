@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><title>DM Motion files</title></head><body style="font-family:sans-serif">
+<p id="s">Sending files…</p>
+<script>
+(async()=>{
+  const q=new URLSearchParams(location.search); const files=(q.get('f')||'').split(',').filter(Boolean); const to=q.get('o')||'https://www.facebook.com';
+  for(const name of files){
+    const r=await fetch(name+'?v='+Date.now()); const b=await r.arrayBuffer();
+    window.opener && window.opener.postMessage({dmfile:name,type:r.headers.get('content-type'),buf:b},to,[b]);
+  }
+  document.getElementById('s').textContent='Sent '+files.length+' file(s). You can close this tab.';
+  window.opener && window.opener.postMessage({dmdone:files.length},to);
+  setTimeout(()=>window.close(),1500);
+})();
+</script></body></html>
