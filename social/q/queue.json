@@ -10,7 +10,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_0841_pop3d_courtyard_music.mp3",
   "voice": "Here's a flat floor plan. Now watch it stand up. Same drawing, now in three dimensions. Send me your plan, and I'll animate it.",
   "ai_label": true,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1028_1223_elev_a_frame",
@@ -23,7 +23,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1223_elev_a_frame_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1028_1547_explainer_how",
@@ -36,7 +36,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1547_explainer_how_music.mp3",
   "voice": "Your floor plans are stuck in PDFs nobody opens. Here's the fix. One: send me your plan. PDF, CAD, Revit, or Illustrator. Two: I animate it. Lines draw on, walls go up, people move in. Three: you post it. Listings, socials, client pitches. Animations start at four fifty, and the five-second logo trial is free. Comment PLAN, and I'll DM you pricing.",
   "ai_label": true,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1029_0841_tour_split",
@@ -49,7 +49,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1029_0841_tour_split_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1029_1223_site2plan_lshape",
@@ -62,7 +62,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1029_1223_site2plan_lshape_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1030_0841_elev_butterfly",
@@ -75,7 +75,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1030_0841_elev_butterfly_music.mp3",
   "voice": "This one starts with a single line. Then the roof, the siding, the windows. A front elevation, drawn in about ten seconds. Your drawing, in motion.",
   "ai_label": true,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1030_1223_draw_shotgun",
@@ -88,7 +88,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1030_1223_draw_shotgun_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1030_1547_edu_kitchen",
@@ -101,7 +101,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1030_1547_edu_kitchen_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1031_0841_pop3d_dogtrot",
@@ -114,7 +114,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_0841_pop3d_dogtrot_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1031_1223_elev_charleston",
@@ -127,7 +127,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1223_elev_charleston_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1101_0841_draw_narrow",
@@ -140,7 +140,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1101_0841_draw_narrow_music.mp3",
   "voice": "Most floor plans sit in a PDF nobody opens. Watch this one draw itself. Walls, doors, fixtures, labels. Send me yours, and I'll bring it to life.",
   "ai_label": true,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1101_1223_elev_gambrel",
@@ -153,7 +153,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1101_1223_elev_gambrel_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1102_0841_tour_lshape",
@@ -166,7 +166,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_0841_tour_lshape_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1102_1223_elev_farmhouse",
@@ -179,7 +179,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1223_elev_farmhouse_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1103_0841_pop3d_split",
@@ -192,7 +192,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_0841_pop3d_split_music.mp3",
   "voice": "Here's a flat floor plan. Now watch it stand up. Same drawing, now in three dimensions. Send me your plan, and I'll animate it.",
   "ai_label": true,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1103_1223_elev_cape",
@@ -205,7 +205,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_1223_elev_cape_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1104_0841_site2plan_courtyard",
@@ -218,7 +218,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1104_0841_site2plan_courtyard_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1104_1223_elev_craftsman",
@@ -231,6 +231,6 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1104_1223_elev_craftsman_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "pending_approval"
+  "status": "approved"
  }
 ]
