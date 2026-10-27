@@ -111,7 +111,7 @@ html,body{{margin:0;width:{W}px;height:{H}px;background:{BG};overflow:hidden;fon
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" style="position:absolute;left:0;top:0"><g transform="translate(435 470) scale(0.68)"><svg viewBox="-2.18 -2.45 309.7 309.7" width="309.7" height="309.7" overflow="visible">
 <path id="lfill" d="{LOGO_D}" fill="#fff" opacity="0"/><path id="link" d="{LOGO_D}" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg></g></svg>
 <div class="t" id="e1">Your drawing, in motion.</div><div class="t" id="e2">Your plan, animated · from $450<br>Free 5-second logo trial</div>
-<div class="t" id="e3"><span>Comment “PLAN” for pricing</span></div>
+<div class="t" id="e3"><span>Pricing: dmba04@gmail.com</span></div>
 <script>
 const D={json.dumps(data)}, T=D.T, E=T.end;
 const $=i=>document.getElementById(i), cl=(x,a,b)=>Math.max(a,Math.min(b,x)), P=(t,a,d)=>cl((t-a)/d,0,1);

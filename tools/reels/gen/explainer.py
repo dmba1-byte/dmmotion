@@ -12,7 +12,7 @@ import numpy as np, scipy.io.wavfile as wavfile
 W, H, FPS = 1080, 1920, 30
 SCRIPT = ("Your floor plans are stuck in PDFs nobody opens. Here's the fix. One: send me your plan. PDF, CAD, Revit, or Illustrator. "
           "Two: I animate it. Lines draw on, walls go up, people move in. Three: you post it. Listings, socials, client pitches. "
-          "Animations start at four fifty, and the five-second logo trial is free. Comment PLAN, and I'll DM you pricing.")
+          "Animations start at four fifty, and the five-second logo trial is free. Email me your plan, and I'll send you pricing.")
 INK, PAPER, ORANGE, GREEN = '#141414', '#ffffff', '#1d4e89', '#2e9b62'
 
 
@@ -32,7 +32,7 @@ def build_html():
     st = lambda key: next(a for a, b, w in subs if w.startswith(key))
     T = dict(s2=st("One:"), files=[st('PDF,'), st('CAD'), st('Revit'), st('or Illus')], s3=st('Two:'), draw=st('Lines'), walls=st('walls'), people=st('people'),
              s4=st('Three:'), posts=[st('Listings'), st('socials'), st('client')], s5=st('Animations'), logo=st('and the five'), free=st('is free'),
-             s6=st('Comment PLAN'), dm=st("and I'll DM"))
+             s6=st('Email me'), dm=st("and I'll send"))
     T['end'] = subs[-1][1] + 0.4
     dur = T['end'] + 2.6
     data = dict(T=T, subs=subs, dur=dur)
@@ -98,22 +98,24 @@ body{{background:{PAPER};background-image:linear-gradient(#e3e9f1 1.5px,transpar
 <div class="a" id="trial" style="left:0;right:0;top:1230px;text-align:center;opacity:0"><span class="pill" style="font-size:44px">5-SECOND LOGO TRIAL</span></div>
 <div class="a" id="free" style="left:0;right:0;top:1350px;text-align:center;opacity:0"><span style="display:inline-block;border:7px solid {GREEN};color:{GREEN};font-size:84px;font-weight:900;padding:4px 34px;border-radius:14px;background:{PAPER}">FREE</span></div>
 
-<!-- S6: comment -> DM -->
-<div class="card" id="cbox" style="left:90px;top:620px;width:900px;height:150px;opacity:0">
-  <div class="a" style="left:28px;top:34px;width:80px;height:80px;border-radius:50%;border:3.5px solid {INK};background:#e9edf2"></div>
-  <div class="a" id="ctext" style="left:140px;top:48px;font-size:46px;font-weight:800;color:#9aa3ad">Add a comment…</div>
-  <div class="a" id="post" style="right:26px;top:36px;height:78px;width:170px;border-radius:12px;background:{INK};color:#fff;font:900 34px Helvetica;text-align:center;line-height:78px">POST</div>
+<!-- S6: email -> reply -->
+<div class="card" id="cbox" style="left:90px;top:560px;width:900px;height:250px;opacity:0">
+  <div class="a" style="left:30px;top:26px;font:800 34px Helvetica"><span style="color:#7f8a99">To</span>&nbsp; dmba04@gmail.com</div>
+  <div class="a" style="left:30px;right:30px;top:86px;border-top:2.5px solid #e3e9f1"></div>
+  <div class="a" id="ctext" style="left:30px;top:106px;font-size:40px;font-weight:800;color:#9aa3ad">Subject</div>
+  <div class="a" id="clip" style="left:30px;top:172px;opacity:0;border:2.5px solid {INK};border-radius:10px;padding:6px 14px;font:800 26px Helvetica">📎 floor_plan.pdf</div>
+  <div class="a" id="post" style="right:26px;top:150px;height:78px;width:170px;border-radius:12px;background:{INK};color:#fff;font:900 34px Helvetica;text-align:center;line-height:78px">SEND</div>
 </div>
 <div class="card" id="dm" style="left:90px;top:860px;width:900px;height:330px;opacity:0">
-  <div class="a" style="left:30px;top:26px;font:800 26px Helvetica;letter-spacing:2px;color:{ORANGE}">NEW MESSAGE</div>
+  <div class="a" style="left:30px;top:26px;font:800 26px Helvetica;letter-spacing:2px;color:{ORANGE}">RE: MY FLOOR PLAN</div>
   <svg class="a" style="left:30px;top:80px" width="90" height="90" viewBox="-2.18 -2.45 309.7 309.7"><rect x="-2" y="-2" width="310" height="310" rx="60" fill="{INK}"/><path d="{LOGO_D}" fill="#fff" transform="translate(50 50) scale(0.68)"/></svg>
-  <div class="a" style="left:150px;top:84px;font:900 40px Helvetica">@dm_motion1</div>
+  <div class="a" style="left:150px;top:84px;font:900 40px Helvetica">DM Motion</div>
   <div class="a" style="left:150px;top:140px;right:40px;font:600 36px Helvetica;line-height:1.3">Here's the pricing for your plan, plus a free logo trial.</div>
 </div>
 <div class="a" id="endc" style="left:0;right:0;top:0;bottom:0;opacity:0;background:{INK}">
   <svg class="a" style="left:420px;top:640px" width="240" height="240" viewBox="-2.18 -2.45 309.7 309.7"><path id="endlogo" d="{LOGO_D}" fill="#fff"/></svg>
   <div class="a" style="left:0;right:0;top:940px;text-align:center;color:#fff;font:900 70px Helvetica;letter-spacing:-1px">Your drawing, in motion.</div>
-  <div class="a" style="left:0;right:0;top:1050px;text-align:center"><span class="pill" style="font-size:40px;box-shadow:6px 6px 0 {GREEN}">Comment “PLAN” for pricing</span></div>
+  <div class="a" style="left:0;right:0;top:1050px;text-align:center"><span class="pill" style="font-size:40px;box-shadow:6px 6px 0 {GREEN}">Pricing: dmba04@gmail.com</span></div>
 </div>
 <div id="subs"></div>
 <script>
@@ -170,7 +172,7 @@ window.setT=t=>{{
  {{ const p=P(t,T.free,0.25), f=$('free'); f.style.opacity=p; f.style.transform=`rotate(-6deg) scale(${{1.6-0.6*eo(p)}})`; out(f,t,T.s6-0.35); }}
  // S6 comment -> DM
  pop($('cbox'),t,T.s6,0,60);
- const typed='PLAN'.slice(0,Math.floor(cl((t-T.s6-0.35)/0.16,0,4))); $('ctext').textContent=typed||'Add a comment…'; $('ctext').style.color=typed?'{INK}':'#9aa3ad';
+ const SUBJ='My floor plan', typed=SUBJ.slice(0,Math.floor(cl((t-T.s6-0.35)/0.06,0,SUBJ.length))); $('ctext').textContent=typed||'Subject'; $('ctext').style.color=typed?'{INK}':'#9aa3ad'; $('clip').style.opacity=P(t,T.s6+1.2,0.2);
  const pp=P(t,T.dm-0.5,0.12)*(1-P(t,T.dm-0.3,0.12)); $('post').style.transform=`scale(${{1-0.08*pp}})`; $('post').style.background=t>T.dm-0.5?'{GREEN}':'{INK}';
  pop($('dm'),t,T.dm,0,240);
  // end card
@@ -210,7 +212,7 @@ def sfx_track(data, music_wav, out_wav):
     for k, a in enumerate(T['posts']): add(a, pop(760 + 120 * k))
     add(T['s5'], whoosh(0.3)); add(T['s5'] + 0.3, thud()); add(T['logo'], pop(900)); add(T['free'], thud())
     add(T['s6'], pop(740))
-    for k in range(4): add(T['s6'] + 0.35 + k * 0.16, click())
+    for k in range(13): add(T['s6'] + 0.35 + k * 0.06, click())
     add(T['dm'] - 0.5, click()); add(T['dm'], pop(1180, 0.16), 1.2); add(T['end'], whoosh(0.5))
     m = np.clip(m, -1, 1); wavfile.write(out_wav, sr, (m * 32767).astype(np.int16))
 

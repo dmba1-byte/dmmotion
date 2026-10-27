@@ -19,7 +19,7 @@ HOOKS = {
 }
 STYLE_TXT = {'courtyard': 'courtyard house', 'split': 'split-bedroom ranch', 'lshape': 'ranch with garage', 'shotgun': 'shotgun house', 'dogtrot': 'dogtrot house', 'narrow': 'narrow-lot home', 'ranch': 'ranch', 'adu': 'backyard cottage'}
 TAGS = ['#houseplan', '#dreamhome', '#floorplan', '#homedesign', '#homebuilder', '#architecture', '#newconstruction', '#customhomes', '#realestate', '#houseplans', '#architecturaldesign', '#housedesign']
-CTAS = ["Comment \u201cPLAN\u201d for pricing", "Comment \u201cLOGO\u201d for a free trial", "Comment \u201cPLAN\u201d for pricing"]
+CTAS = ["Pricing: dmba04@gmail.com", "Free logo trial: dmba04@gmail.com", "Pricing: dmba04@gmail.com"]
 LORE = {
  'courtyard': "Courtyard houses wrap the rooms around a private outdoor room, so every space gets light and air.",
  'split': "Split-bedroom ranches put the primary suite on the opposite side of the house from the kids' rooms.",
@@ -46,9 +46,9 @@ def caption(concept, sub, info, rng, hook='', kw='PLAN'):
     what = {'pop3d': 'Flat plan to 3D, from the same drawing.', 'tour': 'A floor plan that walks you through it.', 'site2plan': 'From the lot down into the house plan.',
             'draw': 'Drawn line by line.', 'elev': 'A front elevation, built line by line.'}[concept]
     first = hook.replace('<br>', ' ')
-    ask = ("Want your plan or elevation animated like this? Comment PLAN and I'll DM you pricing." if kw == 'PLAN'
-           else "Want your logo animated like this? Comment LOGO and I'll make you a free 5-second trial.")
-    return f"{first} 👀\n{ask}\n\n{lore}\n{what} Original drawing, animated from vector linework. From $450.\n.\n{' '.join(rng.sample(TAGS, 7))}"
+    ask = ("Want your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio)." if kw == 'PLAN'
+           else "Want your logo animated like this? Email it to dmba04@gmail.com for a free 5-second trial (the address is in our bio).")
+    return f"{first} 👀\nWould you build this one? 👇\n{ask}\n\n{lore}\n{what} Original drawing, animated from vector linework. From $450.\n.\n{' '.join(rng.sample(TAGS, 7))}"
 
 def make(start, slots, seed0=11, voiced=(0, 4, 8, 12)):
     rng = random.Random(seed0); jobs = []; cnt = {}
@@ -72,7 +72,7 @@ def make(start, slots, seed0=11, voiced=(0, 4, 8, 12)):
         else:
             nb = sum(r.kind == 'bed' for r in p.rooms); nba = sum(r.kind == 'bath' for r in p.rooms)
             spec = f"{p.sf:,} SQ FT · {nb} BED · {nba} BATH"
-        kw = 'LOGO' if 'LOGO' in CTAS[i % 3] else 'PLAN'
+        kw = 'LOGO' if 'logo' in CTAS[i % 3] else 'PLAN'
         job.update(hook=hk, sub=sb, spec=spec, mood=['calm', 'warm', 'bright'][i % 3], bpm=[88, 92, 96][(i // 3) % 3], seed=seed,
                    when=when.isoformat(), caption=caption(concept, sub, info, rng, hk, kw), concept=concept, subject=sub,
                    voice=VO.get(concept, VO['draw']) if i in voiced else None)
