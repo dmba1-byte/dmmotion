@@ -48,18 +48,59 @@ class Plan:
     # ---------------- house types ----------------
     def build(self):
         getattr(self, '_' + self.typ)()
+        self._closets_for_every_bedroom()
         self.W = max([r.x2 for r in self.rooms] + [e[1] + e[3] for e in self.extras]); self.D = max([r.y2 for r in self.rooms] + [e[2] + e[4] for e in self.extras])
         self.beds = sum(1 for r in self.rooms if r.kind == 'bed')
         self.sf = int(sum(r.w * r.h for r in self.rooms if r.kind != 'garage'))
         self._open_plan(); self._doors(); self._windows()
         return self
 
+    def _closets_for_every_bedroom(self):
+        """No real bedroom is a bare rectangle. Each layout builds its own rooms,
+        so rather than special-case every one, any bedroom that ends up without a
+        closet gets one carved off an interior wall — never an exterior wall,
+        which has to stay clear for the R310 escape window. The carve is skipped
+        where it would push the room under IRC R304's 70 sq ft or 7 ft minimums."""
+        d = self.CLOSET_D
+        for rm in [x for x in self.rooms if x.kind == 'bed']:
+            nb = self._neighbors(rm)
+            if any(o.kind in ('closet', 'wic') for o, _ in nb):
+                continue
+            # an interior side is one another room sits against
+            sides = {}
+            for o, (orient, c, lo, hi) in nb:
+                if o.kind in ('garage',):
+                    continue
+                run = hi - lo
+                if orient == 'h':
+                    key = 'top' if abs(c - rm.y) < 1e-6 else 'bottom'
+                else:
+                    key = 'left' if abs(c - rm.x) < 1e-6 else 'right'
+                sides[key] = max(sides.get(key, 0), run) + (100 if o.kind == 'hall' else 0)
+            if not sides:
+                continue
+            side = max(sides, key=sides.get)
+            if side in ('top', 'bottom'):
+                if rm.h - d < self.BED_MIN_DIM or rm.w * (rm.h - d) < self.BED_MIN_SF: continue
+                cy = rm.y if side == 'top' else rm.y2 - d
+                rm.h -= d
+                if side == 'top': rm.y += d
+                self.add('CL.', 'closet', rm.x, cy, rm.w, d)
+            else:
+                if rm.w - d < self.BED_MIN_DIM or rm.h * (rm.w - d) < self.BED_MIN_SF: continue
+                cx = rm.x if side == 'left' else rm.x2 - d
+                rm.w -= d
+                if side == 'left': rm.x += d
+                self.add('CL.', 'closet', cx, rm.y, d, rm.h)
+
     def _public_row(self, x0, y0, W, D, allow_laundry=True):
         r = self.rng
         kit = r.choice([11, 12, 13]); din = r.choice([10, 11, 12]) if W - kit >= 24 else 0
         lw = 7 if allow_laundry and W - kit - din >= 21 and r.random() < 0.6 else 0
-        liv = W - kit - din - lw
+        foy = 6 if W - kit - din - lw >= 22 else 0
+        liv = W - kit - din - lw - foy
         seq = [('LIVING', 'living', liv), ('DINING', 'dining', din), ('KITCHEN', 'kitchen', kit)]
+        if foy: seq.insert(0, ('FOYER', 'foyer', foy))
         seq = [s for s in seq if s[2] > 0]
         if r.random() < 0.5: seq = seq[::-1]
         if lw: seq = ([('LAUNDRY', 'laundry', lw)] + seq) if seq[0][1] != 'living' else (seq + [('LAUNDRY', 'laundry', lw)])
@@ -67,61 +108,126 @@ class Plan:
         for name, kind, w in seq:
             if kind == 'laundry':
                 self.add(name, kind, x, y0, w, 8); self.add('PANTRY', 'pantry', x, y0 + 8, w, D - 8)
+            elif kind == 'foyer':
+                # coat closet against the hall, 28 in deep for bulky coats;
+                # the entry itself runs through to the front door
+                self.add('COAT', 'closet', x, y0, w, self.COAT_D)
+                self.add(name, kind, x, y0 + self.COAT_D, w, D - self.COAT_D)
             else: self.add(name, kind, x, y0, w, D)
             x += w
 
+    # Documented minimums every generated plan is held to.
+    #   IRC R304.2  habitable rooms other than the main one: 70 sq ft
+    #   IRC R304.3  no habitable room narrower than 7 ft in any direction
+    #   IRC R311.6  hallways at least 36 in; 42 in is the comfortable width
+    #   Reach-in closets 24 in deep (28 in for coats); walk-ins at least 4 ft x 4 ft
+    CLOSET_D = 2.0        # reach-in depth, 24 in
+    COAT_D = 2.4          # coat closet, 28 in
+    HALL_W = 3.5          # 42 in — above the 36 in minimum
+    BED_MIN_SF = 70.0
+    BED_MIN_DIM = 7.0
+
     def _bed_row(self, x0, y0, W, D, beds, flip):
-        r = self.rng; prim = r.choice([14, 15, 16]); bath = 8
-        others = beds - 1; ow = (W - prim - bath) / max(1, others)
-        if others and ow < 10.5: prim = 13; ow = (W - prim - bath) / others
-        seq = [('PRIMARY BEDROOM' if beds > 1 else 'BEDROOM', 'bed', prim), ('BATH', 'bath', bath)] + [(f'BEDROOM {i + 2}', 'bed', ow) for i in range(others)]
-        if beds == 1: seq = [('BEDROOM', 'bed', W - bath), ('BATH', 'bath', bath)]
-        if flip: seq = seq[::-1]
+        """A bedroom wing laid out the way one actually gets drawn.
+
+        Bedrooms sit against the exterior wall so each keeps a window for the
+        R310 escape opening. Their closets back onto the hall, which is where
+        closets go in a real plan — they buy the bedroom privacy and acoustic
+        separation from the corridor. The primary gets its bath and walk-in
+        beside it so both are entered from the bedroom, not from the hall.
+        """
+        r = self.rng
+        bath = 8                      # hall bath
+        pbath = 7                     # primary bath
+        wic = 5.5                     # walk-in, over the 4 ft minimum in both directions
+        others = beds - 1
+        suite = beds >= 3             # three bedrooms up means a primary suite
+        fixed = bath + (pbath + wic if suite else 0)
+        prim = r.choice([13, 14, 15])
+        ow = (W - prim - fixed) / max(1, others)
+        if others and ow < self.BED_MIN_DIM + 1:
+            prim = 12
+            ow = (W - prim - fixed) / others
+
+        seq = [('PRIMARY BEDROOM' if beds > 1 else 'BEDROOM', 'bed', prim)]
+        if suite:
+            seq += [('W.I.C.', 'wic', wic), ('PRIMARY BATH', 'bath', pbath)]
+        seq.append(('BATH', 'bath', bath))
+        seq += [(f'BEDROOM {i + 2}', 'bed', ow) for i in range(others)]
+        if beds == 1:
+            seq = [('BEDROOM', 'bed', W - bath), ('BATH', 'bath', bath)]
+        if flip:
+            seq = seq[::-1]
+
         x = x0
-        for name, kind, w in seq: self.add(name, kind, x, y0, w, D); x += w
+        for name, kind, w in seq:
+            if kind == 'bed':
+                # bedroom against the outside wall, its closet backing onto the hall
+                self.add(name, kind, x, y0, w, D - self.CLOSET_D)
+                self.add('CL.', 'closet', x, y0 + D - self.CLOSET_D, w, self.CLOSET_D)
+            else:
+                self.add(name, kind, x, y0, w, D)
+            x += w
 
     def _ranch(self):
         r = self.rng; beds = r.choice([2, 3, 3, 4])
-        W = {2: r.choice([34, 36, 38]), 3: r.choice([44, 46, 48, 50]), 4: r.choice([54, 56, 58])}[beds]
+        W = {2: r.choice([34, 36, 38]), 3: r.choice([56, 58, 60]), 4: r.choice([67, 69, 71])}[beds]
         Dp = r.choice([12, 13, 14]); Dpub = r.choice([16, 18, 20])
         self._bed_row(0, 0, W, Dp, beds, r.random() < 0.5)
-        self.add('HALL', 'hall', 0, Dp, W, 4)
+        lin = 2.5
+        self.add('HALL', 'hall', 0, Dp, W - lin, 4)
+        self.add('LINEN', 'closet', W - lin, Dp, lin, 4)
         self._public_row(0, Dp + 4, W, Dpub)
 
     def _split(self):
-        r = self.rng; D = r.choice([32, 34, 36]); lw = r.choice([15, 16]); rw = r.choice([13, 14]); mw = r.choice([24, 26, 28])
+        r = self.rng; D = r.choice([32, 34, 36]); lw = r.choice([15, 16]); rw = r.choice([16, 17]); mw = r.choice([24, 26, 28])
         left = r.random() < 0.5
         Lx, Mx, Rx = (0, lw, lw + mw) if left else (rw + mw, rw, 0)
         bedD = r.choice([14, 15]); self.add('PRIMARY BEDROOM', 'bed', Lx, 0, lw, bedD)
         self.add('PRIMARY BATH', 'bath', Lx, bedD, lw, 9); self.add('W.I.C.', 'wic', Lx, bedD + 9, lw, D - bedD - 9)
-        b1 = r.choice([12, 13]); self.add('BEDROOM 2', 'bed', Rx, 0, rw, b1)
-        self.add('BATH', 'bath', Rx, b1, rw, 8); self.add('BEDROOM 3', 'bed', Rx, b1 + 8, rw, D - b1 - 8)
+        # the secondary wing needs its own corridor — bedrooms opening straight
+        # onto the living room is the thing a split plan exists to avoid.
+        # IRC R311.6 sets 36 in; 42 in is the comfortable width.
+        hw = self.HALL_W
+        inner = Rx if Rx > 0 else rw - hw          # the side facing the public core
+        bx = Rx + hw if Rx > 0 else Rx
+        brw = rw - hw
+        self.add('HALL', 'hall', inner, 0, hw, D)
+        b1 = r.choice([12, 13]); self.add('BEDROOM 2', 'bed', bx, 0, brw, b1)
+        self.add('BATH', 'bath', bx, b1, brw, 8); self.add('BEDROOM 3', 'bed', bx, b1 + 8, brw, D - b1 - 8)
         kd = r.choice([12, 13, 14]); kw = r.choice([13, 14])
         self.add('KITCHEN', 'kitchen', Mx, 0, kw, kd); self.add('DINING', 'dining', Mx + kw, 0, mw - kw, kd)
         self.add('LIVING', 'living', Mx, kd, mw, D - kd)
 
     def _narrow(self):
         r = self.rng; W = r.choice([20, 22, 24]); hall = 4
-        liv = r.choice([15, 16, 17]); kit = r.choice([13, 14])
+        liv = r.choice([14, 15, 16]); kit = r.choice([12, 13])
         y = 0; beds = r.choice([2, 3])
         side = r.random() < 0.5  # hall on left?
         bw = W - hall; hx, bx = (0, hall) if side else (W - hall, 0)
         bd = [r.choice([12, 13]) for _ in range(beds)]
         names = ['PRIMARY BEDROOM'] + [f'BEDROOM {i + 2}' for i in range(beds - 1)]
         for i in range(beds):
-            self.add(names[i], 'bed', bx, y, bw, bd[i]); y += bd[i]
-            if i == 0: self.add('BATH', 'bath', bx, y, bw, 8); y += 8
+            self.add(names[i], 'bed', bx, y, bw - self.CLOSET_D, bd[i])
+            self.add('CL.', 'closet', bx + bw - self.CLOSET_D, y, self.CLOSET_D, bd[i])
+            y += bd[i]
+            if i == 0:
+                self.add('PRIMARY BATH' if beds >= 3 else 'BATH', 'bath', bx, y, bw, 8); y += 8
+            elif i == 1 and beds >= 3:
+                self.add('BATH', 'bath', bx, y, bw, 7); y += 7
         top = 0; self.add('HALL', 'hall', hx, top, hall, y - top)
         self.add('KITCHEN', 'kitchen', 0, y, W * 0.55, kit); self.add('DINING', 'dining', W * 0.55, y, W * 0.45, kit); y += kit
         self.add('LIVING', 'living', 0, y, W, liv)
 
     def _lshape(self):
-        r = self.rng; beds = r.choice([3, 3, 4]); W = 44 if beds == 3 else 52
+        r = self.rng; beds = r.choice([3, 3, 4]); W = 54 if beds == 3 else 63
         Dp = 13; Dpub = r.choice([17, 18])
         gar_left = r.random() < 0.5; G = r.choice([22, 24])
         x0 = G if gar_left else 0
         self._bed_row(x0, 0, W, Dp, beds, not gar_left)
-        self.add('HALL', 'hall', x0, Dp, W, 4)
+        lin = 2.5
+        self.add('HALL', 'hall', x0, Dp, W - lin, 4)
+        self.add('LINEN', 'closet', x0 + W - lin, Dp, lin, 4)
         self._public_row(x0, Dp + 4, W, Dpub, allow_laundry=False)
         gy = Dp + 4 + Dpub - G + 4
         gx = 0 if gar_left else W
@@ -147,7 +253,7 @@ class Plan:
         self.chain = True
 
     def _dogtrot(self):
-        r = self.rng; pw = r.choice([16, 17, 18]); bz = r.choice([10, 12]); D = r.choice([28, 30, 32])
+        r = self.rng; pw = r.choice([17, 18, 19]); bz = r.choice([10, 12]); D = r.choice([30, 32, 34])
         L0, R0 = 0, pw + bz
         kd = r.choice([12, 13]); self.add('KITCHEN', 'kitchen', L0, 0, pw, kd); self.add('LIVING', 'living', L0, kd, pw, D - kd)
         b1 = r.choice([12, 13]); self.add('PRIMARY BEDROOM', 'bed', R0, 0, pw, b1); self.add('HALL', 'hall', R0, b1, 4, 7)
@@ -196,20 +302,25 @@ class Plan:
         r = self.rng
         for rm in self.rooms:
             nb = self._neighbors(rm)
-            if rm.kind in ('bed', 'bath', 'laundry', 'pantry', 'wic', 'garage'):
+            if rm.kind in ('bed', 'bath', 'laundry', 'pantry', 'wic', 'closet', 'garage'):
                 if rm.kind == 'bath' and rm.name == 'PRIMARY BATH':
                     pref = [x for x in nb if x[0].kind == 'bed']
                 elif rm.kind == 'wic':
                     pref = [x for x in nb if x[0].kind == 'bath']
+                elif rm.kind == 'closet':
+                    # a bedroom closet opens into its bedroom; a hall linen closet
+                    # opens onto the hall
+                    want = {'LINEN': 'hall', 'COAT': 'foyer'}.get(rm.name, 'bed')
+                    pref = [x for x in nb if x[0].kind == want]
                 elif rm.kind == 'garage':
                     pref = [x for x in nb if x[0].kind in ('laundry', 'kitchen', 'living', 'dining', 'hall')]
                 else:
                     pref = [x for x in nb if x[0].kind in PUBLIC]
                 if not pref: continue
                 o, s = max(pref, key=lambda x: x[1][3] - x[1][2])
-                self._door_on(s, 2.5 if rm.kind in ('bath', 'pantry', 'wic') else 3, rm, r.random() < 0.5)
+                self._door_on(s, 2.0 if rm.kind == 'closet' else 2.5 if rm.kind in ('bath', 'pantry', 'wic') else 3, rm, r.random() < 0.5)
         # entry door on front edge of living
-        liv = [x for x in self.rooms if x.kind == 'living']
+        liv = [x for x in self.rooms if x.kind == 'foyer'] or [x for x in self.rooms if x.kind == 'living']
         if liv:
             lv = liv[0]
             if abs(lv.y2 - self.D) < 1e-6 or not any(abs(o.y - lv.y2) < 1e-6 and o.x < lv.x2 and o.x2 > lv.x for o in self.rooms):
@@ -235,7 +346,7 @@ class Plan:
     def _windows(self):
         ext = self._ext_edges()
         for rm in self.rooms:
-            if rm.kind in ('hall', 'pantry', 'wic', 'garage'): continue
+            if rm.kind in ('hall', 'pantry', 'wic', 'closet', 'garage'): continue
             for (o, c, a, b) in [('h', rm.y, rm.x, rm.x2), ('h', rm.y2, rm.x, rm.x2), ('v', rm.x, rm.y, rm.y2), ('v', rm.x2, rm.y, rm.y2)]:
                 units = [u for u in _u(a, b) if (o, round(c, 2), u) in ext]
                 if len(units) * RES < 6: continue
@@ -329,12 +440,15 @@ class Plan:
             lab_y = y(ey + eh / 2) + (6.2 * S if kind == 'court' else 6)
             self._extra_labels = getattr(self, '_extra_labels', []) + [T(x(ex + ew / 2), lab_y if kind == 'court' else y(ey + eh / 2) + 7, lbl, max(14, min(20, S * 0.6)), color=sub, w=700, ls=3)]
         lab = []; fs = max(15, min(24, S * 0.7))
+        _narrow_closet = lambda rm: rm.kind == 'closet' and rm.w * S < len(rm.name) * fs * 0.7
         for rm in self.rooms:
             if rm.kind == 'hall': continue
             cx = x(rm.x + rm.w / 2)
             cy = {'bed': rm.y + rm.h * 0.68, 'living': rm.y + rm.h * 0.32, 'kitchen': rm.y + rm.h * 0.5, 'dining': rm.y + rm.h * 0.5 - 3.4}.get(rm.kind, rm.y + rm.h / 2)
             if rm.kind == 'kitchen': cy = rm.y + (3.4 if not self._kitchen_top(rm) else rm.h - 3.0)
-            nm = rm.name if rm.w * S > len(rm.name) * fs * 0.72 else rm.name.split(' ')[-1] if rm.name.startswith('PRIMARY') else rm.name.split(' ')[0]
+            if _narrow_closet(rm): continue
+            nm = rm.name if rm.w * S > len(rm.name) * fs * 0.72 else (
+                'PRIM. ' + rm.name.split(' ')[-1] if rm.name.startswith('PRIMARY') else rm.name.split(' ')[0])
             lab.append(T(cx, y(cy), nm, fs, color=ink, w=700, ls=2))
             if rm.kind in ('bed', 'living', 'kitchen', 'garage') and rm.w >= 9:
                 lab.append(T(cx, y(cy) + fs * 1.15, f"{fmt_ft(rm.w)} × {fmt_ft(rm.h)}", fs * 0.68, color=sub, w=500, ls=1))
@@ -396,6 +510,8 @@ class Plan:
                 if self._solid(rm, 'top'): rect(X + w / 2 - 3, Y + 0.4, 6, 1.2, 1.5)
             elif k == 'laundry':
                 if w >= 5.5 and h >= 3: rect(X + 0.4, Y + 0.4, 2.3, 2.3, 1.6); circ(X + 1.55, Y + 1.55, 0.8, 1.2); rect(X + 3.0, Y + 0.4, 2.3, 2.3, 1.6); circ(X + 4.15, Y + 1.55, 0.8, 1.2)
+            elif k == 'closet':
+                out.append(L(x(X + 0.35), y(Y + h / 2), x(X + w - 0.35), y(Y + h / 2), 1.1, sub))
             elif k in ('pantry', 'wic'):
                 for i in range(1, 4): out.append(L(x(X + 0.3), y(Y + i * (h / 4)), x(X + 1.6), y(Y + i * (h / 4)), 1, ink))
                 if k == 'wic': out.append(L(x(X + w - 1.6), y(Y + 0.6), x(X + w - 1.6), y(Y + h - 0.6), 1, ink))
