@@ -118,7 +118,7 @@
   "ai_label": false,
   "status": "approved",
   "seed": 29616,
-  "spec": "1,820 SQ FT \u00b7 4 BED \u00b7 1 BATH"
+  "spec": "2,030 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
  {
   "name": "r1029_1547_rule_dining",
@@ -254,7 +254,7 @@
   "style": "light",
   "status": "pending_approval",
   "seed": 46397,
-  "spec": "1,972 SQ FT \u00b7 4 BED \u00b7 1 BATH"
+  "spec": "2,176 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
  {
   "name": "r1031_1223_elev_charleston",
@@ -329,7 +329,7 @@
   "style": "bluewhite",
   "status": "pending_approval",
   "seed": 89366,
-  "spec": "1,584 SQ FT \u00b7 3 BED \u00b7 1 BATH"
+  "spec": "1,800 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
  {
   "name": "r1101_1223_elev_gambrel",
@@ -360,7 +360,7 @@
   "style": "blueprint",
   "status": "pending_approval",
   "seed": 74460,
-  "spec": "1,540 SQ FT \u00b7 3 BED \u00b7 1 BATH"
+  "spec": "1,750 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
  {
   "name": "r1101_1834_tour_shotgun",
@@ -381,8 +381,8 @@
  {
   "name": "r1102_0841_tour_lshape",
   "when_et": "2026-11-02T08:41:00",
-  "hook": "1,540 sq ft, room by room",
-  "caption": "1,540 sq ft, room by room \ud83d\udc40\nWould you build this one? \ud83d\udc47\nWant your logo animated like this? Email it to dmba04@gmail.com for a free 5-second trial (the address is in our bio).\n\nThe attached garage turns a simple ranch into an L, and shelters the front walk.\nA floor plan that walks you through it. Original drawing, animated from vector linework. From $450.\n.\n#floorplan #customhomes #realestate #houseplans #housedesign #architecture #houseplan",
+  "hook": "1,750 sq ft, room by room",
+  "caption": "1,750 sq ft, room by room \ud83d\udc40\nWould you build this one? \ud83d\udc47\nWant your logo animated like this? Email it to dmba04@gmail.com for a free 5-second trial (the address is in our bio).\n\nThe attached garage turns a simple ranch into an L, and shelters the front walk.\nA floor plan that walks you through it. Original drawing, animated from vector linework. From $450.\n.\n#floorplan #customhomes #realestate #houseplans #housedesign #architecture #houseplan",
   "duration": 17.6,
   "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_0841_tour_lshape.mp4",
   "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_0841_tour_lshape_silent.mp4",
@@ -391,7 +391,7 @@
   "ai_label": false,
   "status": "approved",
   "seed": 77962,
-  "spec": "1,540 SQ FT \u00b7 3 BED \u00b7 1 BATH"
+  "spec": "1,750 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
  {
   "name": "r1102_1012_pop3d_adu",
@@ -513,7 +513,7 @@
   "style": "light",
   "status": "pending_approval",
   "seed": 3238,
-  "spec": "1,944 SQ FT \u00b7 4 BED \u00b7 1 BATH"
+  "spec": "2,160 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
  {
   "name": "r1104_0841_site2plan_courtyard",
@@ -575,6 +575,6 @@
   "style": "bluewhite",
   "status": "pending_approval",
   "seed": 73147,
-  "spec": "1,776 SQ FT \u00b7 3 BED \u00b7 1 BATH"
+  "spec": "1,944 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  }
 ]
