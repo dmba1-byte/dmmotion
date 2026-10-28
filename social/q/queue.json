@@ -43,6 +43,34 @@
   "status": "approved"
  },
  {
+  "name": "r1028_1705_rule_toilet",
+  "when_et": "2026-10-28T17:05:00",
+  "hook": "Your toilet has no room in front",
+  "caption": "Your toilet has no room in front \ud83d\udc40\nWould your plan pass this one? \ud83d\udc47\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n30\" clear in front of the toilet \u2014 code allows a reduction to 21\". Source: Nkba Bathroom Planning Guidelines.\n21\" is the legal floor, not the comfortable one. At 21\" your knees are in the vanity. Original drawing, animated from vector linework. From $450.\n.\n#houseplans #realestate #architecturaldesign #dreamhome #customhomes #homebuilder #floorplan",
+  "duration": 16.2,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1705_rule_toilet.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1705_rule_toilet_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1705_rule_toilet_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "style": "sketch",
+  "status": "approved"
+ },
+ {
+  "name": "r1028_1834_site2plan_adu",
+  "when_et": "2026-10-28T18:34:00",
+  "hook": "Start with the lot. End inside the house.",
+  "caption": "Start with the lot. End inside the house. \ud83d\udc40\nWould you build this one? \ud83d\udc47\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n\nFrom the lot down into the house plan. Original drawing, animated from vector linework. From $450.\n.\n#housedesign #homebuilder #houseplan #houseplans #realestate #customhomes #homedesign",
+  "duration": 16.2,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1834_site2plan_adu.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1834_site2plan_adu_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1028_1834_site2plan_adu_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "style": "color",
+  "status": "approved"
+ },
+ {
   "name": "r1029_0841_tour_split",
   "when_et": "2026-10-29T08:41:00",
   "hook": "Take a quick tour of this plan",
