@@ -16,11 +16,19 @@
   "caption": "Is your kitchen layout costing you steps? \ud83d\udc40\nThe work triangle: fridge, sink, range. Each leg 4\u20139 ft, all three under 26 ft total, and nothing (like an island) cutting through it. That's the NKBA kitchen planning guideline.\nWrong layout: 32.2 ft per loop. Right layout: 16.6 ft.\nSave this for your next remodel.\nWant your plan animated like this? Email it to dmba04@gmail.com and I'll send you pricing.\n.\n#kitchendesign #kitchenlayout #floorplan #houseplan #homedesign #kitchenremodel #architecture"
  },
  {
-  "name": "r1031_1547_pause_3d",
-  "src": "r_pause_3d",
+  "name": "r1031_1547_rule_island",
+  "src": "r_rule_island",
   "when": "2026-10-31T15:47:00",
-  "hook": "Only 1% can pause on the exact frame",
+  "hook": "Your island is too close",
   "voice": null,
-  "caption": "Only 1% can pause on the exact frame \ud83d\udc40\nThe plan is fully 3D for exactly one frame out of 120. Screenshot it and email it to dmba04@gmail.com with the subject PAUSED \u2014 that's $100 off your own animated plan (and tell me how many tries it took \ud83d\udc47).\n\nReal floor plan, animated from vector linework. Plans, elevations and 3D from $450.\n.\n#floorplan #houseplan #3dfloorplan #homedesign #homebuilder #architecture #dreamhome"
+  "caption": "Your island is too close \ud83d\udc40 Go measure yours \ud83d\udc47\nThe NKBA kitchen planning guideline: 42\" minimum work aisle for one cook, 48\" when two people cook. At 30\" an open dishwasher or fridge door leaves 6\" \u2014 nobody is getting past.\n\nSave this before you finalize your kitchen plan.\nWant your plan animated like this? Email it to dmba04@gmail.com and I'll send you pricing.\n.\n#kitchenisland #kitchenlayout #kitchendesign #floorplan #houseplan #homebuilder #kitchenremodel"
+ },
+ {
+  "name": "r1102_1547_rule_fridge",
+  "src": "r_rule_fridge",
+  "when": "2026-11-02T15:47:00",
+  "hook": "Your fridge can't open",
+  "voice": null,
+  "caption": "Your fridge can't open \ud83d\udc40 Check your plan \ud83d\udc47\nA fridge door swings 24\u201328\" into the aisle before anyone stands in it. That's why the NKBA sets 42\" minimum for one cook and 48\" when two people cook. At 30\" the door alone eats the whole aisle.\n\nSave this for your next kitchen.\nWant your plan animated like this? Email it to dmba04@gmail.com and I'll send you pricing.\n.\n#kitchendesign #kitchenlayout #floorplan #houseplan #homedesign #kitchenremodel #homebuilder"
  }
 ]

@@ -130,14 +130,14 @@
   "status": "approved"
  },
  {
-  "name": "r1031_1547_pause_3d",
+  "name": "r1031_1547_rule_island",
   "when_et": "2026-10-31T15:47:00",
-  "hook": "Only 1% can pause on the exact frame",
-  "caption": "Only 1% can pause on the exact frame 👀\nThe plan is fully 3D for exactly one frame out of 120. Screenshot it and email it to dmba04@gmail.com with the subject PAUSED — that's $100 off your own animated plan (and tell me how many tries it took 👇).\n\nReal floor plan, animated from vector linework. Plans, elevations and 3D from $450.\n.\n#floorplan #houseplan #3dfloorplan #homedesign #homebuilder #architecture #dreamhome",
-  "duration": 4.0,
-  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_pause_3d.mp4",
-  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_pause_3d_silent.mp4",
-  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_pause_3d_music.mp3",
+  "hook": "Your island is too close",
+  "caption": "Your island is too close 👀 Go measure yours 👇\nThe NKBA kitchen planning guideline: 42\" minimum work aisle for one cook, 48\" when two people cook. At 30\" an open dishwasher or fridge door leaves 6\" — nobody is getting past.\n\nSave this before you finalize your kitchen plan.\nWant your plan animated like this? Email it to dmba04@gmail.com and I'll send you pricing.\n.\n#kitchenisland #kitchenlayout #kitchendesign #floorplan #houseplan #homebuilder #kitchenremodel",
+  "duration": 16.2,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_rule_island.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_rule_island_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_rule_island_music.mp3",
   "voice": null,
   "ai_label": false,
   "status": "approved"
@@ -190,6 +190,19 @@
   "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1223_elev_farmhouse.mp4",
   "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1223_elev_farmhouse_silent.mp4",
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1223_elev_farmhouse_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "status": "approved"
+ },
+ {
+  "name": "r1102_1547_rule_fridge",
+  "when_et": "2026-11-02T15:47:00",
+  "hook": "Your fridge can't open",
+  "caption": "Your fridge can't open 👀 Check your plan 👇\nA fridge door swings 24–28\" into the aisle before anyone stands in it. That's why the NKBA sets 42\" minimum for one cook and 48\" when two people cook. At 30\" the door alone eats the whole aisle.\n\nSave this for your next kitchen.\nWant your plan animated like this? Email it to dmba04@gmail.com and I'll send you pricing.\n.\n#kitchendesign #kitchenlayout #floorplan #houseplan #homedesign #kitchenremodel #homebuilder",
+  "duration": 16.2,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1547_rule_fridge.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1547_rule_fridge_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1547_rule_fridge_music.mp3",
   "voice": null,
   "ai_label": false,
   "status": "approved"
