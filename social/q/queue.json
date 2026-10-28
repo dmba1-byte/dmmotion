@@ -130,6 +130,19 @@
   "status": "approved"
  },
  {
+  "name": "r1031_1547_pause_3d",
+  "when_et": "2026-10-31T15:47:00",
+  "hook": "Only 1% can pause on the exact frame",
+  "caption": "Only 1% can pause on the exact frame 👀\nThe plan is fully 3D for exactly one frame out of 120. Screenshot it and email it to dmba04@gmail.com with the subject PAUSED — that's $100 off your own animated plan (and tell me how many tries it took 👇).\n\nReal floor plan, animated from vector linework. Plans, elevations and 3D from $450.\n.\n#floorplan #houseplan #3dfloorplan #homedesign #homebuilder #architecture #dreamhome",
+  "duration": 4.0,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_pause_3d.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_pause_3d_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_pause_3d_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "status": "approved"
+ },
+ {
   "name": "r1101_0841_draw_narrow",
   "when_et": "2026-11-01T08:41:00",
   "hook": "A narrow-lot home in 11 seconds",
