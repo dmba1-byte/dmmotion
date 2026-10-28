@@ -45,7 +45,6 @@ svg{{position:absolute;left:0;top:0}} .t{{position:absolute;left:60px;right:60px
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}"><defs><filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter></defs>
 <g id="cam" style="transform-origin:540px 960px">{''.join(layers_html)}{iso_html}</g></svg>
 <div id="timer">0:00</div><div id="subs"></div>
-<svg id="nibsvg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" style="position:absolute;left:0;top:0"><g id="nib" opacity="0"><g transform="rotate(-38)"><path d="M0 0 L-5 -16 L5 -16 Z" fill="{st['ink']}"/><rect x="-6.5" y="-30" width="13" height="14" rx="2" fill="{st['sub']}"/><rect x="-7.5" y="-96" width="15" height="67" rx="3" fill="{st['ink']}"/><rect x="-7.5" y="-62" width="15" height="3" fill="{st['bg']}" opacity="0.6"/></g></g></svg>
 <div id="end"></div>
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}"><g transform="translate(435 470) scale(0.68)"><svg viewBox="-2.18 -2.45 309.7 309.7" width="309.7" height="309.7" overflow="visible">
 <path id="lfill" d="{LOGO_D}" fill="#fff" opacity="0"/><path id="link" d="{LOGO_D}" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg></g></svg>
@@ -92,7 +91,6 @@ function along(pts,u){{ if(pts.length===1) return [pts[0][0],pts[0][1],0]; let L
   const T=L[L.length-1]*u; let i=1; while(i<L.length-1&&L[i]<T) i++; const a=pts[i-1],b=pts[i],seg=(L[i]-L[i-1])||1,k=cl((T-L[i-1])/seg,0,1);
   return [a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k, Math.atan2(b[1]-a[1],b[0]-a[0])]; }}
 function isoPt(x,y,z,m){{ const I=D.iso; const tx=I.X0+x*I.S, ty=I.Y0+y*I.S; const ix=I.ox+(x-y)*I.k*0.866, iy=I.oy+(x+y)*I.k*0.5-z*I.k; return [lerp(tx,ix,m), lerp(ty,iy,m)]; }}
-const NIB={{x:null,y:null,o:0}};
 window.setT=t=>{{
  for(const it of items){{const p=cl((t-it.t0)/it.d,0,1); if(it.isT)it.el.style.opacity=p; else{{
   if(it.L>0)it.el.style.strokeDashoffset=it.L*(1-(it.seq?p:ease(p))); if(it.f)it.el.style.fillOpacity=it.fo*cl((t-it.t0-it.d*.6)/(it.d*.6),0,1)}}}}
@@ -115,11 +113,6 @@ window.setT=t=>{{
  if(D.timer){{ const [a,b]=D.timer, tm=$('timer'); const sec=Math.floor(cl(t-a,0,b-a)); tm.textContent='0:'+String(sec).padStart(2,'0'); tm.style.opacity=cl((t-a)/0.3,0,1)*(1-cl((t-E)/0.4,0,1)); }}
  if(D.subs){{ let txt=''; for(const [a,b,w] of D.subs){{ if(t>=a&&t<b){{ txt=w; break; }} }} const el=$('subs'); el.innerHTML=txt?`<span>${{txt}}</span>`:''; el.style.opacity=1-cl((t-E)/0.3,0,1); }}
  const pp=ease(cl((t-(E-3))/3,0,1)); $('cam').style.transform=`scale(${{1+0.03*pp}})`;
- {{ let act=null; for(const it of items){{ if(it.isT||!(it.L>0)) continue; const p=(t-it.t0)/it.d; if(p>0&&p<1&&(!act||it.t0<act.it.t0)) act={{it,p}}; }}
-   const nb=$('nib'); if(act){{ const e=act.it.el, q=act.it.seq?act.p:ease(act.p); try{{ const pt=e.getPointAtLength(act.it.L*q), m=e.getScreenCTM();
-     const x=m.a*pt.x+m.c*pt.y+m.e, y=m.b*pt.x+m.d*pt.y+m.f; if(NIB.x===null){{NIB.x=x;NIB.y=y}} NIB.x+=(x-NIB.x)*0.6; NIB.y+=(y-NIB.y)*0.6; NIB.o=Math.min(1,NIB.o+0.25); }}catch(z){{}} }}
-   else NIB.o=Math.max(0,NIB.o-0.12);
-   nb.setAttribute('transform',`translate(${{NIB.x||0}} ${{NIB.y||0}})`); nb.setAttribute('opacity',NIB.o*0.92*(1-cl((t-E)/0.3,0,1))); }}
  const ho=D.hook_out?1-cl((t-D.hook_out)/0.4,0,1):1; $('hook').style.opacity=ho; $('spec').style.opacity=ho*(1-cl((t-(E-2.4))/.6,0,1)); $('sub').style.opacity=Math.min(ho,1-cl((t-(E-2.4))/.6,0,1));
  $('end').style.opacity=cl((t-E)/.6,0,1);
  const lp=cl((t-E-.15)/1.3,0,1); const lk=$('link'),LL=lk.getTotalLength(); lk.style.strokeDasharray=LL; lk.style.strokeDashoffset=LL*(1-ease(cl(lp/.8,0,1)));

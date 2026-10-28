@@ -23,7 +23,7 @@ def inches(v):
 TOPICS = {
  'island': dict(
     topic='KITCHEN ISLAND AISLE', hook='Your island is<br>too close', sub='the aisle rule most kitchens break',
-    room=(16, 13), wrong=30, right=42,
+    room=(16, 13), wrong=30, right=42, door_d=2.0, door_label='DISHWASHER',
     fixed=[(0, 0, 16, 2, 'COUNTER', 'counter'), (0, 2, 2, 7, '', 'counter'), (14, 2, 2, 7, '', 'counter')],
     mov=dict(w=8, d=3.5, label='ISLAND', axis='y', base=2.0),
     rule='42" minimum aisle for one cook<br>48" when two people cook', source='NKBA KITCHEN PLANNING GUIDELINES',
@@ -35,6 +35,20 @@ TOPICS = {
     mov=dict(w=8, d=3.5, label='ISLAND', axis='y', base=2.0),
     rule='42" minimum aisle for one cook<br>48" when two people cook', source='NKBA KITCHEN PLANNING GUIDELINES',
     note='A fridge or dishwasher door eats 24-28" of the aisle before anyone stands in it.'),
+ 'toilet': dict(
+    topic='TOILET CLEARANCE', hook='Your toilet has<br>no room in front', sub='the bathroom number people guess at',
+    room=(9, 8), wrong=21, right=30,
+    fixed=[(0, 0, 9, 1.6, '', 'counter'), (3.1, 0.4, 1.6, 2.1, 'WC', 'counter')],
+    mov=dict(w=6.5, d=1.9, label='VANITY', axis='y', base=2.5),
+    rule='30" clear in front of the toilet<br>code allows a reduction to 21"', source='NKBA BATHROOM PLANNING GUIDELINES',
+    note='21" is the legal floor, not the comfortable one. At 21" your knees are in the vanity.'),
+ 'dining': dict(
+    topic='DINING TABLE CLEARANCE', hook='Nobody can get<br>out of this chair', sub='the gap every dining room gets wrong',
+    room=(14, 12), wrong=24, right=36,
+    fixed=[(0, 0, 14, 1.5, '', 'counter'), (0, 1.5, 1.4, 5, '', 'counter')],
+    mov=dict(w=6, d=3.2, label='TABLE', axis='y', base=1.5),
+    rule='36" from table edge to wall to pass a chair<br>44" to walk behind someone seated', source='KITCHEN &amp; BATH PLANNING STANDARDS',
+    note='A dining chair pulls out 24" on its own. Anything less and the chair hits the wall.'),
 }
 
 
@@ -65,7 +79,11 @@ def build(spec):
     data = dict(T=T, S=S, X0=X0, Y0=Y0, RW=RW, RD=RD, mw=mv['w'], md=mv['d'], mx=mx, yw=yw, yr=yr,
                 gw=gap_w, gr=gap_r, base=base, label=mv['label'], stair=bool(stair),
                 wrong_t=inches(spec['wrong']), right_t=inches(spec['right']),
-                door_w=2.0, door_d=spec.get('door_d', 2.0), door_label=spec.get('door_label', 'DISHWASHER'))
+                door_w=2.0, door_d=spec.get('door_d', 0.0), door_label=spec.get('door_label', ''),
+                # the person reads green once the usable space left is enough to stand in.
+                # with an appliance door open that is a body's width; without one it is the
+                # standard itself, so the figure turns green exactly at the correct clearance.
+                fit_min=spec.get('fit_min', 1.4 if spec.get('door_d') else spec['right'] / 12 - 0.01))
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 html,body{{margin:0;width:{W}px;height:{H}px;background:{BG};overflow:hidden;font-family:Helvetica,Arial,sans-serif;color:{INK}}}
 .t{{position:absolute;left:55px;right:55px;text-align:center}}
@@ -150,10 +168,10 @@ window.setT=t=>{{
  // open appliance door + a person standing in what's left of the aisle
  const dOpen=P(t,T.person,0.5)*D.door_d;
  door.setAttribute('x',X(D.mx+D.mw*0.56));door.setAttribute('y',Y(D.base));
- door.setAttribute('width',D.door_w*S);door.setAttribute('height',Math.max(1,dOpen*S));
+ door.setAttribute('width',D.door_d?D.door_w*S:0);door.setAttribute('height',D.door_d?Math.max(1,dOpen*S):0);
  dlab.setAttribute('x',X(D.mx+D.mw*0.56+D.door_w/2));dlab.setAttribute('y',Y(D.base+dOpen/2)+7);
  dlab.setAttribute('opacity',dOpen>D.door_d*0.7?1:0);
- const left=gap-D.door_d, fits=left>=1.4;
+ const left=gap-D.door_d, fits=left>=D.fit_min;
  const pcx=X(D.mx+D.mw*0.56+D.door_w/2), pcy=Y(D.base+D.door_d+Math.max(0.35,left/2));
  sh.setAttribute('cx',pcx);sh.setAttribute('cy',pcy);sh.setAttribute('rx',0.83*S);sh.setAttribute('ry',0.5*S);
  sh.setAttribute('fill','#fff');sh.setAttribute('stroke',fits?'{GRN}':'{RED}');

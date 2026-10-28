@@ -78,7 +78,7 @@ body{{background:{PAPER};background-image:linear-gradient(#e3e9f1 1.5px,transpar
 
 <!-- S3: animate -->
 <div class="card" id="anim" style="left:90px;top:430px;width:900px;height:700px;opacity:0;overflow:hidden"><svg id="plansvg" width="900" height="700" viewBox="0 0 900 700">{plan}</svg>
-  <svg class="a" id="nibs" style="left:0;top:0" width="900" height="700"><g id="nib" opacity="0"><g transform="rotate(-38)"><path d="M0 0 L-5 -16 L5 -16 Z" fill="{INK}"/><rect x="-7.5" y="-96" width="15" height="80" rx="3" fill="{INK}"/></g></g></svg></div>
+  </div>
 <div class="card" id="elev" style="left:380px;top:860px;width:640px;height:470px;opacity:0;overflow:hidden"><svg width="640" height="470" viewBox="0 520 1080 793">{ev}</svg></div>
 <div class="chip pill" id="c0" style="left:70px;top:1180px;opacity:0"><span class="tick">✓</span>Lines draw on</div>
 <div class="chip pill" id="c1" style="left:70px;top:1290px;opacity:0"><span class="tick">✓</span>Walls go up</div>
@@ -129,7 +129,6 @@ function out(el,t,a,dx=-1200){{ if(t<a) return; const p=ease(P(t,a,0.45)); el.st
 const PG=['pl_walls-ext','pl_walls-int','pl_openings','pl_fixtures','pl_labels','pl_dims'].map(id=>$(id)).filter(Boolean);
 const PE=[]; PG.forEach((g,gi)=>[...g.querySelectorAll('line,path,rect,circle,text')].forEach(el=>{{ let L=0; if(el.tagName!=='text'){{try{{L=el.getTotalLength()}}catch(e){{}}}} if(L>0){{el.style.strokeDasharray=L;el.style.strokeDashoffset=L}} else el.style.opacity=0; PE.push({{el,L,gi}}); }}));
 const pt=$('pl_tint'); if(pt) pt.style.opacity=0;
-const NIB={{x:null,y:null,o:0}};
 const phones=[[60,1000,-6],[390,960,0],[720,1000,6]];
 const files=[[200,330],[380,300],[560,330],[740,300]];
 window.setT=t=>{{
@@ -156,9 +155,6 @@ window.setT=t=>{{
  PE.forEach((e,i)=>{{ const a=d0+(d1-d0)*(e.gi/PG.length)+ (d1-d0)/PG.length*0.9*((i%40)/40), p=P(t,a,0.35);
    if(e.L>0){{ e.el.style.strokeDashoffset=e.L*(1-ease(p)); if(p>0&&p<1&&(!act||a<act.a)) act={{e,a,p}}; }} else e.el.style.opacity=p; }});
  if(pt) pt.style.opacity=P(t,d1-0.6,0.8);
- if(act){{ try{{ const q=act.e.el.getPointAtLength(act.e.L*ease(act.p)), m=act.e.el.getCTM(); const x=m.a*q.x+m.c*q.y+m.e, y=m.b*q.x+m.d*q.y+m.f;
-   if(NIB.x===null){{NIB.x=x;NIB.y=y}} NIB.x+=(x-NIB.x)*.6; NIB.y+=(y-NIB.y)*.6; NIB.o=Math.min(1,NIB.o+.25); }}catch(z){{}} }} else NIB.o=Math.max(0,NIB.o-.12);
- $('nib').setAttribute('transform',`translate(${{NIB.x||0}} ${{NIB.y||0}})`); $('nib').setAttribute('opacity',NIB.o);
  pop($('elev'),t,T.walls,120,60,4); out($('elev'),t,T.s4-0.35);
  // elevation reveal inside its card: walls/roof draw quickly, figures at 'people'
  ['ev_figs','ev_figs2'].forEach((id,k)=>{{ const g=$(id); if(g) g.style.opacity=P(t,T.people+k*0.3,0.4); }});
