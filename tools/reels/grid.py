@@ -48,6 +48,44 @@ def elevation_svg(kind='craftsman', seed=11, style='light'):
     return f'<svg viewBox="0 0 1080 1920" width="100%" height="100%">{svg}</svg>'
 
 
+
+def tile(src_mp4, t, out_png, aspect=(1, 1), pad=0.08, band=(470, 1560), px=1100):
+    """One tile holding the whole drawing, centred, nothing clipped.
+
+    A fixed crop box can't work — each reel type puts its artwork somewhere
+    different in the 1080x1920 frame. So: grab the frame, ignore the bands that
+    hold the hook and the call to action, measure what the drawing actually
+    occupies, then build a box of the requested shape around that centre.
+    Where the box runs past the edge of the frame it is filled with the page
+    colour, so the drawing stays centred instead of sliding inward, and never
+    gets a black bar from an out-of-bounds crop.
+    """
+    from PIL import Image, ImageChops
+    raw = out_png.with_suffix('.raw.png')
+    subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(t), '-i', str(src_mp4),
+                    '-frames:v', '1', str(raw)], check=True)
+    im = Image.open(raw).convert('RGB')
+    y0, y1 = band[0], min(band[1], im.height)
+    strip = im.crop((0, y0, im.width, y1))
+    bg = strip.getpixel((4, 4))
+    mask = ImageChops.difference(strip, Image.new('RGB', strip.size, bg)).convert('L')
+    box = mask.point(lambda v: 255 if v > 18 else 0).getbbox() or (0, 0, strip.width, strip.height)
+    l, tp, r, bt = box
+    cx, cy = (l + r) / 2, (tp + bt) / 2 + y0
+    aw, ah = aspect
+    # smallest box of this shape that holds the drawing, plus breathing room
+    w = max(r - l, (bt - tp) * aw / ah) * (1 + 2 * pad)
+    h = w * ah / aw
+    x0, yy0 = cx - w / 2, cy - h / 2
+    canvas = Image.new('RGB', (int(w), int(h)), bg)
+    sx0, sy0 = max(0, int(x0)), max(0, int(yy0))
+    sx1, sy1 = min(im.width, int(x0 + w)), min(im.height, int(yy0 + h))
+    canvas.paste(im.crop((sx0, sy0, sx1, sy1)), (sx0 - int(x0), sy0 - int(yy0)))
+    canvas.resize((px, int(px * ah / aw)), Image.LANCZOS).save(out_png)
+    raw.unlink(missing_ok=True)
+    return out_png
+
+
 def post1():
     return f"""<!doctype html><html><head>{HEAD}</head><body><div class="grid"></div>
 <div class="wrap">
@@ -63,17 +101,26 @@ def post1():
 
 
 def post2(frames):
+    STAGES = ('WALLS', 'DOORS &amp; FIXTURES', 'LABELS &amp; DIMENSIONS')
     cells = ''.join(
-        f'<div style="flex:1;border:2.5px solid {INK};background:{PAPER};overflow:hidden;'
-        f'position:relative"><img src="{f}" style="width:100%;height:100%;object-fit:cover"></div>'
-        for f in frames)
+        f'<div style="flex:1">'
+        f'<div style="border:2.5px solid {INK};background:{PAPER};aspect-ratio:10/17;overflow:hidden">'
+        f'<img src="{f}" style="width:100%;display:block"></div>'
+        f'<div style="font:700 19px Helvetica;letter-spacing:2px;color:{BLUE};margin-top:12px">'
+        f'{i+1:02d} &nbsp;{lab}</div></div>'
+        for i, (f, lab) in enumerate(zip(frames, STAGES)))
+    closing = (f'<div style="margin-top:auto;margin-bottom:26px;font-size:27px;line-height:1.4;'
+               f'color:#444;border-left:5px solid {GRN};padding-left:22px">'
+               f'Your line weights, your titles, your dimensions &mdash; kept exactly as you drew them. '
+               f'Nothing redrawn, nothing invented.</div>')
     return f"""<!doctype html><html><head>{HEAD}</head><body><div class="grid"></div>
 <div class="wrap">
  <div class="kicker">BEFORE &rarr; AFTER</div>
  <h1>Your flat plan,<br><em>drawn on screen</em>.</h1>
  <div class="sub">Same drawing. The lines build in order, the way it would be
   drafted — walls, then doors, then fixtures, then labels.</div>
- <div style="display:flex;gap:14px;flex:1;margin-top:26px">{cells}</div>
+ <div style="display:flex;gap:14px;margin-top:26px;align-items:flex-start">{cells}</div>
+ {closing}
  {foot()}
 </div></body></html>"""
 
@@ -90,14 +137,14 @@ def post3(shots=()):
         f'<div style="font-size:24px;color:#555;margin-top:5px">{d}</div></div></div>'
         for n, t, d in steps)
     strip = ''.join(
-        f'<div style="flex:1;border:2.5px solid {INK};overflow:hidden;background:{PAPER}">'
-        f'<img src="{sh}" style="width:100%;height:100%;object-fit:cover"></div>' for sh in shots)
+        f'<div style="flex:1;border:2.5px solid {INK};overflow:hidden;background:{PAPER};'
+        f'aspect-ratio:4/3"><img src="{sh}" style="width:100%;display:block"></div>' for sh in shots)
     return f"""<!doctype html><html><head>{HEAD}</head><body><div class="grid"></div>
 <div class="wrap">
  <div class="kicker">HOW IT WORKS</div>
  <h1>From <em>$450</em><br>a clip.</h1>
  <div style="margin-top:30px">{rows}</div>
- <div style="display:flex;gap:12px;flex:1;margin-top:26px;min-height:0">{strip}</div>
+ <div style="display:flex;gap:12px;margin-top:auto;margin-bottom:22px">{strip}</div>
  <div style="margin-top:14px;background:{INK};color:#fff;padding:26px 30px;border-radius:14px">
   <div style="font:700 25px Helvetica;letter-spacing:2px;color:#9fd9b8">EMAIL YOUR PLAN</div>
   <div style="font:800 42px Helvetica;margin-top:8px;letter-spacing:-1px">dmba04@gmail.com</div>
@@ -125,17 +172,11 @@ if __name__ == '__main__':
     src = Q / 'r1030_1223_draw_shotgun.mp4'
     frames = []
     for i, t in enumerate((3.0, 7.0, 11.5)):
-        f = OUT / f'f{i}.png'
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(t), '-i', str(src),
-                        '-frames:v', '1', '-vf', 'crop=1000:1080:40:560', str(f)], check=True)
-        frames.append(f.as_uri())
+        frames.append(tile(src, t, OUT / f'f{i}.png', aspect=(10, 17)).as_uri())
     shots = []
     for i, (clip, t) in enumerate((('r1030_0841_elev_butterfly.mp4', 11.0),
                                    ('r1031_0841_pop3d_dogtrot.mp4', 10.0),
                                    ('r1029_1223_site2plan_lshape.mp4', 12.0))):
-        f = OUT / f's{i}.png'
-        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-ss', str(t), '-i', str(Q / clip),
-                        '-frames:v', '1', '-vf', 'crop=1000:1000:40:620', str(f)], check=True)
-        shots.append(f.as_uri())
+        shots.append(tile(Q / clip, t, OUT / f's{i}.png', aspect=(4, 3)).as_uri())
     for name, html in (('pin1_what', post1()), ('pin2_before_after', post2(frames)), ('pin3_pricing', post3(shots))):
         print('wrote', shoot(html, name))
