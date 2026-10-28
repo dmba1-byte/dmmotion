@@ -391,7 +391,12 @@ class Plan:
     # ---------------- svg ----------------
     def svg(self, ink, sub, tint, box=(70, 560, 940, 980), title=True, fills=None, sketch=False):
         W, D = self.W, self.D; bx, by, bw, bh = box
-        S = min(bw / W, bh / D); X0 = bx + (bw - W * S) / 2; Y0 = by + (bh - D * S) / 2
+        # leave a margin inside the box so a wide plan never runs to the frame
+        # edge — dimension strings and labels sit outside the room rectangles,
+        # and a drawing touching the border reads as cropped
+        MARGIN = 0.93
+        S = min(bw * MARGIN / W, bh * MARGIN / D)
+        X0 = bx + (bw - W * S) / 2; Y0 = by + (bh - D * S) / 2
         self.S, self.X0, self.Y0 = S, X0, Y0
         x = lambda f: X0 + f * S; y = lambda f: Y0 + f * S
         EW = max(8, min(14, S * 0.45)); IW = max(5, min(8, S * 0.26))
