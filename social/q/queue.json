@@ -151,8 +151,8 @@
   "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1101_0841_draw_narrow.mp4",
   "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1101_0841_draw_narrow_silent.mp4",
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1101_0841_draw_narrow_music.mp3",
-  "voice": "Most floor plans sit in a PDF nobody opens. Watch this one draw itself. Walls, doors, fixtures, labels. Send me yours, and I'll bring it to life.",
-  "ai_label": true,
+  "voice": null,
+  "ai_label": false,
   "status": "approved"
  },
  {
@@ -216,8 +216,8 @@
   "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_0841_pop3d_split.mp4",
   "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_0841_pop3d_split_silent.mp4",
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_0841_pop3d_split_music.mp3",
-  "voice": "Here's a flat floor plan. Now watch it stand up. Same drawing, now in three dimensions. Send me your plan, and I'll animate it.",
-  "ai_label": true,
+  "voice": null,
+  "ai_label": false,
   "status": "approved"
  },
  {
