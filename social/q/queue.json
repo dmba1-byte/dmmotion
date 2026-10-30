@@ -105,7 +105,7 @@
   "voice": null,
   "ai_label": false,
   "style": "blueprint",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 73077,
   "spec": "36'-0\" WIDE \u00b7 25'-9\" TALL"
  },
@@ -138,7 +138,7 @@
   "voice": null,
   "ai_label": false,
   "style": "color",
-  "status": "pending_approval"
+  "status": "approved"
  },
  {
   "name": "r1029_1834_draw_adu",
@@ -152,7 +152,7 @@
   "voice": null,
   "ai_label": false,
   "style": "dark",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 86675,
   "spec": "480 SQ FT \u00b7 1 BED \u00b7 1 BATH"
  },
@@ -183,7 +183,7 @@
   "voice": null,
   "ai_label": false,
   "style": "kraft",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 52249,
   "spec": "1,664 SQ FT \u00b7 2 BED \u00b7 2 BATH"
  },
@@ -227,7 +227,7 @@
   "voice": null,
   "ai_label": false,
   "style": "sketch",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 15459,
   "spec": "1,920 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -258,7 +258,7 @@
   "voice": null,
   "ai_label": false,
   "style": "light",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 46397,
   "spec": "2,414 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
@@ -302,7 +302,7 @@
   "voice": null,
   "ai_label": false,
   "style": "blueprint",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 16678,
   "spec": "900 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -333,7 +333,7 @@
   "voice": null,
   "ai_label": false,
   "style": "bluewhite",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 89366,
   "spec": "2,016 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -364,7 +364,7 @@
   "voice": null,
   "ai_label": false,
   "style": "blueprint",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 74460,
   "spec": "1,890 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -380,7 +380,7 @@
   "voice": null,
   "ai_label": false,
   "style": "kraft",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 41285,
   "spec": "768 SQ FT \u00b7 1 BED \u00b7 1 BATH"
  },
@@ -411,7 +411,7 @@
   "voice": null,
   "ai_label": false,
   "style": "color",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 3308,
   "spec": "672 SQ FT \u00b7 1 BED \u00b7 1 BATH"
  },
@@ -455,7 +455,7 @@
   "voice": null,
   "ai_label": false,
   "style": "light",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 78905,
   "spec": "1,156 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -486,7 +486,7 @@
   "voice": null,
   "ai_label": false,
   "style": "dark",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 43187,
   "spec": "1,298 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -517,7 +517,7 @@
   "voice": null,
   "ai_label": false,
   "style": "light",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 3238,
   "spec": "2,412 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
@@ -548,7 +548,7 @@
   "voice": null,
   "ai_label": false,
   "style": "sketch",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 51428,
   "spec": "1,140 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -579,7 +579,7 @@
   "voice": null,
   "ai_label": false,
   "style": "bluewhite",
-  "status": "pending_approval",
+  "status": "approved",
   "seed": 73147,
   "spec": "1,896 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  }
