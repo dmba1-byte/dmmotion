@@ -647,57 +647,28 @@ class Plan:
         return not self._solid(rm, 'bottom') or abs(rm.y2 - self.D) > 1e-6 and self._solid(rm, 'top')
 
     def _fixtures(self, x, y, S, ink, sub):
-        r = self.rng; out = []
-        def rect(a, b, w, h, sw=1.8, rx=0): out.append(R(x(a), y(b), w * S, h * S, sw, 'none', ink, rx))
-        def circ(a, b, rr, sw=1.4): out.append(C(x(a), y(b), rr * S, sw, 'none', ink))
+        """Draw fixtures from fixturedata geometry so the drawing and the
+        validator share one source of truth.
+
+        The previous version sized furniture from room width - a sofa was
+        min(8, w-5) ft, a tub min(5, w-0.6) - so the same object changed size
+        between plans and nothing read at a consistent scale. Storage and
+        parking keep their simple symbols; they carry no clearance rules.
+        """
+        from . import fixturedata as _FD
+        from . import fixturedraw as _FX
+        fixes, _missing = _FD.place(self)
+        out = _FX.draw(fixes, x, y, S, ink, sub)
         for rm in self.rooms:
             X, Y, w, h, k = rm.x, rm.y, rm.w, rm.h, rm.kind
-            if k == 'bed':
-                bw = 5 if (rm.name.startswith('PRIMARY') or w >= 13) else 4.5
-                if w < bw + 1.5: bw = w - 1.5
-                bx = X + w / 2 - bw / 2; by = Y + 0.6
-                rect(bx, by, bw, 6.7, 2.2); rect(bx + 0.3, by + 0.3, bw / 2 - 0.45, 1.1, 1.3, 5); rect(bx + bw / 2 + 0.15, by + 0.3, bw / 2 - 0.45, 1.1, 1.3, 5)
-                out.append(L(x(bx), y(by + 2), x(bx + bw), y(by + 2), 1.2, ink))
-                if w - bw >= 5: rect(bx - 2, by, 1.6, 1.6, 1.4); rect(bx + bw + 0.4, by, 1.6, 1.6, 1.4)
-            elif k == 'bath':
-                tw = min(5, w - 0.6)
-                rect(X + 0.3, Y + 0.3, tw, 2.6, 1.8, 4); rect(X + 0.6, Y + 0.6, tw - 0.6, 2.0, 1.1, 12)
-                tx = X + w - 2
-                rect(tx - 0.2, Y + h - 2.6, 1.6, 0.6, 1.5)
-                out.append(P(f'M{x(tx):.1f} {y(Y + h - 2.6):.1f} C{x(tx - 0.2):.1f} {y(Y + h - 4.4):.1f} {x(tx + 1.6):.1f} {y(Y + h - 4.4):.1f} {x(tx + 1.4):.1f} {y(Y + h - 2.6):.1f}', 1.5, 'none', ink))
-                if w >= 8: rect(X + 0.3, Y + h - 4.2, 1.8, 2.6, 1.5); circ(X + 1.2, Y + h - 2.9, 0.45)
-            elif k == 'kitchen':
-                top = self._kitchen_top(rm)
-                cy = Y + 0.2 if top else Y + h - 2.2
-                rect(X + 0.2, cy, w - 0.4, 2, 2)
-                rect(X + w / 2 - 1.2, cy + 0.3, 2.4, 1.4, 1.3, 4)
-                for ox in (1.0, 2.2):
-                    for oy in (0.7, 1.5): circ(X + ox, cy + oy, 0.35)
-                rect(X + w - 2.8, cy, 2.6, 2.0, 1.8)
-                if w >= 11 and h >= 13:
-                    iy = cy + 4.6 if top else cy - 5.0
-                    rect(X + 2.5, iy, w - 5, 2.6, 1.8)
-                    for i in range(3): circ(X + 3.6 + i * (w - 7.2) / 2, iy + (3.5 if top else -0.9), 0.5)
-            elif k == 'dining':
-                tw, th = min(6, w - 4), 3.2; tx = X + w / 2 - tw / 2; ty = Y + h / 2 - th / 2 + 0.6
-                rect(tx, ty, tw, th, 1.8, 4); n = 3 if tw >= 6 else 2
-                for i in range(n):
-                    cxp = tx + (i + 0.5) * tw / n - 0.6; rect(cxp, ty - 1.4, 1.2, 1.0, 1.2, 3); rect(cxp, ty + th + 0.4, 1.2, 1.0, 1.2, 3)
-            elif k == 'living':
-                sw = min(8, w - 5); sx = X + w / 2 - sw / 2; sy = Y + h - 5.4 if h >= 12 else Y + h - 4
-                rect(sx - 1, sy - 4.2, sw + 2, 7.2, 1.0, 2)  # rug
-                rect(sx, sy, sw, 3, 2, 6); out.append(L(x(sx), y(sy + 0.9), x(sx + sw), y(sy + 0.9), 1.2, ink))
-                rect(sx + 1.5, sy - 3.2, sw - 3, 1.9, 1.5, 4)
-                if w - sw >= 7: rect(sx + sw + 0.8, sy - 3.0, 2.4, 2.4, 1.4, 4)
-                if self._solid(rm, 'top'): rect(X + w / 2 - 3, Y + 0.4, 6, 1.2, 1.5)
-            elif k == 'laundry':
-                if w >= 5.5 and h >= 3: rect(X + 0.4, Y + 0.4, 2.3, 2.3, 1.6); circ(X + 1.55, Y + 1.55, 0.8, 1.2); rect(X + 3.0, Y + 0.4, 2.3, 2.3, 1.6); circ(X + 4.15, Y + 1.55, 0.8, 1.2)
-            elif k == 'closet':
+            if k == 'closet':
                 out.append(L(x(X + 0.35), y(Y + h / 2), x(X + w - 0.35), y(Y + h / 2), 1.1, sub))
             elif k in ('pantry', 'wic'):
-                for i in range(1, 4): out.append(L(x(X + 0.3), y(Y + i * (h / 4)), x(X + 1.6), y(Y + i * (h / 4)), 1, ink))
-                if k == 'wic': out.append(L(x(X + w - 1.6), y(Y + 0.6), x(X + w - 1.6), y(Y + h - 0.6), 1, ink))
+                for i in range(1, 4):
+                    out.append(L(x(X + 0.3), y(Y + i * (h / 4)), x(X + 1.6), y(Y + i * (h / 4)), 1, ink))
+                if k == 'wic':
+                    out.append(L(x(X + w - 1.6), y(Y + 0.6), x(X + w - 1.6), y(Y + h - 0.6), 1, ink))
             elif k == 'garage':
                 for cx_ in (X + w * 0.27, X + w * 0.73):
-                    rect(cx_ - 3, Y + 2.5, 6, 14.5, 1.2, 10)
+                    out.append(R(x(cx_ - 3), y(Y + 2.5), 6 * S, 15 * S, 1.2, 'none', ink, 10))
         return out

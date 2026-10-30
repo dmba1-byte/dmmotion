@@ -116,6 +116,25 @@ def check(plan):
             if w[0] == d[0] and abs(w[1] - d[1]) < .01 and min(w[3], d[3]) - max(w[2], d[2]) > 0.05:
                 bad.append(('opening conflict', 'window placed over a door'))
 
+    # doors: a leaf needs jamb room at a corner and clear wall to swing against
+    LEAF_JAMB = 4 * IN
+    segs = plan.walls()
+    perp = {'h': [], 'v': []}
+    for _ext, lst in segs.items():
+        for (so, c, a, b) in lst:
+            perp[so].append((c, a, b))
+    for d in plan.doors:
+        o, a, b = d[0], d[2], d[3]
+        c, leaf = d[1], d[3] - d[2]
+        for (pc, pa, pb) in perp['v' if o == 'h' else 'h']:
+            if not (pa - 0.02 <= c <= pb + 0.02): continue
+            for end in (a, b):
+                gap = abs(pc - end)
+                if gap < LEAF_JAMB:
+                    bad.append(('door jamb', f'door within {gap*12:.0f} in of a corner; needs 4 in for jamb and casing'))
+            if (pc < a and a - pc < leaf) or (pc > b and pc - b < leaf):
+                bad.append(('door swing', 'door cannot open flat: less clear wall than the leaf width'))
+
     # circulation: no sleeping room reached only through another sleeping room
     adj = _adjacency(plan)
     beds = [r for r in plan.rooms if r.kind == 'bed']
