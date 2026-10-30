@@ -173,9 +173,11 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1030_0841_elev_butterfly_music.mp3",
   "voice": "This one starts with a single line. Then the roof, the siding, the windows. A front elevation, drawn in about ten seconds. Your drawing, in motion.",
   "ai_label": true,
-  "status": "posting",
+  "status": "posted",
   "seed": 36848,
-  "spec": "46'-0\" WIDE · 14'-3\" TALL"
+  "spec": "46'-0\" WIDE · 14'-3\" TALL",
+  "posted_at": "2026-10-30T12:47:17Z",
+  "permalink": "https://www.instagram.com/reel/DfHnXi5jL6I/"
  },
  {
   "name": "r1030_1012_tour_courtyard",
