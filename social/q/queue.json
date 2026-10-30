@@ -105,9 +105,11 @@
   "voice": null,
   "ai_label": false,
   "style": "blueprint",
-  "status": "posting",
+  "status": "posted",
   "seed": 73077,
-  "spec": "36'-0\" WIDE \u00b7 25'-9\" TALL"
+  "spec": "36'-0\" WIDE \u00b7 25'-9\" TALL",
+  "posted_at": "2026-10-30T03:58:41Z",
+  "permalink": "https://www.instagram.com/reel/DfGq2JQjwEw/"
  },
  {
   "name": "r1029_1223_site2plan_lshape",
