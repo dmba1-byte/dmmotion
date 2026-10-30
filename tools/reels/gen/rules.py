@@ -82,8 +82,9 @@ def build(spec):
     Y0 = 560
     X = lambda f: X0 + f * S
     Y = lambda f: Y0 + f * S
-    T = dict(draw=(0.2, 2.0), place=2.2, wrong=3.2, person=4.4, move=(6.4, 7.6), right=7.8, ok=8.8, rule=9.8, end=12.6)
-    dur = T['end'] + 3.6
+    T = dict(draw=(-0.4, 0.1), place=-0.35, wrong=-0.2, person=0.65, move=(2.5, 3.5),
+             right=3.6, ok=3.8, rule=4.5, end=7.6)
+    dur = T['end'] + 0.4
     mv = spec['mov']
     VERDICT = spec.get('verdict', 'CLEARS')
     gap_w, gap_r = spec['wrong'] / 12, spec['right'] / 12   # feet
@@ -128,7 +129,7 @@ html,body{{margin:0;width:{W}px;height:{H}px;background:{BG};overflow:hidden;fon
 <div class="t" id="sub">{spec['sub']}</div>
 <div class="verdict" id="vw"><span style="background:{RED}"><svg width="32" height="32"><path d="M6 6 L26 26 M26 6 L6 26" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>TOO TIGHT</span></div>
 <div class="verdict" id="vr"><span style="background:{GRN}"><svg width="36" height="32"><path d="M5 17 L14 26 L31 6" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>{VERDICT}</span></div>
-<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" style="position:absolute;left:0;top:0">
+<svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" style="position:absolute;left:0;top:0"><g id="cam" style="transform-origin:540px 760px">
  <g id="walls">{''.join(out)}</g>
  <g id="fixed" opacity="0">{''.join(fixed)}</g>
  <g id="mov" opacity="0"></g>
@@ -138,6 +139,7 @@ html,body{{margin:0;width:{W}px;height:{H}px;background:{BG};overflow:hidden;fon
 <div id="note"></div>
 <div id="rule"><div>{spec['rule']}</div><small>{spec['source']}</small></div>
 <div id="end"></div>
+<div class="t" id="send" style="top:1700px;opacity:0"><span style="display:inline-block;background:{INK};color:#fff;font:800 34px Helvetica;letter-spacing:-0.5px;padding:18px 30px;border-radius:14px">Send this to whoever drew it</span></div>
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" style="position:absolute;left:0;top:0"><g transform="translate(435 470) scale(0.68)"><svg viewBox="-2.18 -2.45 309.7 309.7" width="309.7" height="309.7" overflow="visible">
 <path id="lfill" d="{LOGO_D}" fill="#fff" opacity="0"/><path id="link" d="{LOGO_D}" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg></g></svg>
 <div class="t" id="e1">Your drawing, in motion.</div><div class="t" id="e2">Your plan, animated · from $450<br>Free 5-second logo trial</div>
@@ -170,11 +172,11 @@ const dlab=document.createElementNS(NS,'text');dlab.setAttribute('font-size','19
 const sh=document.createElementNS(NS,'ellipse');sh.setAttribute('stroke-width','3');pg.appendChild(sh);
 const hd=document.createElementNS(NS,'circle');pg.appendChild(hd);
 window.setT=t=>{{
- wl.forEach((o,i)=>{{const a=T.draw[0]+i*0.12,p=P(t,a,0.4);o.el.style.strokeDashoffset=o.L*(1-ease(p));}});
- fx.forEach((e,i)=>e.style.opacity=P(t,T.place+i*0.12,0.3));
+ wl.forEach((o,i)=>{{const a=T.draw[0]+i*0.018,p=P(t,a,0.22);o.el.style.strokeDashoffset=o.L*(1-ease(p));}});
+ fx.forEach((e,i)=>e.style.opacity=P(t,T.place+i*0.05,0.18));
  const m=ease(P(t,T.move[0],T.move[1]-T.move[0]));
  const gap=D.gw+(D.gr-D.gw)*m, y=D.base+gap;
- $('mov').setAttribute('opacity',P(t,T.place+0.3,0.3));
+ $('mov').setAttribute('opacity',P(t,T.place+0.08,0.18));
  box.setAttribute('x',X(D.mx));box.setAttribute('y',Y(y));box.setAttribute('width',D.mw*S);box.setAttribute('height',D.md*S);
  lab.setAttribute('x',X(D.mx+D.mw/2));lab.setAttribute('y',Y(y+D.md/2)+8);
  treads.forEach((l,i)=>{{const yy=y+D.md*(i+1)/9;l.setAttribute('x1',X(D.mx));l.setAttribute('y1',Y(yy));l.setAttribute('x2',X(D.mx+D.mw));l.setAttribute('y2',Y(yy));}});
@@ -188,7 +190,7 @@ window.setT=t=>{{
  const inch=Math.round(gap*12); dt.textContent=inch+'"';
  dt.setAttribute('fill',col);dt.setAttribute('x',cx-90);dt.setAttribute('y',(ya+yb)/2+14);
  dbg.setAttribute('x',cx-90-58);dbg.setAttribute('y',(ya+yb)/2-22);dbg.setAttribute('width',116);dbg.setAttribute('height',46);dbg.setAttribute('rx',8);
- dg.setAttribute('opacity',P(t,T.wrong,0.3)*(1-P(t,E-0.3,0.3)));
+ dg.setAttribute('opacity',P(t,T.wrong,0.18)*(1-P(t,E-0.3,0.3)));
  // open appliance door + a person standing in what's left of the aisle
  const dOpen=P(t,T.person,0.5)*D.door_d;
  door.setAttribute('x',X(D.mx+D.mw*0.56));door.setAttribute('y',Y(D.base));
@@ -207,6 +209,19 @@ window.setT=t=>{{
  $('vr').style.transform=`scale(${{1.25-0.25*eo(P(t,T.ok,0.3))}})`;
  const nv=P(t,T.person+0.5,0.3)*(1-P(t,T.move[0]-0.2,0.3));
  $('note').style.opacity=nv; $('note').textContent=NOTE;
+ $('send').style.opacity=P(t,T.rule+1.0,0.3)*(1-P(t,E-0.15,0.2));
+ // camera: a slow push through the problem, a punch on the fix, then settle
+ {{ const push = 1 + 0.055*ease(P(t,0.1,3.6));
+    const punch = 0.045*(1-Math.min(1,Math.max(0,(t-T.right)/0.55)))*(t>=T.right?1:0);
+    const c=$('cam'); if(c) c.style.transform=`scale(${{push+punch}})`; }}
+ // hook words snap in one after another instead of the block fading
+ {{ const hk=$('hook'); if(hk&&!hk.dataset.split){{ hk.dataset.split='1';
+      hk.innerHTML=hk.innerHTML.split('<br>').map(line=>line.split(' ').map((w,i)=>
+        `<span class="wd" style="display:inline-block">${{w}}</span>`).join(' ')).join('<br>'); }}
+    [...document.querySelectorAll('#hook .wd')].forEach((w,i)=>{{
+      const p=P(t,0.12+i*0.055,0.26), e=ease(p);
+      w.style.opacity=p; w.style.transform=`translateY(${{(1-e)*26}}px)`; }}); }}
+
  const rp=P(t,T.rule,0.4); $('rule').style.opacity=rp*(1-P(t,E-0.3,0.3)); $('rule').style.transform=`translateY(${{40*(1-eo(rp))}}px)`;
  const ho=1-P(t,E-0.4,0.4); $('hook').style.opacity=ho; $('spec').style.opacity=ho; $('sub').style.opacity=ho*(1-P(t,T.wrong-0.2,0.3));
  $('end').style.opacity=P(t,E,0.6);
