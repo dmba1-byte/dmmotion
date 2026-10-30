@@ -139,7 +139,12 @@ def _island(f, x, y, S, ink, sub):
     return [rect(f.x, f.y, f.w, f.h, 1.8)]
 
 
-DRAW = {'bed': _bed, 'bed_k': _bed, 'sofa': _sofa, 'table': _table, 'toilet': _toilet,
+def _counter(f, x, y, S, ink, sub):
+    rect, circ, line = _mk(x, y, S, ink, sub)
+    return [rect(f.x, f.y, f.w, f.h, 1.5)]
+
+
+DRAW = {'counter': _counter, 'bed': _bed, 'bed_k': _bed, 'sofa': _sofa, 'table': _table, 'toilet': _toilet,
         'lav': _lav, 'tub': _tub, 'shower': _shower, 'range': _range, 'sink': _sink,
         'fridge': _fridge, 'washer': _washer, 'island': _island}
 

@@ -99,10 +99,21 @@ def check(plan):
     for i, a in enumerate(fixes):
         for b in fixes[i + 1:]:
             if a.room != b.room: continue
+            # appliances are set into the cabinet run by definition
+            if 'counter' in (a.kind, b.kind) or 'island' in (a.kind, b.kind): continue
             if _ovl((a.x, a.y, a.w, a.h), (b.x, b.y, b.w, b.h)):
                 bad.append((a.cite, f'{a.room}: {a.kind} and {b.kind} overlap'))
             elif _ovl(a.clear, (b.x, b.y, b.w, b.h)) or _ovl(b.clear, (a.x, a.y, a.w, a.h)):
-                bad.append((a.cite, f'{a.room}: {a.kind} clearance blocked by {b.kind}'))
+                # Two runs meeting at a corner share the aisle between them -
+                # that is what an L-shaped kitchen is. The 42 in work aisle is a
+                # rule about OPPOSING runs, so only flag fixtures that face each
+                # other or sit on the same wall.
+                from .fixturedraw import facing
+                fa, fb = facing(a), facing(b)
+                perpendicular = {fa, fb} in ({'down', 'left'}, {'down', 'right'},
+                                             {'up', 'left'}, {'up', 'right'})
+                if not perpendicular:
+                    bad.append((a.cite, f'{a.room}: {a.kind} clearance blocked by {b.kind}'))
 
     # doors must not swing into each other
     for i in range(len(plan.doors)):
@@ -141,6 +152,23 @@ def check(plan):
                 if inset > 0.02:
                     bad.append(('door swing', 'door leaf strikes a perpendicular wall when opened'))
                     break
+
+    # NKBA work triangle: sink / cooking surface / refrigerator, each leg
+    # 4-9 ft, the three legs together not more than 26 ft
+    import math
+    byroom = {}
+    for f in fixes:
+        if f.kind in ('sink', 'range', 'fridge'):
+            byroom.setdefault(f.room, {})[f.kind] = (f.x + f.w / 2, f.y + f.h / 2)
+    for room, pts in byroom.items():
+        if len(pts) < 3: continue
+        a, b, c = pts['sink'], pts['range'], pts['fridge']
+        legs = [math.dist(a, b), math.dist(b, c), math.dist(c, a)]
+        for name, L in zip(('sink-range', 'range-fridge', 'fridge-sink'), legs):
+            if L < 4.0:  bad.append(('NKBA work triangle', f'{name} leg {L:.1f} ft, under 4'))
+            if L > 9.0:  bad.append(('NKBA work triangle', f'{name} leg {L:.1f} ft, over 9'))
+        if sum(legs) > 26.0:
+            bad.append(('NKBA work triangle', f'legs total {sum(legs):.1f} ft, over 26'))
 
     # circulation: no sleeping room reached only through another sleeping room
     adj = _adjacency(plan)
