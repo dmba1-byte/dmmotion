@@ -351,9 +351,21 @@ class Plan:
                 units = [u for u in _u(a, b) if (o, round(c, 2), u) in ext]
                 if len(units) * RES < 6: continue
                 lo, hi = min(units), max(units) + RES
-                if any(d[0] == o and abs(d[1] - c) < 1e-6 and d[2] < hi and d[3] > lo for d in self.doors):
-                    if hi - lo < 14: continue
-                    lo, hi = (lo, lo + (hi - lo) / 2 - 2) if True else (lo, hi)
+                # Place glazing in the widest door-free stretch of this wall run.
+                # (The previous rule shrank to the first half of the run without
+                # checking which half the door was in, so a door in that half got
+                # a window laid straight over it.)
+                CLR = 0.5   # keep glazing off the door casing
+                blocked = sorted((max(lo, d[2] - CLR), min(hi, d[3] + CLR)) for d in self.doors
+                                 if d[0] == o and abs(d[1] - c) < 1e-6 and d[2] < hi and d[3] > lo)
+                if blocked:
+                    free, cur = [], lo
+                    for bs, be in blocked:
+                        if bs > cur: free.append((cur, bs))
+                        cur = max(cur, be)
+                    if cur < hi: free.append((cur, hi))
+                    if not free: continue
+                    lo, hi = max(free, key=lambda t: t[1] - t[0])
                 wl = {'bath': 3, 'kitchen': 4, 'laundry': 3}.get(rm.kind, 6 if rm.kind == 'living' else 5)
                 wl = min(wl, hi - lo - 2)
                 if wl < 2.5: continue
