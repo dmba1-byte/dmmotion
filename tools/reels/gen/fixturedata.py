@@ -24,13 +24,18 @@ Fix = namedtuple('Fix', 'kind x y w h clear room cite')
 IN = 1.0 / 12.0           # inches -> feet
 
 # footprint (w, d) in feet, and required clear depth in front
+# `side` is clear space required beside the fixture EDGE. For the water closet
+# and lavatory IRC R307.1 states 15 in from the CENTRELINE, so the edge figure
+# is 15 in minus half the fixture width: 5 in for a 20 in closet, 3 in for a
+# 24 in lavatory. Coding 15 in at the edge (as this first did) is roughly three
+# times the real requirement and makes compliant bathrooms impossible.
 SPEC = {
-    'toilet':  dict(w=20 * IN, d=28 * IN, clear=21 * IN, side=15 * IN, cite='IRC R307.1'),
-    'lav':     dict(w=24 * IN, d=21 * IN, clear=21 * IN, side=15 * IN, cite='IRC R307.1'),
+    'toilet':  dict(w=20 * IN, d=28 * IN, clear=21 * IN, side=5 * IN,  cite='IRC R307.1'),
+    'lav':     dict(w=24 * IN, d=21 * IN, clear=21 * IN, side=3 * IN,  cite='IRC R307.1'),
     'tub':     dict(w=60 * IN, d=30 * IN, clear=21 * IN, side=0.0,     cite='IRC R307.1'),
     'shower':  dict(w=36 * IN, d=36 * IN, clear=21 * IN, side=0.0,     cite='IRC P2705.1'),
-    'range':   dict(w=30 * IN, d=25 * IN, clear=42 * IN, side=12 * IN, cite='NKBA work aisle'),
-    'sink':    dict(w=30 * IN, d=25 * IN, clear=42 * IN, side=18 * IN, cite='NKBA work aisle'),
+    'range':   dict(w=30 * IN, d=25 * IN, clear=42 * IN, side=12 * IN, cite='NKBA landing 12 in'),
+    'sink':    dict(w=30 * IN, d=25 * IN, clear=42 * IN, side=15 * IN, cite='NKBA landing 18/24 in'),
     'fridge':  dict(w=36 * IN, d=30 * IN, clear=42 * IN, side=15 * IN, cite='NKBA landing'),
     'bed':     dict(w=60 * IN, d=80 * IN, clear=24 * IN, side=0.0,     cite='access side'),
     'bed_k':   dict(w=76 * IN, d=80 * IN, clear=24 * IN, side=0.0,     cite='access side'),
@@ -86,6 +91,21 @@ def _inside(r, rm, eps=0.02):
 WALLS = ('top', 'bottom', 'left', 'right')
 
 
+def swing_box(d):
+    """Quarter-circle sweep of a door leaf, as a bounding square."""
+    o, c, a, b, hinge_lo, swing = d
+    wd = b - a
+    if o == 'h':
+        hx, hy = (a if hinge_lo else b), c
+        y0 = hy - wd if swing == 'up' else hy
+        x0 = hx if hinge_lo else hx - wd
+        return (x0, y0, wd, wd)
+    hx, hy = c, (a if hinge_lo else b)
+    x0 = hx - wd if swing == 'left' else hx
+    y0 = hy if hinge_lo else hy - wd
+    return (x0, y0, wd, wd)
+
+
 def _try_wall(plan, rm, kind, side, placed, span_pref=None):
     """Place `kind` flat against one wall of `rm`, centred in the widest stretch
     free of doors and of anything already placed. Returns a Fix or None."""
@@ -107,7 +127,11 @@ def _try_wall(plan, rm, kind, side, placed, span_pref=None):
         else:     blocks.append((f.y - s['side'], f.y + f.h + s['side']))
     span = _free_span(lo, hi, blocks, need)
     if not span: return None
-    mid = (span[0] + span[1]) / 2
+    # Hug the start of the run rather than centring. Centring splits the
+    # remaining wall into two short stubs and nothing else will fit; ganging
+    # fixtures from a corner is both how bathrooms and kitchens are actually
+    # laid out and what leaves one usable contiguous run.
+    mid = span[0] + s['side'] + w / 2
     if   side == 'top':    fx = _rect(kind, mid - w / 2, rm.y, w, d, 'down', rm.kind)
     elif side == 'bottom': fx = _rect(kind, mid - w / 2, rm.y2 - d, w, d, 'up', rm.kind)
     elif side == 'left':   fx = _rect(kind, rm.x, mid - w / 2, d, w, 'right', rm.kind)
@@ -117,6 +141,11 @@ def _try_wall(plan, rm, kind, side, placed, span_pref=None):
     for o in placed:
         if _ovl(fx.clear, (o.x, o.y, o.w, o.h)) or _ovl((fx.x, fx.y, fx.w, fx.h), o.clear) \
            or _ovl((fx.x, fx.y, fx.w, fx.h), (o.x, o.y, o.w, o.h)):
+            return None
+    # nothing may sit in, or need clear space inside, a door's sweep
+    for d in plan.doors:
+        sb = swing_box(d)
+        if _ovl((fx.x, fx.y, fx.w, fx.h), sb) or _ovl(fx.clear, sb):
             return None
     return fx
 

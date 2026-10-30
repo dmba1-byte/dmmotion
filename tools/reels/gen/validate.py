@@ -116,7 +116,9 @@ def check(plan):
             if w[0] == d[0] and abs(w[1] - d[1]) < .01 and min(w[3], d[3]) - max(w[2], d[2]) > 0.05:
                 bad.append(('opening conflict', 'window placed over a door'))
 
-    # doors: a leaf needs jamb room at a corner and clear wall to swing against
+    # doors: casing needs room at a corner, and the leaf must clear perpendicular
+    # walls when it swings. Hinging next to a corner is normal practice, so the
+    # test is the actual swept quarter-circle, not mere proximity to a wall.
     LEAF_JAMB = 4 * IN
     segs = plan.walls()
     perp = {'h': [], 'v': []}
@@ -124,16 +126,21 @@ def check(plan):
         for (so, c, a, b) in lst:
             perp[so].append((c, a, b))
     for d in plan.doors:
-        o, a, b = d[0], d[2], d[3]
-        c, leaf = d[1], d[3] - d[2]
+        o, a, b, c = d[0], d[2], d[3], d[1]
         for (pc, pa, pb) in perp['v' if o == 'h' else 'h']:
             if not (pa - 0.02 <= c <= pb + 0.02): continue
             for end in (a, b):
-                gap = abs(pc - end)
-                if gap < LEAF_JAMB:
-                    bad.append(('door jamb', f'door within {gap*12:.0f} in of a corner; needs 4 in for jamb and casing'))
-            if (pc < a and a - pc < leaf) or (pc > b and pc - b < leaf):
-                bad.append(('door swing', 'door cannot open flat: less clear wall than the leaf width'))
+                if abs(pc - end) < LEAF_JAMB:
+                    bad.append(('door jamb', f'door within {abs(pc-end)*12:.0f} in of a corner; needs 4 in for casing'))
+        sb = _swing_box(d)
+        for (pc, pa, pb) in perp['v' if o == 'h' else 'h']:
+            # perpendicular wall as a thin rect, tested against the swept area
+            wr = (pc - 0.01, pa, 0.02, pb - pa) if o == 'h' else (pa, pc - 0.01, pb - pa, 0.02)
+            if _ovl(sb, wr):
+                inset = min(abs(pc - a), abs(pc - b))
+                if inset > 0.02:
+                    bad.append(('door swing', 'door leaf strikes a perpendicular wall when opened'))
+                    break
 
     # circulation: no sleeping room reached only through another sleeping room
     adj = _adjacency(plan)
