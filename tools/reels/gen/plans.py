@@ -388,8 +388,155 @@ class Plan:
         o, c, a, b = {'top': ('h', rm.y, rm.x, rm.x2), 'bottom': ('h', rm.y2, rm.x, rm.x2), 'left': ('v', rm.x, rm.y, rm.y2), 'right': ('v', rm.x2, rm.y, rm.y2)}[side]
         return not any((o, round(c, 2), u) in self.open for u in _u(a, b))
 
+
+    # ---------------- detail pass: poche / hatch / shadow ----------------
+    @staticmethod
+    def _clip(x1, y1, x2, y2, xmin, ymin, xmax, ymax):
+        """Liang-Barsky clip of a segment to an axis-aligned rect."""
+        dx, dy = x2 - x1, y2 - y1; t0, t1 = 0.0, 1.0
+        for p, q in ((-dx, x1 - xmin), (dx, xmax - x1), (-dy, y1 - ymin), (dy, ymax - y1)):
+            if p == 0:
+                if q < 0: return None
+            else:
+                r = q / p
+                if p < 0:
+                    if r > t1: return None
+                    if r > t0: t0 = r
+                else:
+                    if r < t0: return None
+                    if r < t1: t1 = r
+        return (x1 + t0 * dx, y1 + t0 * dy, x1 + t1 * dx, y1 + t1 * dy)
+
+    def _poche(self, segs, x, y, EW, IW, ink, wallcol):
+        """Walls as filled closed rectangles (poche) instead of single thick strokes.
+
+        Walls are axis-aligned, so each segment becomes a rect of its own
+        thickness. An end is extended by half the thickness of whatever
+        perpendicular wall meets it there, which closes corners and tees
+        without gaps — and crucially does NOT extend into a door or window
+        opening, because walls() has already split the run at openings.
+        """
+        allsegs = [(o, c, a, b, (EW if ext else IW), ext)
+                   for ext, lst in segs.items() for (o, c, a, b) in lst]
+
+        def ext_at(o, cross, pos):
+            best = 0.0
+            for (o2, c2, a2, b2, t2, _e2) in allsegs:
+                if o2 == o: continue
+                if abs(c2 - pos) > 0.02: continue
+                if a2 - 0.02 <= cross <= b2 + 0.02: best = max(best, t2 / 2.0)
+            return best
+
+        pe, pi = [], []
+        for (o, c, a, b, t, ext) in allsegs:
+            e0, e1 = ext_at(o, c, a), ext_at(o, c, b)
+            if o == 'h':
+                x1, x2 = x(a) - e0, x(b) + e1; y1, y2 = y(c) - t / 2, y(c) + t / 2
+            else:
+                y1, y2 = y(a) - e0, y(b) + e1; x1, x2 = x(c) - t / 2, x(c) + t / 2
+            d = f'M{x1:.1f} {y1:.1f} H{x2:.1f} V{y2:.1f} H{x1:.1f} Z'
+            (pe if ext else pi).append(P(d, 1.25 if ext else 1.0, wallcol, ink))
+        return pe, pi
+
+    def _hatch(self, x, y, S, sub):
+        """Floor material hatching, by room kind. Lives in the tint group, so it
+        fades in with the room tints and costs one opacity write per frame."""
+        def hl(x1, y1, x2, y2, w, op):
+            return (f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
+                    f'stroke="{sub}" stroke-width="{w}" stroke-opacity="{op}" stroke-linecap="butt"/>')
+        KIND = {'bath': 'tile', 'laundry': 'tile', 'pantry': 'tile', 'foyer': 'tile', 'kitchen': 'tile',
+                'living': 'wood', 'dining': 'wood', 'bed': 'wood', 'hall': 'wood', 'garage': 'slab'}
+        out = []
+        for rm in self.rooms:
+            k = KIND.get(rm.kind)
+            if not k: continue
+            x1, y1, x2, y2 = x(rm.x), y(rm.y), x(rm.x2), y(rm.y2)
+            if k == 'tile':
+                step = 2.0
+                n = 1
+                while rm.x + n * step < rm.x2 - 0.05:
+                    xx = x(rm.x + n * step); out.append(hl(xx, y1, xx, y2, 0.9, 0.45)); n += 1
+                n = 1
+                while rm.y + n * step < rm.y2 - 0.05:
+                    yy = y(rm.y + n * step); out.append(hl(x1, yy, x2, yy, 0.9, 0.45)); n += 1
+            elif k == 'wood':
+                step = 1.6
+                n = 1
+                while rm.y + n * step < rm.y2 - 0.05:
+                    yy = y(rm.y + n * step); out.append(hl(x1, yy, x2, yy, 0.75, 0.34)); n += 1
+            else:  # slab: sparse 45 diagonals, clipped to the room
+                step = 3.0 * S
+                span = (x2 - x1) + (y2 - y1)
+                t = -span
+                while t < span:
+                    seg = self._clip(x1 + t, y1, x1 + t + (y2 - y1), y2, x1, y1, x2, y2)
+                    if seg: out.append(hl(*seg, 0.75, 0.30))
+                    t += step
+        return out
+
+
+
+    @staticmethod
+    def _halo(txt, col, w=5.0):
+        """Knock a room label out of the linework it crosses. Fixtures are drawn
+        outline-only over the room tint, so a tint-coloured halo is invisible."""
+        return txt.replace('<text ', f'<text stroke="{col}" stroke-width="{w}" stroke-linejoin="round" paint-order="stroke" ', 1)
+
+    def _grid(self, segs, x, y, accent):
+        """Drafting grid: circled axis bubbles and dashed centre lines, the way a
+        real architectural sheet is set out. Lives outside the write-on schedule
+        so the dash pattern survives (the animator overwrites stroke-dasharray on
+        anything it strokes on)."""
+        W, D = self.W, self.D
+        # Sum each wall line's run, not its longest piece: exterior walls are cut
+        # into short segments by windows, so max() would discard them entirely.
+        vx, hy = {}, {}
+        for _ext, lst in segs.items():
+            for o, c, a, b in lst:
+                k = round(c, 2)
+                tgt = vx if o == 'v' else hy
+                tgt[k] = tgt.get(k, 0) + (b - a)
+
+        def pick(d, full, limit=6):
+            cand = sorted([(c, sp) for c, sp in d.items() if sp >= full * 0.30], key=lambda t: -t[1])
+            keep = []
+            for c, sp in cand:                      # drop near-duplicate axes
+                if all(abs(c - k) >= full * 0.055 for k, _ in keep): keep.append((c, sp))
+                if len(keep) >= limit: break
+            return [c for c, _ in sorted(keep)]
+
+        VX, HY = pick(vx, D), pick(hy, W)
+        LET = 'ABCDEFG'
+        top, left = y(0) - 70, x(0) - 70
+        bot, right = y(D) + 34, x(W) + 34
+        out = []
+        def dash(x1, y1, x2, y2):
+            return (f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{accent}" '
+                    f'stroke-width="1" stroke-opacity="0.42" stroke-dasharray="12 5 2.5 5"/>')
+        def bub(cx, cy, txt):
+            return (f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="15.5" fill="none" stroke="{accent}" '
+                    f'stroke-width="1.4" stroke-opacity="0.85"/>'
+                    + T(cx, cy + 6, txt, 17, 'middle', accent, 700, 0))
+        for i, c in enumerate(VX):
+            out.append(dash(x(c), top + 16, x(c), bot)); out.append(bub(x(c), top, LET[i]))
+        for i, c in enumerate(HY):
+            out.append(dash(left + 16, y(c), right, y(c))); out.append(bub(left, y(c), str(i + 1)))
+        return out
+
+    def _shadow(self, segs, x, y, EW, col, dx=5.0, dy=7.0):
+        """Soft offset under the exterior walls. Only used on light backgrounds."""
+        out = []
+        for o, c, a, b in segs[True]:
+            if o == 'h':
+                x1, x2 = x(a) - EW / 2, x(b) + EW / 2; y1, y2 = y(c) - EW / 2, y(c) + EW / 2
+            else:
+                y1, y2 = y(a) - EW / 2, y(b) + EW / 2; x1, x2 = x(c) - EW / 2, x(c) + EW / 2
+            out.append(f'<rect x="{x1 + dx:.1f}" y="{y1 + dy:.1f}" width="{x2 - x1:.1f}" '
+                       f'height="{y2 - y1:.1f}" fill="{col}" fill-opacity="0.16" stroke="none"/>')
+        return out
+
     # ---------------- svg ----------------
-    def svg(self, ink, sub, tint, box=(70, 560, 940, 980), title=True, fills=None, sketch=False):
+    def svg(self, ink, sub, tint, box=(70, 560, 940, 980), title=True, fills=None, sketch=False, detail=False, wall=None, shadow=None, accent=None):
         W, D = self.W, self.D; bx, by, bw, bh = box
         # leave a margin inside the box so a wide plan never runs to the frame
         # edge — dimension strings and labels sit outside the room rectangles,
@@ -407,11 +554,18 @@ class Plan:
         for rm in self.rooms:
             col = (fills or {}).get(rm.kind, tint) if rm.kind != 'garage' else (fills or {}).get('garage', tint)
             tg.append(R(x(rm.x), y(rm.y), rm.w * S, rm.h * S, 0, col, 'none'))
-        we = G('walls-ext', *lines(segs[True], EW)); wi = G('walls-int', *lines(segs[False], IW))
+        if detail:
+            _pe, _pi = self._poche(segs, x, y, EW, IW, ink, wall or ink)
+            we = G('walls-ext', *_pe); wi = G('walls-int', *_pi)
+        else:
+            we = G('walls-ext', *lines(segs[True], EW)); wi = G('walls-int', *lines(segs[False], IW))
         op = []
         for o, c, a, b in self.windows:
             off = EW * 0.35
-            if o == 'h': op += [L(x(a), y(c) - off, x(b), y(c) - off, 1.4, ink), L(x(a), y(c) + off, x(b), y(c) + off, 1.4, ink)]
+            if detail and accent:
+                if o == 'h': op.append(R(x(a), y(c) - EW / 2, (b - a) * S, EW, 0.9, accent, ink))
+                else:        op.append(R(x(c) - EW / 2, y(a), EW, (b - a) * S, 0.9, accent, ink))
+            elif o == 'h': op += [L(x(a), y(c) - off, x(b), y(c) - off, 1.4, ink), L(x(a), y(c) + off, x(b), y(c) + off, 1.4, ink)]
             else: op += [L(x(c) - off, y(a), x(c) - off, y(b), 1.4, ink), L(x(c) + off, y(a), x(c) + off, y(b), 1.4, ink)]
         for o, c, a, b, hinge_lo, swing in self.doors:
             wd = (b - a) * S
@@ -454,16 +608,27 @@ class Plan:
             if _narrow_closet(rm): continue
             nm = rm.name if rm.w * S > len(rm.name) * fs * 0.72 else (
                 'PRIM. ' + rm.name.split(' ')[-1] if rm.name.startswith('PRIMARY') else rm.name.split(' ')[0])
-            lab.append(T(cx, y(cy), nm, fs, color=ink, w=700, ls=2))
+            _nm = T(cx, y(cy), nm, fs, color=ink, w=700, ls=2)
+            lab.append(self._halo(_nm, tint, 5.5) if detail else _nm)
             if rm.kind in ('bed', 'living', 'kitchen', 'garage') and rm.w >= 9:
-                lab.append(T(cx, y(cy) + fs * 1.15, f"{fmt_ft(rm.w)} × {fmt_ft(rm.h)}", fs * 0.68, color=sub, w=500, ls=1))
+                _dm = T(cx, y(cy) + fs * 1.15, f"{fmt_ft(rm.w)} × {fmt_ft(rm.h)}", fs * 0.68, color=sub, w=500, ls=1)
+                lab.append(self._halo(_dm, tint, 4.5) if detail else _dm)
         lab += getattr(self, '_extra_labels', []); self._extra_labels = []
-        dims = [dimH(x(0), x(W), y(0) - 34, fmt_ft(W), sub), dimV(x(0) - 34, y(0), y(D), fmt_ft(D), sub)]
+        # with the grid on, bubbles own the left margin — put the overall
+        # vertical dimension on the right, the way a real sheet separates them
+        dims = [dimH(x(0), x(W), y(0) - 34, fmt_ft(W), sub),
+                dimV(x(W) + 38, y(0), y(D), fmt_ft(D), sub, off=20) if (detail and accent)
+                else dimV(x(0) - 34, y(0), y(D), fmt_ft(D), sub)]
         if title:
             word = WORD.get(self.beds, str(self.beds))
             dims += [T(x(0), y(D) + 74, 'FLOOR PLAN', 26, 'start', ink, 600, 4),
                      T(x(0), y(D) + 104, f'{TYPE_NAME[self.typ]} · {word}-BEDROOM · {self.sf:,} SF', 18, 'start', sub, 500, 1.5)]
-        parts = [G('tint', *tg), we, wi, G('openings', *op), G('fixtures', *fx), G('labels', *lab), G('dims', *dims)]
+        grid = ''
+        if detail:
+            if shadow: tg.insert(0, G('shadow', *self._shadow(segs, x, y, EW, shadow)))
+            tg.append(G('hatch', *self._hatch(x, y, S, sub)))
+            if accent: grid = G('grid', G('gridinner', *self._grid(segs, x, y, accent)))
+        parts = ([grid] if grid else []) + [G('tint', *tg), we, wi, G('openings', *op), G('fixtures', *fx), G('labels', *lab), G('dims', *dims)]
         return ''.join(parts)
 
     def _kitchen_top(self, rm):

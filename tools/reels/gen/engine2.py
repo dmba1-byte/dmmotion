@@ -7,13 +7,14 @@ W, H, FPS = 1080, 1920, 30
 LOGO_D = re.search(r'<path d="([^"]+)"', open('/home/claude/logo/DM_logo_mark-black.svg').read()).group(1)
 
 STYLES = {
- 'light':     dict(bg='#ffffff', ink='#1f1f1f', sub='#8a8a8a', tint='#f1efe9', tint2='#e6e3dc', lawn='#eef0e8', road='#ecebe7', hook='#1f1f1f', hook2='#6b6b6b', wall='#f7f6f2'),
+ 'light':     dict(bg='#ffffff', ink='#1f1f1f', sub='#8a8a8a', tint='#f1efe9', tint2='#e6e3dc', lawn='#eef0e8', road='#ecebe7', hook='#1f1f1f', hook2='#6b6b6b', wall='#f7f6f2', shadow='#000000'),
  'blueprint': dict(bg='#0e2a47', ink='#eaf2ff', sub='#8fb0d6', tint='#12365a', tint2='#173f68', lawn='#113353', road='#0f2f4d', hook='#ffffff', hook2='#9fc0e6', wall='#1c4a78'),
  'dark':      dict(bg='#141414', ink='#f2f2f2', sub='#8c8c8c', tint='#1e1e1e', tint2='#272727', lawn='#1b1e1a', road='#1d1d1d', hook='#ffffff', hook2='#9a9a9a', wall='#2c2c2c'),
- 'bluewhite': dict(bg='#ffffff', ink='#1d4e89', sub='#7fa3cc', tint='#eef4fb', tint2='#dbe7f5', lawn='#eaf2fa', road='#eef2f7', hook='#1d4e89', hook2='#6b8fb8', wall='#ffffff'),
- 'kraft':     dict(bg='#e8dbc2', ink='#3b2f24', sub='#8a7458', tint='#f2e9d6', tint2='#dccaa9', lawn='#ddd1b5', road='#d6c7a8', hook='#3b2f24', hook2='#7a6650', wall='#f6efe1'),
- 'sketch':    dict(bg='#fbfaf6', ink='#3d3d3d', sub='#9a9a9a', tint='#f3f1ea', tint2='#e8e5dc', lawn='#eef0e6', road='#ecebe5', hook='#2b2b2b', hook2='#7b7b7b', wall='#ffffff', rough=True),
- 'color':     dict(bg='#ffffff', ink='#1f2a36', sub='#8592a0', tint='#f4f4f2', tint2='#e7e9ec', lawn='#e9f2e3', road='#ecedef', hook='#1f2a36', hook2='#6b7684', wall='#ffffff',
+ 'bluewhite': dict(bg='#ffffff', ink='#1d4e89', sub='#7fa3cc', tint='#eef4fb', tint2='#dbe7f5', lawn='#eaf2fa', road='#eef2f7', hook='#1d4e89', hook2='#6b8fb8', wall='#ffffff', shadow='#1d4e89'),
+ 'kraft':     dict(bg='#e8dbc2', ink='#3b2f24', sub='#8a7458', tint='#f2e9d6', tint2='#dccaa9', lawn='#ddd1b5', road='#d6c7a8', hook='#3b2f24', hook2='#7a6650', wall='#f6efe1', shadow='#3b2f24'),
+ 'sketch':    dict(bg='#fbfaf6', ink='#3d3d3d', sub='#9a9a9a', tint='#f3f1ea', tint2='#e8e5dc', lawn='#eef0e6', road='#ecebe5', hook='#2b2b2b', hook2='#7b7b7b', wall='#ffffff', shadow='#3d3d3d', rough=True),
+ 'studio':    dict(bg='#efe7e1', ink='#141414', sub='#9b9389', tint='#f7f2ee', tint2='#e8ded6', lawn='#e4e5d9', road='#e9e2db', hook='#141414', hook2='#6e665e', wall='#ffffff', shadow='#6b5c50', accent='#2d5ea8'),
+ 'color':     dict(bg='#ffffff', ink='#1f2a36', sub='#8592a0', tint='#f4f4f2', tint2='#e7e9ec', lawn='#e9f2e3', road='#ecedef', hook='#1f2a36', hook2='#6b7684', wall='#ffffff', shadow='#1f2a36',
                    fills={'bed': '#e6eefa', 'bath': '#dff2ef', 'wic': '#eef0f2', 'living': '#fbefdc', 'kitchen': '#f9e4e0', 'dining': '#f2eafa', 'hall': '#f4f4f1', 'laundry': '#eaf1e1', 'pantry': '#f1f1ee', 'garage': '#ebebeb', 'foyer': '#f4f4f1'}),
 }
 

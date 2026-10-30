@@ -9,7 +9,8 @@ from gen import elevs as EV
 
 def _plan(seed, typ, st):
     p = Plan(seed, typ).build()
-    svg = p.svg(st['ink'], st['sub'], st['tint'], fills=st.get('fills'))
+    svg = p.svg(st['ink'], st['sub'], st['tint'], fills=st.get('fills'),
+                detail=True, shadow=st.get('shadow'), accent=st.get('accent'))
     return p, svg
 
 def plan_sched(pre, t0, scale=1.0):
@@ -21,7 +22,7 @@ def job_draw(name, seed, typ, style, hook, sub, cta):
     st = STYLES[style]; p, svg = _plan(seed, typ, st); svg = prefix_ids(svg, 'p_')
     return dict(name=name, style=style, hook=hook, sub=sub, cta=cta, end=12.0, sched=plan_sched('p_', 0.05), timer=[0.05, 10.5],
                 figs=F.plan_figs(p, 'Lp', (9.4, 11.6), (9.2, 9.6)),
-                layers=[{'id': 'Lp', 'svg': svg}], layers_meta=[], tint_windows=[['p_tint', 7.8, 9.0]]), p
+                layers=[{'id': 'Lp', 'svg': svg}], layers_meta=[], tint_windows=[['p_tint', 7.8, 9.0], ['p_grid', 0.1, 1.1]]), p
 
 def job_tour(name, seed, typ, style, hook, sub, cta):
     st = STYLES[style]; p, svg = _plan(seed, typ, st); svg = prefix_ids(svg, 'p_')
