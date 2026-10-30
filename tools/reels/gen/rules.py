@@ -26,28 +26,51 @@ TOPICS = {
     room=(16, 13), wrong=30, right=42, door_d=2.0, door_label='DISHWASHER',
     fixed=[(0, 0, 16, 2, 'COUNTER', 'counter'), (0, 2, 2, 7, '', 'counter'), (14, 2, 2, 7, '', 'counter')],
     mov=dict(w=8, d=3.5, label='ISLAND', axis='y', base=2.0),
-    rule='42" minimum aisle for one cook<br>48" when two people cook', source='NKBA KITCHEN PLANNING GUIDELINES',
+    rule='42" minimum aisle for one cook<br>48" when two people cook', source='NKBA KITCHEN PLANNING GUIDELINES', verdict='NKBA',
     note='Under 42" and two people can\'t pass while a dishwasher or oven door is open.'),
  'fridge': dict(
     topic='FRIDGE DOOR SWING', hook='Your fridge<br>can\'t open', sub='the clearance people forget',
     room=(16, 13), wrong=30, right=42, door_d=2.3, door_label='FRIDGE DOOR',
     fixed=[(0, 0, 16, 2, 'COUNTER', 'counter'), (0, 2, 2, 7, '', 'counter'), (14, 2, 2, 7, '', 'counter')],
     mov=dict(w=8, d=3.5, label='ISLAND', axis='y', base=2.0),
-    rule='42" minimum aisle for one cook<br>48" when two people cook', source='NKBA KITCHEN PLANNING GUIDELINES',
+    rule='42" minimum aisle for one cook<br>48" when two people cook', source='NKBA KITCHEN PLANNING GUIDELINES', verdict='NKBA',
     note='A fridge or dishwasher door eats 24-28" of the aisle before anyone stands in it.'),
  'toilet': dict(
     topic='TOILET CLEARANCE', hook='Your toilet has<br>no room in front', sub='the bathroom number people guess at',
     room=(9, 8), wrong=21, right=30,
     fixed=[(0, 0, 9, 1.6, '', 'counter'), (3.1, 0.4, 1.6, 2.1, 'WC', 'counter')],
     mov=dict(w=6.5, d=1.9, label='VANITY', axis='y', base=2.5),
-    rule='30" clear in front of the toilet<br>code allows a reduction to 21"', source='NKBA BATHROOM PLANNING GUIDELINES',
+    rule='30" clear in front of the toilet<br>code allows a reduction to 21"', source='NKBA BATHROOM PLANNING GUIDELINES', verdict='NKBA',
     note='21" is the legal floor, not the comfortable one. At 21" your knees are in the vanity.'),
+ 'hallway': dict(
+    topic='HALLWAY WIDTH', hook='Two people can\'t<br>pass in this hall', sub='the number code sets, and the one that works',
+    room=(13, 11), wrong=30, right=42, verdict='IRC',
+    fixed=[(0, 0, 13, 2.4, 'BEDROOM', 'counter')],
+    mov=dict(w=13, d=2.4, label='BEDROOM', axis='y', base=2.4),
+    rule='36" is the code minimum for a hallway<br>42" is the width that actually works',
+    source='IRC R311.6', note='At 36" two people turn sideways. At 42" they don\'t.'),
+ 'vanity': dict(
+    topic='IN FRONT OF THE SINK', hook='You can\'t stand<br>at this sink', sub='the clearance a small bath always loses',
+    room=(10, 9), wrong=21, right=30, verdict='NKBA',
+    fixed=[(0, 0, 10, 2.0, 'VANITY', 'counter')],
+    mov=dict(w=7, d=2.6, label='TUB', axis='y', base=2.0),
+    rule='30" of clear floor in front of a sink<br>measured from the front edge of the bowl',
+    source='NKBA BATHROOM PLANNING GUIDELINES',
+    note='Lean over a sink to wash your face and you need every inch of it.'),
+ 'shower': dict(
+    topic='IN FRONT OF THE SHOWER', hook='Nowhere to dry<br>off in this bath', sub='the gap people find out about too late',
+    room=(11, 10), wrong=20, right=30, verdict='NKBA',
+    fixed=[(0, 0, 11, 2.8, 'SHOWER', 'counter')],
+    mov=dict(w=8, d=2.0, label='VANITY', axis='y', base=2.8),
+    rule='30" of clear floor in front of a shower or tub<br>same figure as in front of a sink',
+    source='NKBA BATHROOM PLANNING GUIDELINES',
+    note='You step out, you turn, you reach for a towel. That takes 30 inches.'),
  'dining': dict(
     topic='DINING TABLE CLEARANCE', hook='Nobody can get<br>out of this chair', sub='the gap every dining room gets wrong',
     room=(14, 12), wrong=24, right=36,
     fixed=[(0, 0, 14, 1.5, '', 'counter'), (0, 1.5, 1.4, 5, '', 'counter')],
     mov=dict(w=6, d=3.2, label='TABLE', axis='y', base=1.5),
-    rule='36" from table edge to wall to pass a chair<br>44" to walk behind someone seated', source='KITCHEN &amp; BATH PLANNING STANDARDS',
+    rule='36" from table edge to wall to pass a chair<br>44" to walk behind someone seated', source='KITCHEN &amp; BATH PLANNING STANDARDS', verdict='CLEARS',
     note='A dining chair pulls out 24" on its own. Anything less and the chair hits the wall.'),
 }
 
@@ -62,6 +85,7 @@ def build(spec):
     T = dict(draw=(0.2, 2.0), place=2.2, wrong=3.2, person=4.4, move=(6.4, 7.6), right=7.8, ok=8.8, rule=9.8, end=12.6)
     dur = T['end'] + 3.6
     mv = spec['mov']
+    VERDICT = spec.get('verdict', 'CLEARS')
     gap_w, gap_r = spec['wrong'] / 12, spec['right'] / 12   # feet
     out = []
     ln = lambda x1, y1, x2, y2, w, c=INK: out.append(f'<line x1="{X(x1):.1f}" y1="{Y(y1):.1f}" x2="{X(x2):.1f}" y2="{Y(y2):.1f}" stroke="{c}" stroke-width="{w}" stroke-linecap="square"/>')
@@ -103,7 +127,7 @@ html,body{{margin:0;width:{W}px;height:{H}px;background:{BG};overflow:hidden;fon
 <div class="t" id="hook">{spec['hook']}</div>
 <div class="t" id="sub">{spec['sub']}</div>
 <div class="verdict" id="vw"><span style="background:{RED}"><svg width="32" height="32"><path d="M6 6 L26 26 M26 6 L6 26" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg>TOO TIGHT</span></div>
-<div class="verdict" id="vr"><span style="background:{GRN}"><svg width="36" height="32"><path d="M5 17 L14 26 L31 6" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>CODE</span></div>
+<div class="verdict" id="vr"><span style="background:{GRN}"><svg width="36" height="32"><path d="M5 17 L14 26 L31 6" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>{VERDICT}</span></div>
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}" style="position:absolute;left:0;top:0">
  <g id="walls">{''.join(out)}</g>
  <g id="fixed" opacity="0">{''.join(fixed)}</g>
