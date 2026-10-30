@@ -1,0 +1,12 @@
+# Python bytecode caches, regenerated on every render run
+__pycache__/
+*.pyc
+
+# Local render scratch output (rerender.py / restyle write here)
+rr/
+out/
+
+# NOTE: batch2.json is deliberately NOT ignored. The job definitions for the
+# queue (hook line breaks, subtitle, cta, mood, bpm) lived only in that file
+# and were never committed, which made the October restyle a reconstruction
+# job. If a generator writes it again, commit it.
