@@ -189,7 +189,7 @@
   "voice": null,
   "ai_label": false,
   "style": "kraft",
-  "status": "approved",
+  "status": "hold",
   "seed": 52249,
   "spec": "1,664 SQ FT \u00b7 2 BED \u00b7 2 BATH"
  },
@@ -204,7 +204,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1030_1223_draw_shotgun_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "approved",
+  "status": "hold",
   "seed": 67088,
   "spec": "944 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -233,7 +233,7 @@
   "voice": null,
   "ai_label": false,
   "style": "sketch",
-  "status": "approved",
+  "status": "hold",
   "seed": 15459,
   "spec": "1,920 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -248,7 +248,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_0841_pop3d_dogtrot_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "approved",
+  "status": "hold",
   "seed": 53304,
   "spec": "1,088 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -264,7 +264,7 @@
   "voice": null,
   "ai_label": false,
   "style": "light",
-  "status": "approved",
+  "status": "hold",
   "seed": 46397,
   "spec": "2,414 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
@@ -308,7 +308,7 @@
   "voice": null,
   "ai_label": false,
   "style": "blueprint",
-  "status": "approved",
+  "status": "hold",
   "seed": 16678,
   "spec": "900 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -323,7 +323,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1101_0841_draw_narrow_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "approved",
+  "status": "hold",
   "seed": 24159,
   "spec": "1,440 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -339,7 +339,7 @@
   "voice": null,
   "ai_label": false,
   "style": "bluewhite",
-  "status": "approved",
+  "status": "hold",
   "seed": 89366,
   "spec": "2,016 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -370,7 +370,7 @@
   "voice": null,
   "ai_label": false,
   "style": "blueprint",
-  "status": "approved",
+  "status": "hold",
   "seed": 74460,
   "spec": "1,890 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -386,7 +386,7 @@
   "voice": null,
   "ai_label": false,
   "style": "kraft",
-  "status": "approved",
+  "status": "hold",
   "seed": 41285,
   "spec": "768 SQ FT \u00b7 1 BED \u00b7 1 BATH"
  },
@@ -401,7 +401,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_0841_tour_lshape_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "approved",
+  "status": "hold",
   "seed": 77962,
   "spec": "1,890 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -417,7 +417,7 @@
   "voice": null,
   "ai_label": false,
   "style": "color",
-  "status": "approved",
+  "status": "hold",
   "seed": 3308,
   "spec": "672 SQ FT \u00b7 1 BED \u00b7 1 BATH"
  },
@@ -461,7 +461,7 @@
   "voice": null,
   "ai_label": false,
   "style": "light",
-  "status": "approved",
+  "status": "hold",
   "seed": 78905,
   "spec": "1,156 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -476,7 +476,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_0841_pop3d_split_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "approved",
+  "status": "hold",
   "seed": 86279,
   "spec": "2,006 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  },
@@ -492,7 +492,7 @@
   "voice": null,
   "ai_label": false,
   "style": "dark",
-  "status": "approved",
+  "status": "hold",
   "seed": 43187,
   "spec": "1,298 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -523,7 +523,7 @@
   "voice": null,
   "ai_label": false,
   "style": "light",
-  "status": "approved",
+  "status": "hold",
   "seed": 3238,
   "spec": "2,412 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
@@ -538,7 +538,7 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1104_0841_site2plan_courtyard_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "approved",
+  "status": "hold",
   "seed": 17026,
   "spec": "1,584 SQ FT \u00b7 2 BED \u00b7 2 BATH"
  },
@@ -554,7 +554,7 @@
   "voice": null,
   "ai_label": false,
   "style": "sketch",
-  "status": "approved",
+  "status": "hold",
   "seed": 51428,
   "spec": "1,140 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
@@ -585,7 +585,7 @@
   "voice": null,
   "ai_label": false,
   "style": "bluewhite",
-  "status": "approved",
+  "status": "hold",
   "seed": 73147,
   "spec": "1,896 SQ FT \u00b7 3 BED \u00b7 2 BATH"
  }
