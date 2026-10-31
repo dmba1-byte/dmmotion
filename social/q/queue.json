@@ -258,6 +258,20 @@
   "spec": "1,088 SQ FT \u00b7 2 BED \u00b7 1 BATH"
  },
  {
+  "name": "r1031_0841_rule_vanity",
+  "when_et": "2026-10-31T08:41:00",
+  "hook": "You can't stand at this sink",
+  "caption": "You can't stand at this sink \ud83d\udc40\nWould your plan pass this one? \ud83d\udc47\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n30\" of clear floor in front of a sink \u2014 measured from the front edge of the bowl. Source: Nkba Bathroom Planning Guidelines.\nLean over a sink to wash your face and you need every inch of it. Original drawing, animated from vector linework. From $450.\n.\n#homedesign #realestate #housedesign #dreamhome #architecturaldesign #newconstruction #architecture",
+  "duration": 20.9,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_0841_rule_vanity.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_0841_rule_vanity_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_0841_rule_vanity_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "spec": "IN FRONT OF THE SINK",
+  "status": "approved"
+ },
+ {
   "name": "r1031_1012_tour_ranch",
   "when_et": "2026-10-31T10:12:00",
   "hook": "Every room in this ranch, one at a time",
@@ -274,6 +288,34 @@
   "spec": "2,414 SQ FT \u00b7 4 BED \u00b7 2 BATH"
  },
  {
+  "name": "r1031_1012_rule_island",
+  "when_et": "2026-10-31T10:12:00",
+  "hook": "Your island is too close",
+  "caption": "Your island is too close \ud83d\udc40\nWould your plan pass this one? \ud83d\udc47\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n42\" minimum aisle for one cook \u2014 48\" when two people cook. Source: Nkba Kitchen Planning Guidelines.\nTwo people can't pass with a dishwasher door open. Original drawing, animated from vector linework. From $450.\n.\n#dreamhome #realestate #newconstruction #homebuilder #housedesign #houseplans #floorplan",
+  "duration": 21.23,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1012_rule_island.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1012_rule_island_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1012_rule_island_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "spec": "KITCHEN ISLAND AISLE",
+  "status": "approved"
+ },
+ {
+  "name": "r1031_1223_rule_shower",
+  "when_et": "2026-10-31T12:23:00",
+  "hook": "Nowhere to dry off in this bath",
+  "caption": "Nowhere to dry off in this bath \ud83d\udc40\nWould your plan pass this one? \ud83d\udc47\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n30\" of clear floor in front of a shower or tub \u2014 same figure as in front of a sink. Source: Nkba Bathroom Planning Guidelines.\nYou step out, you turn, you reach for a towel. That takes 30 inches. Original drawing, animated from vector linework. From $450.\n.\n#homebuilder #housedesign #floorplan #realestate #customhomes #houseplan #newconstruction",
+  "duration": 21.03,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1223_rule_shower.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1223_rule_shower_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1223_rule_shower_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "spec": "IN FRONT OF THE SHOWER",
+  "status": "approved"
+ },
+ {
   "name": "r1031_1223_rule_vanity",
   "when_et": "2026-10-31T12:23:00",
   "hook": "You can't stand at this sink",
@@ -286,6 +328,20 @@
   "ai_label": false,
   "spec": "IN FRONT OF THE SINK",
   "status": "pending_approval"
+ },
+ {
+  "name": "r1031_1547_rule_toilet",
+  "when_et": "2026-10-31T15:47:00",
+  "hook": "Your toilet has no room in front",
+  "caption": "Your toilet has no room in front \ud83d\udc40\nWould your plan pass this one? \ud83d\udc47\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n30\" clear in front of the toilet \u2014 code allows a reduction to 21\". Source: Nkba Bathroom Planning Guidelines.\n21\" is the legal floor, not the comfortable one. At 21\" your knees are in the vanity. Original drawing, animated from vector linework. From $450.\n.\n#houseplan #realestate #housedesign #dreamhome #houseplans #newconstruction #architecture",
+  "duration": 21.57,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_rule_toilet.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_rule_toilet_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1547_rule_toilet_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "spec": "TOILET CLEARANCE",
+  "status": "approved"
  },
  {
   "name": "r1031_1547_rule_island",
@@ -315,6 +371,20 @@
   "status": "hold",
   "seed": 16678,
   "spec": "900 SQ FT \u00b7 2 BED \u00b7 1 BATH"
+ },
+ {
+  "name": "r1031_1834_rule_fridge",
+  "when_et": "2026-10-31T18:34:00",
+  "hook": "Your fridge can't open",
+  "caption": "Your fridge can't open \ud83d\udc40\nWould your plan pass this one? \ud83d\udc47\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n42\" minimum aisle for one cook \u2014 48\" when two people cook. Source: Nkba Kitchen Planning Guidelines.\nA fridge door eats 24-28\" before anyone stands in it. Original drawing, animated from vector linework. From $450.\n.\n#houseplans #homedesign #realestate #architecturaldesign #housedesign #customhomes #newconstruction",
+  "duration": 21.2,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1834_rule_fridge.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1834_rule_fridge_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_1834_rule_fridge_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "spec": "FRIDGE DOOR SWING",
+  "status": "approved"
  },
  {
   "name": "r1101_0841_draw_narrow",
@@ -359,7 +429,8 @@
   "voice": null,
   "ai_label": false,
   "spec": "IN FRONT OF THE SHOWER",
-  "status": "approved"
+  "status": "approved",
+  "note": "silent cut \u2014 rebuild with voiceover before release"
  },
  {
   "name": "r1101_1547_pop3d_lshape",
@@ -437,7 +508,8 @@
   "ai_label": false,
   "seed": 67242,
   "spec": "48'-0\" WIDE \u00b7 22'-9\" TALL",
-  "status": "approved"
+  "status": "approved",
+  "note": "silent cut \u2014 rebuild with voiceover before release"
  },
  {
   "name": "r1102_1547_rule_fridge",
@@ -450,7 +522,8 @@
   "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1102_1547_rule_fridge_music.mp3",
   "voice": null,
   "ai_label": false,
-  "status": "approved"
+  "status": "approved",
+  "note": "silent cut \u2014 rebuild with voiceover before release"
  },
  {
   "name": "r1102_1834_site2plan_dogtrot",
@@ -512,7 +585,8 @@
   "ai_label": false,
   "seed": 43890,
   "spec": "36'-0\" WIDE \u00b7 19'-10\" TALL",
-  "status": "approved"
+  "status": "approved",
+  "note": "silent cut \u2014 rebuild with voiceover before release"
  },
  {
   "name": "r1103_1547_draw_ranch",
@@ -574,7 +648,8 @@
   "ai_label": false,
   "seed": 53948,
   "spec": "36'-0\" WIDE \u00b7 18'-5\" TALL",
-  "status": "approved"
+  "status": "approved",
+  "note": "silent cut \u2014 rebuild with voiceover before release"
  },
  {
   "name": "r1104_1547_pop3d_narrow",
