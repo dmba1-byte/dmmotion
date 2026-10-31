@@ -87,7 +87,7 @@ TOPICS = {
 EXN = 14              # stacked layers that make the walls read as solid when they rise
 
 
-def build(spec):
+def build(spec, cues=None, total=None):
     RW, RD = spec['room']
     S = min(820 / RW, 620 / RD)
     X0 = 540 - RW * S / 2
@@ -95,11 +95,15 @@ def build(spec):
     X = lambda f: X0 + f * S
     Y = lambda f: Y0 + f * S
 
-    # ---- beats are cut to the voiceover, not the other way round ----
-    T = dict(setup=0.00, hunt=1.20, reveal=3.05, stakes=4.50, door=7.05,
-             turn=9.65, sell=12.05, end=15.10)
+    # ---- beats are cut to the voiceover, never the other way round ----
+    # `cues` is where each script line actually starts, measured off the real
+    # narration; build() is called with it so picture and voice cannot drift.
+    c = cues or [0.10, 2.52, 4.72, 7.53, 10.37, 13.14, 16.25, 18.79]
+    T = dict(setup=0.0, hunt=c[1] - 0.14, reveal=c[2] + 0.55, stakes=c[3] - 0.10,
+             door=c[4] - 0.12, turn=c[5] - 0.12, sell=c[6] - 0.14, cta=c[7] - 0.10,
+             end=(total or 19.8) + 0.55)
     T['found'] = T['hunt']; T['open'] = T['sell']
-    T['move'] = (9.75, 10.70)
+    T['move'] = (c[5] + 0.30, c[5] + 1.25)
     dur = T['end']
 
     mv = spec['mov']
@@ -145,15 +149,17 @@ def build(spec):
     L6 = "Free to move on paper. Not after the pour."
     L7 = "You didn't see it until it moved."
 
-    # every reel is voiced, end to end — silence is where viewers leave
-    VO = [(0.08, L1),
-          (1.26, "Three seconds. Find what's wrong."),
-          (3.11, f"The {spec['gapname']} is {w_w} inches."),
-          (4.56, f"It needs {w_r}. {str(w_d).capitalize()} inches short."),
-          (7.13, L5),
-          (9.72, "Free to move on paper. Not after the pour."),
-          (12.15, L7),
-          (13.83, "Send me your drawing.")]
+    # The spoken script. Written as whole sentences with connective tissue —
+    # clipped fragments make any voice sound staccato. It is read as ONE
+    # continuous take, and the beats below are cut to where the words land.
+    SCRIPT = [f"You'd approve this {spec['room_word']}. Most people would.",
+              "You've got three seconds to find what's wrong.",
+              f"Time's up. The {spec['gapname']} is only {w_w} inches.",
+              f"It needs {w_r}, so you're {w_d} inches short.",
+              spec['vo_stakes'],
+              "On paper that's one move. After the pour it's concrete.",
+              "You didn't see it until it moved. That's what I do.",
+              "Send me your drawing."]
 
     data = dict(T=T, S=S, X0=X0, Y0=Y0, RW=RW, RD=RD, mw=mv['w'], md=mv['d'], mx=mx,
                 yw=yw, yr=yr, gw=gap_w, gr=gap_r, base=base, label=mv['label'],
@@ -489,13 +495,17 @@ window.setT=t=>{{
  $('spec').style.opacity=1-P(t,T.sell+0.2,0.3);
  $('ser').style.opacity=0.55+0.45*P(t,T.sell+0.5,0.4);
 }}; setT(0);
-</script></body></html>""", dur, T, VO
+</script></body></html>""", dur, T, SCRIPT
 
 
 def render(key, outdir='/home/claude/reels/out2', stills=None, voice=True):
     spec = TOPICS[key]; name = f'r_rule_{key}'
     out = pathlib.Path(outdir); out.mkdir(exist_ok=True)
-    html, dur, T, VO = build(spec); hp = out / f'{name}.html'; hp.write_text(html)
+    import vo as VOICE
+    *_, SCRIPT = build(spec)                        # the script for this topic
+    narration, cues, total = VOICE.narrate(SCRIPT)  # one continuous read
+    html, dur, T, _ = build(spec, cues, total)
+    hp = out / f'{name}.html'; hp.write_text(html)
     fr = out / f'fr_{name}'; fr.mkdir(exist_ok=True); N = int(FPS * dur)
     with sync_playwright() as pw:
         b = pw.chromium.launch(); pg = b.new_page(viewport={'width': W, 'height': H}); errs = []
@@ -510,9 +520,7 @@ def render(key, outdir='/home/claude/reels/out2', stills=None, voice=True):
     # end == dur so the beat runs the whole clip and no end-card chime is added
     soundtrack.make(dur, draw=(0.2, 1.1), end=dur, mood='bright', bpm=100,
                     seed=zlib.crc32(key.encode()) % 999, out=wav, pen=False, beat=True)
-    if voice:
-        import vo as VOICE
-        VOICE.mix_into(wav, VO)
+    VOICE.lay_under(wav, narration)
     mp4 = str(out / f'{name}.mp4')
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', str(FPS), '-i', str(fr / '%04d.png'), '-i', wav, '-c:v', 'libx264',
                     '-preset', 'veryfast', '-pix_fmt', 'yuv420p', '-crf', '20', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', mp4], check=True)
