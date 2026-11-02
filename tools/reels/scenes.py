@@ -170,6 +170,23 @@ F.tape=()=>{
   const sh=hit>0&&hit<1?Math.sin(t*60)*6*(1-hit):0;world.setAttribute('transform',`translate(${sh} 0)`);
  };
 };
+
+// ---------------- PHOTO (AI image, animated) ----------------
+F.photo=()=>{
+ const w=world, IM=__IMGS__;
+ const els=IM.map(u=>E('image',{href:u,x:-80,y:-140,width:1240,height:2200,preserveAspectRatio:'xMidYMid slice','style':'filter:brightness(1.75) contrast(1.08) saturate(1.1)'},w));
+ const wash=E('rect',{x:-100,y:-100,width:1300,height:2200,fill:P.glow,opacity:0,'style':'mix-blend-mode:soft-light'},S);
+ const tint=E('rect',{x:-100,y:-100,width:1300,height:2200,fill:P.bg2,opacity:.22,'style':'mix-blend-mode:multiply'},S);
+ const dust=[];for(let i=0;i<34;i++)dust.push(E('circle',{r:2+(i%4),fill:P.ink,opacity:.0},S));
+ const n=IM.length;
+ upd=(t)=>{
+  const u=cl(t/DUR,0,1);
+  els.forEach((e,i)=>{const seg=1/n, a=i*seg, o=n===1?1:(i===0?1-cl((u-(a+seg-.08))/.08,0,1):cl((u-(a-.0))/.08,0,1)); e.setAttribute('opacity',o);
+    const lu=cl((u-a)/seg,0,1.2), dir=i%2?-1:1, z=1.04+.10*(n===1?u:lu); e.setAttribute('transform',`translate(${540} ${960}) scale(${z}) translate(${-540+dir*(-30+60*(n===1?u:lu))} ${-960-20*(n===1?u:lu)})`)});
+  const fl=.5+.5*Math.sin(t*7.3)*Math.sin(t*2.9);wash.setAttribute('opacity',.08+.10*fl);
+  dust.forEach((d,i)=>{const x=(i*97+t*(14+i%5*6))%1100,y=(i*181+t*(-20-i%3*9)+4000)%1960;d.setAttribute('cx',x);d.setAttribute('cy',y);d.setAttribute('opacity',.12+.25*Math.abs(Math.sin(t*1.7+i)))});
+ };
+};
 F[K]();
 const capEl=document.getElementById('cap'),tagEl=document.getElementById('tag');tagEl.textContent=TAG||'';
 E('rect',{width:1080,height:1920,fill:'url(#vg)'});
@@ -178,11 +195,11 @@ window.setT=t=>{upd(t);capEl.innerHTML=CAP?`<span>${CAP}</span>`:'';
  tagEl.style.opacity=ease(cl(t/0.4,0,1));};
 setT(0);
 </script>"""
-def render(kind, dur, pal, caption, out, tag=''):
+def render(kind, dur, pal, caption, out, tag='', imgs=None):
     out = pathlib.Path(out); fr = out.with_suffix('.frames'); shutil.rmtree(fr, ignore_errors=True); fr.mkdir(parents=True)
     p = PAL[pal]
     html = (HTML.replace('__PAL__', json.dumps(p)).replace('__KIND__', json.dumps(kind)).replace('__DUR__', str(dur)).replace('__CAP__', json.dumps(caption))
-            .replace('__TAG__', json.dumps(tag)).replace('__ACC__', p['acc']).replace('__INK__', p['ink']))
+            .replace('__TAG__', json.dumps(tag)).replace('__IMGS__', json.dumps([pathlib.Path(i).resolve().as_uri() for i in (imgs or [])])).replace('__ACC__', p['acc']).replace('__INK__', p['ink']))
     hp = out.with_suffix('.html'); hp.write_text(html)
     N = int(dur * FPS)
     with sync_playwright() as pw:
