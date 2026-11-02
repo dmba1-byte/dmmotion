@@ -394,7 +394,8 @@
   "voice": null,
   "ai_label": false,
   "spec": "FRIDGE DOOR SWING",
-  "status": "posting"
+  "status": "hold",
+  "note": "David 11/1: too many clearance/bathroom reels in a row — vary topics, same voiced story style"
  },
  {
   "name": "r1101_0841_draw_narrow",
@@ -689,6 +690,7 @@
   "voice": null,
   "ai_label": false,
   "spec": "HALLWAY WIDTH",
-  "status": "posting"
+  "status": "hold",
+  "note": "David 11/1: too many clearance/bathroom reels in a row — vary topics, same voiced story style"
  }
 ]
