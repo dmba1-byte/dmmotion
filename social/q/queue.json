@@ -692,5 +692,17 @@
   "spec": "HALLWAY WIDTH",
   "status": "hold",
   "note": "David 11/1: too many clearance/bathroom reels in a row — vary topics, same voiced story style"
+ },
+ {
+  "name": "r1101_2330_elev_cape",
+  "when_et": "2026-11-01T23:30:00",
+  "hook": "Nobody reads a flat elevation",
+  "caption": "Nobody reads a flat elevation 👀\nWatch this Cape Cod build itself, line by line: walls, roof, dormers, siding, front door.\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\nOriginal drawing, animated from vector linework. From $450.\n.\n#capecod #houseplans #architecture #homedesign #customhomes #homebuilder #elevation",
+  "duration": 16.0,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1101_2330_elev_cape.mp4",
+  "voice": null,
+  "ai_label": false,
+  "spec": "Cape Cod elevation",
+  "status": "posting"
  }
 ]
