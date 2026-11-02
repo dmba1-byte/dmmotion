@@ -34,7 +34,7 @@ def build_html(job):
         filt = ' filter="url(#rough)"' if st.get('rough') else ''
         layers_html.append(f'<g id="{L["id"]}" style="opacity:{L.get("op0", 1)}"><g id="{L["id"]}_cam"{filt}>{L["svg"]}</g></g>')
     iso_html = '<g id="iso" style="opacity:0"></g>' if job.get('iso') else ''
-    data = {k: job.get(k) for k in ('layers_meta', 'iso', 'end', 'tint_windows', 'hook_out', 'figs', 'timer', 'subs', 'cam_y', 'accent')}
+    data = {k: job.get(k) for k in ('layers_meta', 'iso', 'end', 'tint_windows', 'hook_out', 'figs', 'timer', 'subs', 'cam_y', 'accent', 'ov', 'tags')}
     sched = job['sched']
     fx_html = '<div id="fx"></div>' if job.get('fx') else ''
     fxc = json.dumps(FX.get(job.get('fx') or 'blue'))
@@ -46,6 +46,10 @@ svg{{position:absolute;left:0;top:0}} .t{{position:absolute;left:60px;right:60px
 #e1{{top:820px;font-size:70px;font-weight:700;color:#fff;letter-spacing:-1px;opacity:0}} #e2{{top:930px;font-size:38px;color:#bdbdbd;opacity:0;line-height:1.35}}
 #spec{{position:absolute;left:0;right:0;top:{job.get('hook_top', 250) - 92}px;text-align:center}} #spec span{{display:inline-block;border:2.5px solid {st['hook']};color:{st['hook']};font:700 27px Helvetica,Arial,sans-serif;letter-spacing:3px;padding:9px 20px;border-radius:8px}}
 #fx{{position:absolute;inset:0;z-index:0;pointer-events:none}}
+#ovs{{position:absolute;left:0;top:0;z-index:4;pointer-events:none}} #tags{{position:absolute;left:0;right:0;top:0;z-index:5;pointer-events:none}}
+#tags .tg{{position:absolute;left:60px;right:60px;text-align:center;color:{st['hook']};opacity:0}}
+#tags .chip{{top:262px}} #tags .chip span{{display:inline-block;font:700 36px Menlo,Consolas,monospace;letter-spacing:4px;padding:16px 30px;border-radius:14px;border:2px solid currentColor;background:rgba(8,20,36,.55);backdrop-filter:blur(8px)}}
+#tags .cd{{top:262px;font:800 190px Helvetica,Arial,sans-serif;letter-spacing:-6px;line-height:1}} #tags .big{{top:250px;font:800 76px Helvetica,Arial,sans-serif;letter-spacing:-2px;line-height:1.05}}
 #timer{{position:absolute;top:120px;right:60px;font:600 30px Menlo,monospace;color:{st['hook2']};opacity:0;letter-spacing:1px}}
 #subs{{position:absolute;left:70px;right:70px;bottom:360px;text-align:center}} #subs span{{display:inline-block;color:#f7f2e6;font-size:46px;font-weight:700;line-height:1.16;letter-spacing:-.4px;padding:20px 38px 24px;border-radius:24px;background:linear-gradient(180deg,rgba(10,32,60,.80),rgba(6,20,40,.88));border:1.5px solid rgba(247,242,230,.30);box-shadow:0 16px 44px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(10px)}} #subs span::before{{content:'';display:block;width:64px;height:5px;border-radius:3px;background:{job.get('accent') or {'blue':'#6db8ff','green':'#58e0a4','gray':'#e8e8e8'}.get(job.get('fx') or '', '#f3ecd8')};margin:0 auto 14px}} #subs em{{font-style:normal;color:{job.get('accent') or {'blue':'#6db8ff','green':'#58e0a4','gray':'#e8e8e8'}.get(job.get('fx') or '', '#f3ecd8')}}}
 #e3{{top:1140px;opacity:0}} #e3 span{{display:inline-block;background:#fff;color:#141414;font-size:40px;font-weight:700;padding:24px 44px;border-radius:14px}}
@@ -53,7 +57,7 @@ svg{{position:absolute;left:0;top:0}} .t{{position:absolute;left:60px;right:60px
 {fx_html}<div id="spec">{('<span>' + job['spec'] + '</span>') if job.get('spec') else ''}</div><div class="t" id="hook">{job['hook']}</div><div class="t" id="sub">{job['sub']}</div>
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}"><defs><filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter></defs>
 <g id="cam" style="transform-origin:540px 960px">{''.join(layers_html)}{iso_html}</g></svg>
-<div id="timer">0:00</div><div id="subs"></div>
+<svg id="ovs" width="{W}" height="{H}" viewBox="0 0 {W} {H}"></svg><div id="tags"></div><div id="timer">0:00</div><div id="subs"></div>
 <div id="end"></div>
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}"><g transform="translate(435 470) scale(0.68)"><svg viewBox="-2.18 -2.45 309.7 309.7" width="309.7" height="309.7" overflow="visible">
 <path id="lfill" d="{LOGO_D}" fill="#fff" opacity="0"/><path id="link" d="{LOGO_D}" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/></svg></g></svg>
@@ -100,6 +104,18 @@ function along(pts,u){{ if(pts.length===1) return [pts[0][0],pts[0][1],0]; let L
   const T=L[L.length-1]*u; let i=1; while(i<L.length-1&&L[i]<T) i++; const a=pts[i-1],b=pts[i],seg=(L[i]-L[i-1])||1,k=cl((T-L[i-1])/seg,0,1);
   return [a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k, Math.atan2(b[1]-a[1],b[0]-a[0])]; }}
 function isoPt(x,y,z,m){{ const I=D.iso; const tx=I.X0+x*I.S, ty=I.Y0+y*I.S; const ix=I.ox+(x-y)*I.k*0.866, iy=I.oy+(x+y)*I.k*0.5-z*I.k; return [lerp(tx,ix,m), lerp(ty,iy,m)]; }}
+
+// overlays: rings, scan bars (with clip reveal), draw-on paths, labels  (screen coords)
+const NSV='http://www.w3.org/2000/svg', OVS=$('ovs'), OV=[];
+(D.ov||[]).forEach(o=>{{ const mk=(n,a)=>{{const e=document.createElementNS(NSV,n); for(const k in a) e.setAttribute(k,a[k]); OVS.appendChild(e); return e;}};
+  const col=o.col||ST.hook;
+  if(o.type==='ring'){{ o.e1=mk('circle',{{fill:'none',stroke:col,'stroke-width':5}}); o.e2=mk('circle',{{fill:'none',stroke:col,'stroke-width':3}}); o.e0=mk('circle',{{fill:col,'fill-opacity':0.10}}); }}
+  if(o.type==='scan'){{ o.tr=mk('rect',{{y:o.y0,height:o.y1-o.y0,fill:col,'fill-opacity':0.0}}); o.bar=mk('rect',{{y:o.y0-24,height:o.y1-o.y0+48,width:6,rx:3,fill:col}}); o.gl=mk('rect',{{y:o.y0-24,height:o.y1-o.y0+48,width:70,fill:col,'fill-opacity':0.18}});
+     if(o.clip){{ const cp=mk('clipPath',{{id:'cp_'+o.clip}}); o.cr=document.createElementNS(NSV,'rect'); o.cr.setAttribute('y',0); o.cr.setAttribute('height',{H}); cp.appendChild(o.cr); $(o.clip).setAttribute('clip-path','url(#cp_'+o.clip+')'); }} }}
+  if(o.type==='path'){{ o.e1=mk('path',{{d:o.d,fill:'none',stroke:col,'stroke-width':o.w||5,'stroke-linecap':'round'}}); o.L=o.e1.getTotalLength(); o.e1.style.strokeDasharray=o.L; o.e1.style.strokeDashoffset=o.L; }}
+  if(o.type==='label'){{ o.e1=mk('text',{{x:o.x,y:o.y,fill:col,'font-size':o.fs||28,'font-family':'Menlo,Consolas,monospace','font-weight':700,'text-anchor':o.anchor||'middle','letter-spacing':2}}); o.e1.textContent=o.text; }}
+}});
+const TG=(D.tags||[]).map(([a,b,html,kind])=>{{const d=document.createElement('div'); d.className='tg '+kind; d.innerHTML=kind==='chip'?'<span>'+html+'</span>':html; $('tags').appendChild(d); return {{a,b,d,kind}}; }});
 const FXC={fxc};
 window.setT=t=>{{
  const fx=$('fx'); if(fx){{ const a=t*0.42, b=t*0.31, br=0.5+0.5*Math.sin(t*1.6);
@@ -123,6 +139,19 @@ window.setT=t=>{{
    g.setAttribute('opacity',op);
    if(f.type==='top'){{ g.setAttribute('transform',`translate(${{px}} ${{py}}) rotate(${{ang*180/Math.PI+90}})`); }}
    else {{ const bob=(u>0&&u<1)?Math.abs(Math.sin(t*9))*f.s*0.12:0; g.setAttribute('transform',`translate(${{px}} ${{py-bob}}) scale(${{f.flip?-1:1}} 1)`); }} }});
+
+ for(const o of (D.ov||[])){{ const p=cl((t-o.t0)/(o.t1-o.t0),0,1), vis=(t>=o.t0&&t<=o.t1);
+  if(o.type==='ring'){{ const inn=cl((t-o.t0)/0.3,0,1), out=1-cl((t-(o.t1-0.3))/0.3,0,1), op=vis?Math.min(inn,out):0, pl=0.5+0.5*Math.sin((t-o.t0)*7), rr=o.r*(0.82+0.18*ease(inn))*(1+0.07*pl), rp=(((t-o.t0)*1.3)%1);
+    o.e1.setAttribute('cx',o.x);o.e1.setAttribute('cy',o.y);o.e1.setAttribute('r',rr);o.e1.style.opacity=op;
+    o.e0.setAttribute('cx',o.x);o.e0.setAttribute('cy',o.y);o.e0.setAttribute('r',rr);o.e0.style.opacity=op;
+    o.e2.setAttribute('cx',o.x);o.e2.setAttribute('cy',o.y);o.e2.setAttribute('r',o.r*(1+0.55*rp));o.e2.style.opacity=op*(1-rp)*0.8; }}
+  if(o.type==='scan'){{ const e=ease(p), x=lerp(o.x0,o.x1,e), op=(t>=o.t0-0.05&&t<=o.t1+0.5)?1-cl((t-o.t1)/0.5,0,1):0;
+    o.bar.setAttribute('x',x-3); o.bar.style.opacity=op; o.gl.setAttribute('x',x-70); o.gl.style.opacity=op; o.gl.setAttribute('width',70);
+    if(o.cr){{ o.cr.setAttribute('x',o.x0-1000); o.cr.setAttribute('width',(t<o.t0?0:(t>=o.t1?3000:(x-(o.x0-1000))))); }} }}
+  if(o.type==='path'){{ const q=ease(cl((t-o.t0)/(o.d1||0.6),0,1)), out=o.t1?1-cl((t-o.t1)/0.3,0,1):1; o.e1.style.strokeDashoffset=o.L*(1-q); o.e1.style.opacity=out; }}
+  if(o.type==='label'){{ o.e1.style.opacity=cl((t-o.t0)/0.3,0,1)*(o.t1?1-cl((t-o.t1)/0.3,0,1):1); }}
+ }}
+ for(const g of TG){{ const inn=cl((t-g.a)/0.22,0,1), out=1-cl((t-(g.b-0.18))/0.18,0,1), v=(t>=g.a&&t<g.b)?Math.min(inn,out):0; g.d.style.opacity=v; g.d.style.transform=`translateY(${{(1-ease(inn))*18}}px) scale(${{0.94+0.06*ease(inn)}})`; }}
  if(D.timer){{ const [a,b]=D.timer, tm=$('timer'); const sec=Math.floor(cl(t-a,0,b-a)); tm.textContent='0:'+String(sec).padStart(2,'0'); tm.style.opacity=cl((t-a)/0.3,0,1)*(1-cl((t-E)/0.4,0,1)); }}
  if(D.subs){{ let txt='',a0=0,b0=0; for(const [a,b,w] of D.subs){{ if(t>=a&&t<b){{ txt=w;a0=a;b0=b; break; }} }} const el=$('subs'); el.innerHTML=txt?`<span>${{txt}}</span>`:''; if(txt){{ const sp=el.firstChild, p=ease(cl((t-a0)/0.28,0,1)), q=cl((b0-t)/0.12,0,1); sp.style.opacity=Math.min(p,q); sp.style.transform=`translateY(${{(1-p)*22}}px) scale(${{0.96+0.04*p}})`; }} el.style.opacity=1-cl((t-E)/0.3,0,1); }}
  const pp=ease(cl((t-(E-3))/3,0,1)); $('cam').style.transform=`scale(${{1+0.03*pp}})`;
@@ -166,7 +195,8 @@ def fit_cam(svgs, margin=64, band=(470, 1290)):
         b = p.chromium.launch(); pg = b.new_page(viewport={'width': W, 'height': H})
         pg.set_content('<body style="margin:0"><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920">' + ''.join(svgs) + '</svg></body>')
         bb = pg.evaluate("(()=>{const g=[...document.querySelectorAll('#s > g')];let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const e of g){if(e.id.endsWith('tint')||e.id.endsWith('shade'))continue;const r=e.getBBox();if(r.width===0)continue;x0=Math.min(x0,r.x);y0=Math.min(y0,r.y);x1=Math.max(x1,r.x+r.width);y1=Math.max(y1,r.y+r.height);}return [x0,y0,x1,y1]})()")
+        gb = pg.evaluate("(()=>{const o={};for(const e of document.querySelectorAll('#s > g')){const r=e.getBBox();o[e.id]=[r.x,r.y,r.x+r.width,r.y+r.height]}return o})()")
         b.close()
     x0, y0, x1, y1 = bb; bw, bh = x1 - x0, y1 - y0
     sc = min((W - 2 * margin) / bw, (band[1] - band[0] - 2 * 10) / bh)
-    return dict(s=round(sc, 3), cx=round((x0 + x1) / 2, 1), cy=round((y0 + y1) / 2, 1), cam_y=(band[0] + band[1]) // 2, bbox=bb)
+    return dict(s=round(sc, 3), cx=round((x0 + x1) / 2, 1), cy=round((y0 + y1) / 2, 1), cam_y=(band[0] + band[1]) // 2, bbox=bb, groups=gb)
