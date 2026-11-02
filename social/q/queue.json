@@ -301,7 +301,7 @@
   "voice": null,
   "ai_label": false,
   "spec": "KITCHEN ISLAND AISLE",
-  "status": "approved"
+  "status": "posting"
  },
  {
   "name": "r1031_1223_rule_shower",
@@ -315,7 +315,7 @@
   "voice": null,
   "ai_label": false,
   "spec": "IN FRONT OF THE SHOWER",
-  "status": "approved"
+  "status": "posting"
  },
  {
   "name": "r1031_1223_rule_vanity",
@@ -344,7 +344,7 @@
   "voice": null,
   "ai_label": false,
   "spec": "TOILET CLEARANCE",
-  "status": "approved"
+  "status": "posting"
  },
  {
   "name": "r1031_1547_rule_island",
@@ -388,7 +388,7 @@
   "voice": null,
   "ai_label": false,
   "spec": "FRIDGE DOOR SWING",
-  "status": "approved"
+  "status": "posting"
  },
  {
   "name": "r1101_0841_draw_narrow",
@@ -683,6 +683,6 @@
   "voice": null,
   "ai_label": false,
   "spec": "HALLWAY WIDTH",
-  "status": "approved"
+  "status": "posting"
  }
 ]
