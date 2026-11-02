@@ -18,6 +18,18 @@ SR = 48000
 VOICE = '/home/claude/reels/voices/en-us-ryan-high.onnx'
 CACHE = pathlib.Path('/home/claude/reels/voices/cache'); CACHE.mkdir(parents=True, exist_ok=True)
 _v = None
+KDIR = '/home/claude/reels/kokoro'
+KVOICE = 'am_adam'
+SPEED = 1.0
+_k = None
+
+
+def _kokoro():
+    global _k
+    if _k is None:
+        from kokoro_onnx import Kokoro
+        _k = Kokoro(f'{KDIR}/kokoro-v1.0.onnx', f'{KDIR}/voices-v1.0.bin')
+    return _k
 
 LEN_SCALE = 1.00      # natural pace; slower read sounded laboured
 PAUSE = 0.24          # between lines of the script
@@ -43,24 +55,14 @@ def _tidy(a):
 
 
 def _line(text):
-    """One line of script. Piper splits it into sentences; we keep them together
-    with a natural beat between, instead of letting them butt up or drift apart."""
-    key = hashlib.sha1(f'{text}|{LEN_SCALE}|{SUB_PAUSE}'.encode()).hexdigest()[:16]
+    """One line of script, read by Kokoro (local, free). Whole line in one pass so
+    the sentence keeps its own rhythm."""
+    key = hashlib.sha1(f'kokoro|{KVOICE}|{SPEED}|{text}'.encode()).hexdigest()[:16]
     p = CACHE / f'{key}.npy'
     if p.exists():
         return np.load(p)
-    from piper import SynthesisConfig
-    cfg = SynthesisConfig(length_scale=LEN_SCALE, normalize_audio=True)
-    parts, rate = [], None
-    for ch in _voice().synthesize(text, syn_config=cfg):
-        rate = ch.sample_rate
-        parts.append(_tidy(np.asarray(ch.audio_float_array, dtype=np.float32)))
-    if not parts:
-        return np.zeros(0, dtype=np.float32)
-    gap = np.zeros(int(SUB_PAUSE * rate), dtype=np.float32)
-    a = parts[0]
-    for q in parts[1:]:
-        a = np.concatenate([a, gap, q])
+    a, rate = _kokoro().create(text, voice=KVOICE, speed=SPEED, lang='en-us')
+    a = _tidy(np.asarray(a, dtype=np.float32))
     if rate != SR:
         a = resample_poly(a, SR, rate)
     a = a.astype(np.float32)

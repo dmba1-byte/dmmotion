@@ -7,15 +7,20 @@ W, H, FPS = 1080, 1920, 30
 LOGO_D = re.search(r'<path d="([^"]+)"', open('/home/claude/logo/DM_logo_mark-black.svg').read()).group(1)
 
 STYLES = {
- 'light':     dict(bg='#ffffff', ink='#1f1f1f', sub='#8a8a8a', tint='#f1efe9', tint2='#e6e3dc', lawn='#eef0e8', road='#ecebe7', hook='#1f1f1f', hook2='#6b6b6b', wall='#f7f6f2', shadow='#000000'),
+ 'light':     dict(bg='#ffffff', ink='#1f1f1f', sub='#8a8a8a', tint='#f1efe9', tint2='#e6e3dc', lawn='#eef0e8', road='#ecebe7', hook='#1f1f1f', hook2='#6b6b6b', wall='#f7f6f2'),
  'blueprint': dict(bg='#0e2a47', ink='#eaf2ff', sub='#8fb0d6', tint='#12365a', tint2='#173f68', lawn='#113353', road='#0f2f4d', hook='#ffffff', hook2='#9fc0e6', wall='#1c4a78'),
  'dark':      dict(bg='#141414', ink='#f2f2f2', sub='#8c8c8c', tint='#1e1e1e', tint2='#272727', lawn='#1b1e1a', road='#1d1d1d', hook='#ffffff', hook2='#9a9a9a', wall='#2c2c2c'),
- 'bluewhite': dict(bg='#ffffff', ink='#1d4e89', sub='#7fa3cc', tint='#eef4fb', tint2='#dbe7f5', lawn='#eaf2fa', road='#eef2f7', hook='#1d4e89', hook2='#6b8fb8', wall='#ffffff', shadow='#1d4e89'),
- 'kraft':     dict(bg='#e8dbc2', ink='#3b2f24', sub='#8a7458', tint='#f2e9d6', tint2='#dccaa9', lawn='#ddd1b5', road='#d6c7a8', hook='#3b2f24', hook2='#7a6650', wall='#f6efe1', shadow='#3b2f24'),
- 'sketch':    dict(bg='#fbfaf6', ink='#3d3d3d', sub='#9a9a9a', tint='#f3f1ea', tint2='#e8e5dc', lawn='#eef0e6', road='#ecebe5', hook='#2b2b2b', hook2='#7b7b7b', wall='#ffffff', shadow='#3d3d3d', rough=True),
- 'studio':    dict(bg='#efe7e1', ink='#141414', sub='#9b9389', tint='#f7f2ee', tint2='#e8ded6', lawn='#e4e5d9', road='#e9e2db', hook='#141414', hook2='#6e665e', wall='#ffffff', shadow='#6b5c50', accent='#2d5ea8'),
- 'color':     dict(bg='#ffffff', ink='#1f2a36', sub='#8592a0', tint='#f4f4f2', tint2='#e7e9ec', lawn='#e9f2e3', road='#ecedef', hook='#1f2a36', hook2='#6b7684', wall='#ffffff', shadow='#1f2a36',
+ 'bluewhite': dict(bg='#ffffff', ink='#1d4e89', sub='#7fa3cc', tint='#eef4fb', tint2='#dbe7f5', lawn='#eaf2fa', road='#eef2f7', hook='#1d4e89', hook2='#6b8fb8', wall='#ffffff'),
+ 'kraft':     dict(bg='#e8dbc2', ink='#3b2f24', sub='#8a7458', tint='#f2e9d6', tint2='#dccaa9', lawn='#ddd1b5', road='#d6c7a8', hook='#3b2f24', hook2='#7a6650', wall='#f6efe1'),
+ 'sketch':    dict(bg='#fbfaf6', ink='#3d3d3d', sub='#9a9a9a', tint='#f3f1ea', tint2='#e8e5dc', lawn='#eef0e6', road='#ecebe5', hook='#2b2b2b', hook2='#7b7b7b', wall='#ffffff', rough=True),
+ 'color':     dict(bg='#ffffff', ink='#1f2a36', sub='#8592a0', tint='#f4f4f2', tint2='#e7e9ec', lawn='#e9f2e3', road='#ecedef', hook='#1f2a36', hook2='#6b7684', wall='#ffffff',
                    fills={'bed': '#e6eefa', 'bath': '#dff2ef', 'wic': '#eef0f2', 'living': '#fbefdc', 'kitchen': '#f9e4e0', 'dining': '#f2eafa', 'hall': '#f4f4f1', 'laundry': '#eaf1e1', 'pantry': '#f1f1ee', 'garage': '#ebebeb', 'foyer': '#f4f4f1'}),
+}
+
+FX = {
+ 'blue':  dict(c1='rgba(46,124,214,.62)', c2='rgba(22,80,160,.50)', c3='rgba(120,190,255,.18)', grid='rgba(160,200,255,.07)'),
+ 'green': dict(c1='rgba(44,180,120,.50)', c2='rgba(18,110,78,.46)', c3='rgba(140,240,190,.14)', grid='rgba(160,255,210,.06)'),
+ 'gray':  dict(c1='rgba(170,180,190,.30)', c2='rgba(90,100,112,.40)', c3='rgba(255,255,255,.10)', grid='rgba(255,255,255,.05)'),
 }
 
 def prefix_ids(svg, p):
@@ -31,6 +36,8 @@ def build_html(job):
     iso_html = '<g id="iso" style="opacity:0"></g>' if job.get('iso') else ''
     data = {k: job.get(k) for k in ('layers_meta', 'iso', 'end', 'tint_windows', 'hook_out', 'figs', 'timer', 'subs')}
     sched = job['sched']
+    fx_html = '<div id="fx"></div>' if job.get('fx') else ''
+    fxc = json.dumps(FX.get(job.get('fx') or 'blue'))
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
 html,body{{margin:0;width:{W}px;height:{H}px;background:{st['bg']};overflow:hidden;font-family:Helvetica,Arial,sans-serif}}
 svg{{position:absolute;left:0;top:0}} .t{{position:absolute;left:60px;right:60px;text-align:center}}
@@ -38,11 +45,12 @@ svg{{position:absolute;left:0;top:0}} .t{{position:absolute;left:60px;right:60px
 #end{{position:absolute;inset:0;background:#141414;opacity:0}}
 #e1{{top:820px;font-size:70px;font-weight:700;color:#fff;letter-spacing:-1px;opacity:0}} #e2{{top:930px;font-size:38px;color:#bdbdbd;opacity:0;line-height:1.35}}
 #spec{{position:absolute;left:0;right:0;top:{job.get('hook_top', 250) - 92}px;text-align:center}} #spec span{{display:inline-block;border:2.5px solid {st['hook']};color:{st['hook']};font:700 27px Helvetica,Arial,sans-serif;letter-spacing:3px;padding:9px 20px;border-radius:8px}}
+#fx{{position:absolute;inset:0;z-index:0;pointer-events:none}}
 #timer{{position:absolute;top:120px;right:60px;font:600 30px Menlo,monospace;color:{st['hook2']};opacity:0;letter-spacing:1px}}
 #subs{{position:absolute;left:90px;right:90px;top:{job.get('subs_top', 1420)}px;text-align:center}} #subs span{{display:inline-block;background:rgba(0,0,0,.72);color:#fff;font-size:40px;font-weight:700;line-height:1.3;padding:12px 22px;border-radius:12px}}
 #e3{{top:1140px;opacity:0}} #e3 span{{display:inline-block;background:#fff;color:#141414;font-size:40px;font-weight:700;padding:24px 44px;border-radius:14px}}
 </style></head><body>
-<div id="spec">{('<span>' + job['spec'] + '</span>') if job.get('spec') else ''}</div><div class="t" id="hook">{job['hook']}</div><div class="t" id="sub">{job['sub']}</div>
+{fx_html}<div id="spec">{('<span>' + job['spec'] + '</span>') if job.get('spec') else ''}</div><div class="t" id="hook">{job['hook']}</div><div class="t" id="sub">{job['sub']}</div>
 <svg width="{W}" height="{H}" viewBox="0 0 {W} {H}"><defs><filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter></defs>
 <g id="cam" style="transform-origin:540px 960px">{''.join(layers_html)}{iso_html}</g></svg>
 <div id="timer">0:00</div><div id="subs"></div>
@@ -92,7 +100,11 @@ function along(pts,u){{ if(pts.length===1) return [pts[0][0],pts[0][1],0]; let L
   const T=L[L.length-1]*u; let i=1; while(i<L.length-1&&L[i]<T) i++; const a=pts[i-1],b=pts[i],seg=(L[i]-L[i-1])||1,k=cl((T-L[i-1])/seg,0,1);
   return [a[0]+(b[0]-a[0])*k, a[1]+(b[1]-a[1])*k, Math.atan2(b[1]-a[1],b[0]-a[0])]; }}
 function isoPt(x,y,z,m){{ const I=D.iso; const tx=I.X0+x*I.S, ty=I.Y0+y*I.S; const ix=I.ox+(x-y)*I.k*0.866, iy=I.oy+(x+y)*I.k*0.5-z*I.k; return [lerp(tx,ix,m), lerp(ty,iy,m)]; }}
+const FXC={fxc};
 window.setT=t=>{{
+ const fx=$('fx'); if(fx){{ const a=t*0.42, b=t*0.31, br=0.5+0.5*Math.sin(t*1.6);
+  const x1=540+430*Math.sin(a), y1=520+260*Math.cos(a*0.8), x2=540+470*Math.cos(b+1.7), y2=1380+300*Math.sin(b), x3=540+300*Math.sin(a*1.3+2), y3=960+500*Math.cos(b*1.1);
+  fx.style.background=`radial-gradient(circle at ${{x3}}px ${{y3}}px,${{FXC.c3}},transparent 38%),radial-gradient(circle at ${{x1}}px ${{y1}}px,${{FXC.c1}},transparent ${{46+6*br}}%),radial-gradient(circle at ${{x2}}px ${{y2}}px,${{FXC.c2}},transparent 52%),linear-gradient(${{FXC.grid}} 1px,transparent 1px) 0 ${{(t*18)%54}}px/54px 54px,linear-gradient(90deg,${{FXC.grid}} 1px,transparent 1px) 0 0/54px 54px,radial-gradient(ellipse at 50% 50%,transparent 50%,rgba(0,0,0,.6) 100%)`; }}
  for(const it of items){{const p=cl((t-it.t0)/it.d,0,1); if(it.isT)it.el.style.opacity=p; else{{
   if(it.L>0)it.el.style.strokeDashoffset=it.L*(1-(it.seq?p:ease(p))); if(it.f)it.el.style.fillOpacity=it.fo*cl((t-it.t0-it.d*.6)/(it.d*.6),0,1)}}}}
  tints.forEach(o=>o.els.forEach(x=>x.style.opacity=cl((t-o.a)/(o.b-o.a),0,1)));
