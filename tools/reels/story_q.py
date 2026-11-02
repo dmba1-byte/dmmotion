@@ -2,29 +2,29 @@ import sys, zlib, re, pathlib, subprocess, json, numpy as np
 sys.path.insert(0, '/home/claude/reels')
 from gen import engine2, jobs as J, elevs as EV
 from gen.engine2 import STYLES, prefix_ids
-import vo, soundtrack
+import vo, soundtrack, scenes, compose
 
 SP = {
- 'farm': dict(kind='farmhouse', style='dark', fx='green', acc='#58e0a4', mode='scale',
-   hook='How big is<br>this house?', chip='NO SCALE', rings=['e_roof','e_openings','e_walls'], price='CLIPS FROM $450', cta='Send me your drawing',
-   lines=["How big is this house?", "Take three seconds.", "You can't tell. Nothing here gives it scale.", "Now watch.",
-          "A person. A door. A dimension. Now it's a home.", "I animate your drawings with that context built in. Clips start at four hundred fifty dollars.", "Send me your drawing."],
-   caps=["How big is<br>this house?", "Take three<br>seconds.", "You can't tell.<br>Nothing gives<br>it scale.", "Now watch.", "A person. A door.<br>A dimension.<br>Now it's a <em>home</em>.", "Clips start<br>at <em>$450</em>.", "Send me<br>your drawing."]),
- 'wt': dict(kind='saltbox', style='blueprint', fx='blue', acc='#6db8ff', mode='weights',
-   hook='Which line is<br>the roof?', chip='EVERY LINE: SAME WEIGHT', rings=['e_roof','e_openings','e_walls'], price='SIMPLE SHEETS · $30', cta='Line weights for $30',
-   lines=["Which line is the roof?", "You've got three seconds.", "You can't tell. Every line has the same weight.", "Now watch the profile.",
-          "Profile heavy. Detail light. Your eye finally knows where to land.", "Line weights to your spec. Simple sheets are thirty dollars.", "Message me your file."],
-   caps=["Which line<br>is the roof?", "You've got<br>three seconds.", "You can't tell.<br>Every line has the<br><em>same weight</em>.", "Now watch<br>the profile.", "Profile heavy.<br>Detail light.<br>Your eye <em>lands</em>.", "Simple sheets<br>are <em>$30</em>.", "Message me<br>your file."]),
- 'sun': dict(kind='craftsman', style='dark', fx='gray', acc='#e8e8e8', mode='light',
-   hook='What time of day<br>is this?', chip='NO LIGHT ON IT', rings=['e_roof','e_openings','e_walls'], price='CLIPS FROM $450', cta='Send me your drawing',
-   lines=["What time of day is this?", "Take three seconds.", "You can't tell. There's no light on it.", "Now let the sun in.",
-          "Shade. Depth. Now it's a place at four in the afternoon.", "I bring your drawings to life like this. Clips start at four hundred fifty dollars.", "Send me your drawing."],
-   caps=["What time<br>of day is this?", "Take three<br>seconds.", "You can't tell.<br>There's <em>no light</em><br>on it.", "Now let the<br>sun in.", "Shade. Depth.<br>Now it's a <em>place</em>.", "Clips start<br>at <em>$450</em>.", "Send me<br>your drawing."]),
- 'jury': dict(kind='cape', style='bluewhite', fx=None, acc='#1f5fae', mode='weights', split=True,
-   hook='Does this drawing<br>win the jury?', chip='LOOKS LIKE A CAD EXPORT', rings=['e_roof','e_openings','e_walls'], price='SIMPLE SHEETS · $30', cta='Line weights for $30',
-   lines=["Does this drawing win the jury?", "Take three seconds.", "The model is right. But it reads like a CAD export.", "Now watch it get a hand.",
-          "Profile. Detail. Hatch. Now it reads like a drawing.", "Line weights to your spec. Simple sheets are thirty dollars.", "Message me your file."],
-   caps=["Does this drawing<br>win the jury?", "Take three<br>seconds.", "The model is right.<br>It reads like a<br><em>CAD export</em>.", "Now watch it<br>get a hand.", "Profile. Detail. Hatch.<br>Now it reads like<br>a <em>drawing</em>.", "Simple sheets<br>are <em>$30</em>.", "Message me<br>your file."]),
+ 'farm': dict(kind='farmhouse', style='dark', fx='green', acc='#58e0a4', mode='scale', scene=('scroll','green',''),
+   hook='Would a client stop<br>for this drawing?', chip='FLAT = SCROLLED PAST', rings=['e_roof','e_openings','e_walls'], price='CLIPS FROM $450', cta='Send me your drawing',
+   lines=["Would a client stop for this drawing?", "Take three seconds.", "Probably not. A flat PDF looks like every other PDF.", "In a feed, the one that moves is the one that stops the thumb.",
+          "Now watch.", "A person. A door. A dimension. It moves, and it feels lived in.", "I animate your drawings like this. Clips start at four hundred fifty dollars.", "Send me your drawing."],
+   caps=["Would a client<br>stop for this<br>drawing?", "Take three<br>seconds.", "Probably not.<br>A flat PDF looks like<br>every other <em>PDF</em>.", "In a feed, the one<br>that <em>moves</em> stops<br>the thumb.", "Now watch.", "A person. A door.<br>A dimension.<br>It <em>moves</em>.", "Clips start<br>at <em>$450</em>.", "Send me<br>your drawing."]),
+ 'wt': dict(kind='saltbox', style='blueprint', fx='blue', acc='#6db8ff', mode='weights', scene=('desk','blue','2:07 AM'),
+   hook='Which part of this<br>house is closest?', chip='ALL LINES: SAME WEIGHT', rings=['e_roof','e_openings','e_walls'], price='SIMPLE SHEETS · $30', cta='Line weights for $30',
+   lines=["Which part of this house is closest to you?", "Take three seconds.", "You can't tell. Every line has the same weight.", "So at two a.m. you're still fixing it, line by line.",
+          "Now watch the profile.", "Heavy profile. Light detail. The closest edge finally comes forward.", "Line weights to your spec. Simple sheets are thirty dollars.", "Message me your file."],
+   caps=["Which part of this<br>house is closest<br>to you?", "Take three<br>seconds.", "You can't tell.<br>Every line has the<br><em>same weight</em>.", "So at 2 a.m.<br>you're still fixing it<br><em>line by line</em>.", "Now watch<br>the profile.", "Heavy profile.<br>Light detail.<br>The edge <em>comes forward</em>.", "Simple sheets<br>are <em>$30</em>.", "Message me<br>your file."]),
+ 'sun': dict(kind='craftsman', style='dark', fx='gray', acc='#e8e8e8', mode='light', scene=('sunarc','gray','SUN PATH'),
+   hook='Why does this drawing<br>feel flat?', chip='NO LIGHT ON IT', rings=['e_roof','e_openings','e_walls'], price='CLIPS FROM $450', cta='Send me your drawing',
+   lines=["Why does this drawing feel flat?", "Take three seconds.", "No light. No shade. Nothing pushes back.", "In real life, light moves across a building all day.",
+          "Now let the sun in.", "Shade. Depth. Now it's a place.", "I animate your drawings like this. Clips start at four hundred fifty dollars.", "Send me your drawing."],
+   caps=["Why does this<br>drawing feel flat?", "Take three<br>seconds.", "No light. No shade.<br>Nothing <em>pushes back</em>.", "In real life, light<br>moves across a<br>building <em>all day</em>.", "Now let the<br>sun in.", "Shade. Depth.<br>Now it's a <em>place</em>.", "Clips start<br>at <em>$450</em>.", "Send me<br>your drawing."]),
+ 'jury': dict(kind='cape', style='bluewhite', fx=None, acc='#1f5fae', mode='weights', split=True, scene=('jury','blue','THE REVIEW'),
+   hook='What does a jury<br>see first?', chip='NOTHING LEADS THE EYE', rings=['e_roof','e_openings','e_walls'], price='SIMPLE SHEETS · $30', cta='Line weights for $30',
+   lines=["What does a jury see first?", "Take three seconds.", "The model is right. But with every line the same weight, nothing leads the eye.", "A jury looks at many boards. Hierarchy decides which one gets read.",
+          "Now watch it get a hand.", "Profile. Detail. Hatch. Now the eye knows where to go.", "Line weights to your spec. Simple sheets are thirty dollars.", "Message me your file."],
+   caps=["What does a jury<br>see first?", "Take three<br>seconds.", "Every line the same<br>weight. <em>Nothing leads</em><br>the eye.", "A jury looks at<br>many boards.<br><em>Hierarchy</em> decides.", "Now watch it<br>get a hand.", "Profile. Detail. Hatch.<br>The eye knows<br>where to <em>go</em>.", "Simple sheets<br>are <em>$30</em>.", "Message me<br>your file."]),
 }
 key, name = sys.argv[1], sys.argv[2]
 c = SP[key]; st = STYLES[c['style']]
@@ -58,18 +58,18 @@ for i, g in enumerate(c['rings']):
     ov.append(dict(type='ring', x=cxs, y=cys, r=round(min(150, max(70, (x1 - x0) * S * 0.28)), 1), t0=round(starts[1] + 0.15 + i * (durs[1] / 3.2), 2), t1=round(starts[1] + 0.15 + (i + 1) * (durs[1] / 3.2) + 0.1, 2), col=col))
 x0, y0, x1, y1 = FC['bbox']; X0, X1, Y0, Y1 = sx(x0) - 10, sx(x1) + 10, sy(y0) - 14, sy(y1) + 14
 ov.append(dict(type='path', d=f'M{X0} {Y0} H{X1} V{Y1} H{X0} Z', t0=starts[2] + 0.2, t1=starts[3] - 0.05, d1=0.9, col=col, w=4))
-t0s, t1s = round(starts[3] + 0.25, 2), round(ends[4] - 0.3, 2)
+t0s, t1s = round(starts[4] + 0.25, 2), round(ends[5] - 0.3, 2)
 ov.append(dict(type='scan', t0=t0s, t1=t1s, x0=X0, x1=X1, y0=Y0, y1=Y1, col=col, clip='Le'))
 if c.get('split'):
-    ov.append(dict(type='label', x=round(X0 + 80), y=round(Y0 - 34), text='AFTER', t0=t0s + 0.6, t1=ends[4], col=col, fs=30))
-    ov.append(dict(type='label', x=round(X1 - 80), y=round(Y0 - 34), text='BEFORE', t0=t0s + 0.6, t1=ends[4], col=col, fs=30))
+    ov.append(dict(type='label', x=round(X0 + 80), y=round(Y0 - 34), text='AFTER', t0=t0s + 0.6, t1=ends[5], col=col, fs=30))
+    ov.append(dict(type='label', x=round(X1 - 80), y=round(Y0 - 34), text='BEFORE', t0=t0s + 0.6, t1=ends[5], col=col, fs=30))
 tags = [[starts[1] + durs[1] * i / 3, starts[1] + durs[1] * (i + 1) / 3, str(3 - i), 'cd'] for i in range(3)]
-tags += [[starts[2] + 0.1, ends[2] + 0.25, c['chip'], 'chip'], [starts[5] + 0.15, ends[5] + 0.3, c['price'], 'chip']]
+tags += [[starts[2] + 0.1, ends[2] + 0.25, c['chip'], 'chip'], [starts[6] + 0.15, ends[6] + 0.3, c['price'], 'chip']]
 subs = [[a, round(b + 0.12, 2), cap] for a, b, cap in zip(starts, ends, c['caps'])]
 job = dict(name=name, style=c['style'], hook=c['hook'], sub='', cta=c['cta'], end=E, sched=sched, subs=subs, tags=tags, ov=ov, accent=col,
            layers=[{'id': 'Lu', 'svg': usvg}, {'id': 'Le', 'svg': wsvg}],
            layers_meta=[{'id': 'Lu', 'cam': [[0, S, CX, CY]]}, {'id': 'Le', 'cam': [[0, S, CX, CY]]}], cam_y=CAMY,
-           tint_windows=tw, mood='warm', bpm=92, seed=seed, hook_out=starts[1] - 0.05, fx=c['fx'])
+           tint_windows=tw, mood='warm', bpm=92, seed=seed, hook_out=starts[1] - 0.5, fx=c['fx'])
 dur = E + 3.6
 audio = np.zeros(int((dur + 0.2) * vo.SR), dtype=np.float32)
 for a, s in zip(auds, starts):
@@ -79,6 +79,11 @@ engine2.render(job, str(out))
 wav = str(out / f'{name}_mix.wav')
 soundtrack.make(dur, draw=(0.4, E - 0.8), end=E, mood='warm', bpm=92, seed=seed, out=wav, pen=False, beat=True)
 vo.lay_under(wav, audio)
+final0 = str(out / f'{name}_voiced0.mp4')
 final = str(out / f'{name}_voiced.mp4')
-subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', str(out / f'{name}_silent.mp4'), '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', final], check=True)
+subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', str(out / f'{name}_silent.mp4'), '-i', wav, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', final0], check=True)
+import scenes, compose
+sk, sp, stag = c['scene']; sd = round(ends[3] - starts[3] + 0.25, 2)
+scp = scenes.render(sk, sd, sp, c['caps'][3], str(out / f'{name}_scene.mp4'), stag)
+compose.overlay(final0, [(scp, starts[3] - 0.05, sd)], final)
 print('FINAL', final, round(dur, 1), json.dumps(dict(starts=starts, ends=ends)))
