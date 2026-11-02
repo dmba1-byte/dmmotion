@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="DM Motion: short animated clips built from the Illustrator, SVG or PDF drawings you already have. Lines draw on, layers build. Charlotte, NC.">
-<meta property="og:title" content="DM Motion · Your drawing, in motion.">
-<meta property="og:description" content="Animated plans, elevations, diagrams and logos from your own vector files.">
+<meta name="description" content="DM Motion: clean, consistent line weights for architecture drawings from $30, and animated clips of your drawings from $450. Bundle both for $425. Charlotte, NC.">
+<meta property="og:title" content="DM Motion · Line weights done. Drawing in motion.">
+<meta property="og:description" content="Line weights from $30. Animated plans, elevations and diagrams from your own files. Both for $425.">
 <meta property="og:image" content="https://dmba1-byte.github.io/dmmotion/dm-logo.png">
 <link rel="icon" type="image/png" href="dm-logo.png">
-<title>DM Motion · Your drawing, in motion.</title>
+<title>DM Motion · Line weights done. Drawing in motion.</title>
 <style>
 /* Layout: one column, video-first; a motion studio's dark screening room, single theme by choice. */
 :root{
@@ -112,16 +112,133 @@ ol li b{font-weight:500}
 .bar .btn.small{margin-top:0}
 @media (max-width:640px){.bar-txt{display:none}.bar-in{justify-content:stretch}.bar .btn{flex:1;text-align:center}}
 @media (max-width:640px){.videos{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+/* Bands: the page is an extension of the reels: dark hero, blueprint blue, cream, back to dark. */
+.band{position:relative;overflow:hidden}
+.band .wrap{padding-block:56px}
+.band.hero{background:#141414}
+.band.hero .wrap{padding-top:32px;position:relative;z-index:1}
+.band.dark{background:#141414}
+.band.blue{--bg:#0c2745;--fg:#f3ecd8;--muted:#b9c8de;--panel:rgba(255,255,255,.07);--line:rgba(243,236,216,.3);background-color:#164a80;background-image:linear-gradient(rgba(243,236,216,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(243,236,216,.07) 1px,transparent 1px);background-size:32px 32px;color:var(--fg)}
+.band.cream{--bg:#f3ecd8;--fg:#14202e;--muted:#566170;--panel:#fbf6e8;--line:#d6c9a8;background:#f3ecd8;color:var(--fg);color-scheme:light}
+.band.blue,.band.cream{color-scheme:normal}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.band.hero .eyebrow{color:#9fb7d6}
+h2.big{font-size:clamp(28px,4.6vw,46px);line-height:1.06;letter-spacing:-.02em;text-transform:none;color:var(--fg);font-weight:500;margin:0 0 16px;text-wrap:balance}
+.story{font-size:18px;max-width:62ch;color:var(--muted);margin:0 0 28px}
+.band h3{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:500;margin:34px 0 12px}
+.herodraw{position:absolute;right:-4%;top:6%;width:min(56vw,620px);opacity:.22;pointer-events:none}
+.herodraw path{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 7s ease-in-out infinite}
+.herodraw path:nth-child(2){animation-delay:.6s}.herodraw path:nth-child(3){animation-delay:1.4s}.herodraw path:nth-child(4){animation-delay:2.4s}.herodraw path:nth-child(5){animation-delay:3s}
+@keyframes draw{0%{stroke-dashoffset:1}45%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:-1}}
+.lwgrid{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:center;margin:0 0 24px}
+.lwdemo{margin:0;background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:12px;padding:12px}
+.lwdemo svg{width:100%;display:block}
+.lwdemo figcaption{font-size:12.5px;color:var(--muted);margin-top:6px}
+.lwdemo .prof path{animation:lwP 9s ease-in-out infinite}
+.lwdemo .det path{animation:lwD 9s ease-in-out infinite}
+.lwdemo .hatch path{animation:lwH 9s ease-in-out infinite}
+@keyframes lwP{0%,28%{stroke-width:1.5}42%,90%{stroke-width:4.6}100%{stroke-width:1.5}}
+@keyframes lwD{0%,28%{stroke-width:1.5}42%,90%{stroke-width:2}100%{stroke-width:1.5}}
+@keyframes lwH{0%,28%{stroke-width:1.5}42%,90%{stroke-width:.5}100%{stroke-width:1.5}}
+.lwdemo text{font-family:var(--mono);font-size:11px;fill:#f3ecd8;stroke:none}
+.lwdemo .t1{animation:tA 9s infinite}.lwdemo .t2{animation:tB 9s infinite}
+@keyframes tA{0%,28%{opacity:1}36%,92%{opacity:0}100%{opacity:1}}
+@keyframes tB{0%,34%{opacity:0}44%,90%{opacity:1}100%{opacity:0}}
+.lwtiers{display:grid;gap:10px}
+.tier{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;display:grid;grid-template-columns:76px 1fr;column-gap:12px;align-items:baseline}
+.tier .price{font-family:var(--mono);font-size:24px;margin:0;grid-row:span 2}
+.tier .what{font-weight:500;margin:0}
+.tier p:last-child{margin:0;color:var(--muted);font-size:14px}
+.tiernote{font-size:13px;color:var(--muted);margin:2px 0 0}
+.send3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 22px}
+.send3 div{border-top:2px solid var(--fg);padding-top:10px;display:flex;flex-direction:column;gap:4px}
+.send3 b{font-weight:500}
+.send3 span{color:var(--muted);font-size:14px}
+.band .cta{margin:0 0 18px}
+.cmp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:0 0 6px}
+.cmpcol{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+.cmpcol.win{background:#14202e;color:#f3ecd8;border-color:#14202e;--bg:#f3ecd8;--fg:#f3ecd8;--muted:#b9c8de}
+.cmpname{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.cmpprice{font-size:34px;font-weight:500;margin:0 0 6px;letter-spacing:-.02em}
+.cmpcol p:last-of-type{margin:0;font-size:14px;color:var(--muted)}
+.band.cream .cmpcol.win .btn{background:#f3ecd8;color:#14202e;border-color:#f3ecd8}
+.nights{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.nights div{border-left:3px solid #1d5ea8;padding:2px 0 2px 14px;display:flex;flex-direction:column;gap:4px}
+.nights b{font-weight:500}.nights span{color:var(--muted);font-size:14px}
+.rv{transition:opacity .6s ease,transform .6s ease}
+.js .rv{opacity:0;transform:translateY(18px)}
+.js .rv.in{opacity:1;transform:none}
+.band.cream .btn.ghost{color:var(--fg)}
+.band.cream .btn{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.band.cream .btn.ghost{background:transparent;color:var(--fg)}
+.lwset{margin:14px 0}
+.lwin{display:grid;grid-template-columns:1fr 2fr;gap:18px}
+.lwset label.text{margin-bottom:8px}
+.lwset select{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--fg);font:inherit;font-size:14px;padding:9px 11px;width:100%;box-sizing:border-box}
+.lwset a{color:var(--fg)}
+.band.blue .offer,.band.blue .step2{border-color:var(--fg)}
+.band.cream .step2{border-color:var(--fg)}
+@media (max-width:760px){.lwgrid,.cmp,.nights,.send3,.lwin{grid-template-columns:1fr}.herodraw{width:90vw;opacity:.14}}
+@media (prefers-reduced-motion:reduce){.herodraw path{animation:none;stroke-dashoffset:0}.lwdemo *{animation:none!important}.js .rv{opacity:1;transform:none}}
 </style>
+<script>document.documentElement.className+=" js"</script>
 </head>
 <body>
-<div class="wrap">
-<header><img src="dm-logo.png" alt="DM"><div class="name">David Mba <span>· DM Motion</span></div><nav><a href="#examples">Examples</a><a href="#pricing">Pricing</a><a href="#start">Start a clip</a><a href="#faq">Questions</a></nav></header>
-
-<h1>Your drawing, in motion.</h1>
-<p class="lead">For builders and small architecture firms: a 10 to 30 second clip of your own plan, elevation or logo drawing itself, for listings, your website and social. Send the file you already have (AI, SVG, PDF or DXF; Revit and AutoCAD exports work). Every line is yours; the result is the same every time.</p>
-<div class="cta"><a class="btn" href="#start">Start a clip · 2-minute brief</a><a class="btn ghost" href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">Try it free: email your logo</a><span class="hint">Preview in five business days. Half to start, half when it's right.</span></div>
-
+<section class="band hero"><svg class="herodraw" viewBox="0 0 400 260" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><g fill="none" stroke="#f3ecd8" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path pathLength="1" d="M20 220H380"/><path pathLength="1" d="M90 220V110H310V220"/><path pathLength="1" d="M70 112L200 40L330 112"/><path pathLength="1" d="M120 140H170V190H120ZM230 140H280V190H230Z"/><path pathLength="1" d="M185 220V165H215V220"/></g></svg><div class="wrap">
+<header><img src="dm-logo.png" alt="DM"><div class="name">David Mba <span>· DM Motion</span></div><nav><a href="#lineweights">Line weights</a><a href="#bundle">Bundle</a><a href="#examples">Animation</a><a href="#start">Order</a><a href="#faq">Questions</a></nav></header>
+<p class="eyebrow">New: line weights from $30 · Animation from $450 · Both for $425</p>
+<h1>Line weights done.<br>Drawing in motion.</h1>
+<p class="lead">Send me your Rhino file, the scale and your line degrees. You get back clean, consistent line weights, exactly to spec, from $30. Then I animate the finished drawing into a clip for your portfolio, listing or site. Same look every time.</p>
+<div class="cta"><a class="btn" href="#start">Start an order · 2-minute brief</a><a class="btn ghost" href="#lineweights">See the line-weight service</a><span class="hint">Or try the free logo write-on: <a href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">email your logo</a>.</span></div>
+</div></section>
+<section class="band blue" id="lineweights"><div class="wrap">
+<p class="eyebrow rv">New · Line weights for architecture drawings</p>
+<h2 class="big rv">Stop spending your studio nights on line weights.</h2>
+<p class="story rv">It's the night before the pin-up. The design is solved. And you're still going drawing by drawing, nudging cut, profile and detail lines until they finally look like they belong together. That's technical work with a right answer. Send it to me and spend the night on the part only you can do: the design.</p>
+<div class="lwgrid">
+  <figure class="lwdemo rv"><svg viewBox="0 0 400 260" role="img" aria-label="An elevation whose lines start all the same weight, then snap to a clear hierarchy of profile, detail and hatch weights">
+    <g fill="none" stroke="#f3ecd8" stroke-linejoin="round" stroke-linecap="round">
+      <g class="hatch"><path d="M92 122H308"/><path d="M92 134H308"/><path d="M92 146H308"/><path d="M92 158H308"/><path d="M92 170H308"/><path d="M92 182H308"/><path d="M92 194H308"/><path d="M92 206H308"/><path d="M92 218H308"/></g>
+      <g class="det"><path d="M120 140H170V190H120ZM230 140H280V190H230Z"/><path d="M185 220V165H215V220"/><path d="M145 140V190M120 165H170M255 140V190M230 165H280"/></g>
+      <g class="prof"><path d="M20 220H380"/><path d="M90 220V110H310V220"/><path d="M70 112L200 40L330 112"/></g>
+    </g>
+    <text class="t1" x="200" y="248" text-anchor="middle">Before: every line the same</text>
+    <text class="t2" x="200" y="248" text-anchor="middle">After: profile · detail · hatch, to your degrees</text>
+  </svg><figcaption>Illustration of the idea: same geometry, a clear hierarchy of line weights.</figcaption></figure>
+  <div class="lwtiers rv">
+    <div class="tier"><p class="price">$30</p><p class="what">Simple</p><p>A single plan, section or elevation with light detail.</p></div>
+    <div class="tier"><p class="price">$60</p><p class="what">Standard</p><p>A typical sheet at studio scale with moderate detail.</p></div>
+    <div class="tier"><p class="price">$100</p><p class="what">Complex</p><p>Dense, large or multi-view sheets with heavy detail.</p></div>
+    <p class="tiernote">Priced by scale and detail. I confirm the tier and delivery date with you before work starts.</p>
+  </div>
+</div>
+<div class="send3">
+  <div class="rv"><b>1 · Your Rhino file</b><span>.3dm with your 2D linework on layers (Make2D output, curves or layouts).</span></div>
+  <div class="rv"><b>2 · Target scale</b><span>For example 1/8" = 1'-0" or 1:100. Output is built to that scale.</span></div>
+  <div class="rv"><b>3 · Your line degrees</b><span>Your weights for cut, profile, projection and hatch, or ask for my default set.</span></div>
+</div>
+<p class="cta"><a class="btn choose" data-product="lw" href="#start">Order line weights · from $30</a><a class="btn ghost choose" data-product="bundle" href="#start">Or add motion: bundle $425</a></p>
+<p class="fine">You choose the design and the weights; I do the technical line work to your spec. If your course restricts outside help on production work, don't order this for that submission. The order form asks you to confirm.</p>
+</div></section>
+<section class="band cream" id="bundle"><div class="wrap">
+<p class="eyebrow rv">Line + Motion bundle</p>
+<h2 class="big rv">Buying only the animation is paying more for less.</h2>
+<p class="story rv">The animation is built from the finished drawing, so the line weights should be right before it moves. Do both together: your line weights done to scale and spec, plus a 30-second animated clip of the same drawing, for less than the animation alone.</p>
+<div class="cmp">
+  <div class="cmpcol rv"><p class="cmpname">Animation alone</p><p class="cmpprice">$450</p><p>Animated clip of a drawing you've already finished.</p></div>
+  <div class="cmpcol rv"><p class="cmpname">Line weights alone</p><p class="cmpprice">$30–$100</p><p>Clean line weights to your scale and degrees.</p></div>
+  <div class="cmpcol win rv"><p class="cmpname">Line + Motion</p><p class="cmpprice">$425</p><p>Line weights (up to a $100 sheet) <b>and</b> the 30-second animated clip. Launch price. $212.50 to start, the rest before the clean files.</p><a class="btn small choose" data-product="bundle" href="#start">Order the bundle · $425</a></div>
+</div>
+<h3 class="rv">The nights this replaces</h3>
+<div class="nights">
+  <div class="rv"><b>Sunday, 11 p.m.</b><span>Final review is Monday. Four sheets, three line-weight schemes, none of them matching.</span></div>
+  <div class="rv"><b>Three days before the jury</b><span>The model is right. The drawing still looks like a CAD export.</span></div>
+  <div class="rv"><b>Portfolio week</b><span>Twelve drawings that all need the same look, and the same hour you don't have.</span></div>
+</div>
+<p class="fine">Scenarios, not testimonials. The bundle covers one drawing up to the Complex tier; larger sets are quoted. The MOTION code does not combine with line weights or the bundle.</p>
+</div></section>
+<section class="band dark" id="anim"><div class="wrap">
+<p class="eyebrow rv">Animation</p><h2 class="big rv">Then watch it draw itself.</h2>
 <figure class="feature" id="examples"><video src="floorplan.mp4" autoplay muted loop playsinline preload="auto"></video><figcaption>Floor plan build-up: walls, then openings, fixtures, labels, dimensions. 20 s, 1080p, from a single layered vector file.</figcaption></figure>
 
 <div class="videos">
@@ -131,7 +248,7 @@ ol li b{font-weight:500}
 
 <p class="mid"><a class="btn choose" data-product="clip" href="#start">Order a clip · $225 to start</a><span class="hint">Or scroll for prices, the brief and answers.</span></p>
 
-<h2 id="pricing">What it costs</h2>
+<h2 id="pricing">Animation: what it costs</h2>
 <div class="grid">
   <div class="card"><p class="price">Free</p><p class="what">Logo write-on, as a trial</p><p>Send your logo as AI, SVG or a clean PNG and get a 5-second write-on back, no charge, no obligation.</p><a class="btn small" href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">Email your logo</a></div>
   <div class="card"><p class="price">$450</p><p class="what">Animated plan, elevation or diagram</p><p>Up to 30 seconds from your vector or CAD file. Lines draw on, layers build, labels land. 1080p MP4, two rounds of notes. Preview in five business days. $225 to start, $225 when it's right.</p><a class="btn small choose" data-product="clip" href="#start">Order a clip · $225 to start</a></div>
@@ -151,6 +268,8 @@ ol li b{font-weight:500}
   <div class="card"><p class="price">$50</p><p class="what">Off per referral</p><p>Send a colleague my way; when they book a clip, $50 comes off your next one. No limit.</p><a class="btn small ghost" href="mailto:?subject=Animated%20clips%20from%20your%20drawings&body=Worth%20a%20look%3A%20https%3A%2F%2Fdmba1-byte.github.io%2Fdmmotion%2F">Send this page to a colleague</a></div>
 </div>
 
+</div></section>
+<section class="band blue"><div class="wrap">
 <h2>How it works</h2>
 <ol>
   <li><b>Day 0.</b> You send the brief, the file and half the fee. <span>A site plan that builds up from the lot line, an elevation that draws floor by floor, a diagram that reveals one system at a time. AI, SVG, PDF or DXF; from Revit or AutoCAD, export to DXF or PDF, or send the DWG.</span></li>
@@ -160,10 +279,14 @@ ol li b{font-weight:500}
 <p class="pay">Venmo <strong>@David-Mba-1</strong> · Cash App <strong>$Dmba04</strong> · <a href="https://www.paypal.com/qrcodes/p2pqrc/YC22N3RWSYA86">PayPal</a>. Email is answered within one business day.</p>
 
 
-<h2 id="start">Start a clip: tell me what should move</h2>
-<p class="brief-lead">Tick what fits. It writes the brief for you; send it with your file attached. Not sure? Leave the defaults and I'll take it from there. Just want the free logo write-on? Skip this and <a href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">email your logo</a>.</p>
+</div></section>
+<section class="band cream" id="startband"><div class="wrap">
+<h2 id="start">Start an order: tell me what you need</h2>
+<p class="brief-lead">Choose line weights, animation or the bundle, tick what fits. It writes the brief for you; send it with your file attached. Not sure? Leave the defaults and I'll take it from there. Just want the free logo write-on? Skip this and <a href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">email your logo</a>.</p>
 <form class="brief" id="brief" onsubmit="return false">
   <fieldset class="products"><legend>What you're ordering</legend>
+    <label><input type="radio" name="product" value="lw"> <span><b>Line weights</b> · $30 / $60 / $100 · paid up front</span></label>
+    <label><input type="radio" name="product" value="bundle"> <span><b>Line + Motion bundle</b> · $425 · $212.50 to start</span></label>
     <label><input type="radio" name="product" value="clip" checked> <span><b>Animated plan, elevation or diagram</b> · $450 · $225 to start</span></label>
     <label><input type="radio" name="product" value="logo"> <span><b>Logo package</b> · $200 · paid up front</span></label>
     <label><input type="radio" name="product" value="card"> <span><b>Three-clip card</b> · $1,100 · paid up front, this brief is clip one</span></label>
@@ -218,6 +341,21 @@ ol li b{font-weight:500}
       <label><input type="radio" name="end" value="Logo end card (+$20)"> End: my logo card (+$20)</label>
     </fieldset>
   </div>
+  <fieldset class="lwset"><legend>Line weights <span>(for line-weight and bundle orders)</span></legend>
+    <div class="lwin">
+      <div>
+        <label><input type="radio" name="lwtier" value="Simple · $30"> Simple · $30</label>
+        <label><input type="radio" name="lwtier" value="Standard · $60" checked> Standard · $60</label>
+        <label><input type="radio" name="lwtier" value="Complex · $100"> Complex · $100</label>
+      </div>
+      <div>
+        <label class="text">Target scale <input type="text" id="lwscale" placeholder="1/8&quot; = 1'-0&quot; or 1:100"></label>
+        <label class="text">Line degrees (cut / profile / projection / hatch) <input type="text" id="lwdeg" placeholder="Or leave blank for my default set"></label>
+        <label class="text">What it's for <select id="lwuse"><option>Studio or course submission</option><option>Competition or portfolio</option><option>Client or marketing drawing</option><option>Other (say in notes)</option></select></label>
+      </div>
+    </div>
+    <label class="gap"><input type="checkbox" id="ack"> <span>I confirm the drawing is mine (or my firm's) to send, and that if this is for a course I've checked that my school allows outside help on production work. I've read the <a href="#faq">questions</a> and accept that line weights are delivered as graphic files, not construction documents.</span></label>
+  </fieldset>
   <div class="brow">
     <label class="text">Your firm <input type="text" id="firm" placeholder="Firm name"></label>
     <label class="text">Code. Type MOTION for $50 off your first clip; no need to email first <input type="text" id="code" placeholder="MOTION"></label>
@@ -231,6 +369,7 @@ ol li b{font-weight:500}
   <pre class="preview" id="preview"></pre>
   <div class="step2"><p class="step2-head" id="step2head">Then send half to start</p><p id="step2text">Your clip starts the business day the brief, the file and the payment have all landed; the other half is due before the clean file. Need an invoice for your books? Say so in the notes and I'll send a PayPal invoice within a business day.</p><div class="paybtns"><a class="btn" id="paybtn" href="https://www.paypal.com/qrcodes/p2pqrc/YC22N3RWSYA86" target="_blank" rel="noopener">Pay $225 by card or PayPal</a></div><p class="payfine">Secure checkout by PayPal, paid to DM Motion. No PayPal account needed; enter <b id="payamt">$225</b> and put your firm name in the note. You get an emailed receipt.</p><p class="payalt">Or pay by app: Venmo <a href="https://venmo.com/u/David-Mba-1">@David-Mba-1</a> · Cash App <a href="https://cash.app/$Dmba04">$Dmba04</a></p></div>
 </form>
+</div></section>
 <script>
 (function(){
   var f=document.getElementById('brief'), pv=document.getElementById('preview'), mb=document.getElementById('mailbtn'), cb=document.getElementById('copybtn');
@@ -238,18 +377,14 @@ ol li b{font-weight:500}
   function build(){
     var moves=[].slice.call(f.querySelectorAll('input[name="move"]:checked')).map(function(e){return e.value});
     var firm=document.getElementById('firm').value.trim(), code=document.getElementById('code').value.trim(), notes=document.getElementById('notes').value.trim();
-    var lines=['DM Motion brief - '+quote(code).label+(firm?' - '+firm:''),'',
-      'Drawing: '+val('type'),
-      'What happens: '+(moves.length?moves.join('; '):'Lines draw on'),
-      'Build order: '+val('order'),
-      'Look: '+val('look'),
-      'Pace: '+val('pace')+', '+val('len'),
-      'Format: '+val('fmt'),
-      'Ending: '+val('end')];
-    var q=quote(code); lines.splice(2,0,'Ordering: '+q.label); lines.push('Total: $'+q.total+(q.note?' ('+q.note+')':'')+(q.upfront?' · Paid up front: $'+q.start:' · To start: $'+q.start+' · Balance before the clean file: $'+q.balance));
+    var prod=val('product'), q=quote(code), lwOn=(prod==='lw'||prod==='bundle');
+    var lines=['DM Motion brief - '+q.label+(firm?' - '+firm:''),'','Ordering: '+q.label];
+    if(lwOn){ lines.push('Line weights: '+val('lwtier'),'Target scale: '+(document.getElementById('lwscale').value.trim()||'(not given)'),'Line degrees: '+(document.getElementById('lwdeg').value.trim()||'(use your default set)'),'Use: '+document.getElementById('lwuse').value,'Terms confirmed: '+(document.getElementById('ack').checked?'yes':'NOT YET')); }
+    if(prod!=='lw'){ lines.push('Drawing: '+val('type'),'What happens: '+(moves.length?moves.join('; '):'Lines draw on'),'Build order: '+val('order'),'Look: '+val('look'),'Pace: '+val('pace')+', '+val('len'),'Format: '+val('fmt'),'Ending: '+val('end')); }
+    lines.push('Total: $'+q.total+(q.note?' ('+q.note+')':'')+(q.upfront?' · Paid up front: $'+q.start:' · To start: $'+q.start+' · Balance before the clean file: $'+q.balance));
     if(code) lines.push('Code: '+code);
     if(notes) lines.push('Notes: '+notes);
-    lines.push('','File attached: (attach your AI, SVG, PDF, DXF or DWG)');
+    lines.push('','File attached: '+(lwOn?'(attach your Rhino .3dm':'(attach your AI, SVG, PDF, DXF or DWG')+')');
     return lines.join('\n');
   }
   function money(n){return (n%1?n.toFixed(2):String(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',')}
@@ -257,7 +392,10 @@ ol li b{font-weight:500}
     var c=(code||'').toUpperCase().replace(/\s+/g,''); var motion=(c==='MOTION'||c==='MOTION50');
     var prod=val('product'); var fmt=val('fmt'); var add=0; if(fmt.indexOf('+$75')>-1) add+=75; if(val('end').indexOf('+$20')>-1) add+=20;
     var total, start, note='', label;
-    if(prod==='logo'){ total=200+add; start=total; label='Logo package'; }
+    if(prod==='lw'||prod==='bundle') add=(prod==='bundle')?add:0;
+    if(prod==='lw'){ var tv=val('lwtier'); total=tv.indexOf('$100')>-1?100:(tv.indexOf('$30')>-1?30:60); start=total; label='Line weights'; note='paid up front'; }
+    else if(prod==='bundle'){ total=425+add; start=total/2; label='Line + Motion bundle'; note='launch price'; }
+    else if(prod==='logo'){ total=200+add; start=total; label='Logo package'; }
     else if(prod==='card'){ total=1100+add; start=total; label='Three-clip card'; note='paid up front; add-ons priced per clip'; }
     else if(prod==='monthly'){ total=350+add; start=total; label='One clip a month'; note='first month; add-ons priced per clip'; }
     else { total=(motion?400:450)+add; start=total/2; label='Animated clip'; note=motion?'MOTION: $50 off, logo package included free':''; }
@@ -267,7 +405,8 @@ ol li b{font-weight:500}
     var t=build(); pv.textContent=t;
     var q=quote(document.getElementById('code').value); document.getElementById('step2head').textContent=q.upfront?'Then send $'+q.start:'Then send $'+q.start+' to start'; document.getElementById('paybtn').textContent='Pay $'+q.start+' by card or PayPal'; document.getElementById('payamt').textContent='$'+q.start; document.getElementById('step2text').textContent=(q.upfront?'Paid in full up front. Your order starts the business day the brief, the file and the payment have all landed.':'Your clip starts the business day the brief, the file and the payment have all landed; the other $'+q.balance+' is due before the clean file.')+' Need an invoice for your books? Say so in the notes and I\'ll send a PayPal invoice within a business day.';
     var firm=document.getElementById('firm').value.trim();
-    mb.href='mailto:dmba04@gmail.com?subject='+encodeURIComponent('DM Motion brief - '+quote(document.getElementById('code').value).label+(firm?' - '+firm:''))+'&body='+encodeURIComponent(t);
+    var need=((val('product')==='lw'||val('product')==='bundle')&&!document.getElementById('ack').checked); mb.style.opacity=need?'.45':''; mb.title=need?'Tick the confirmation box first':'';
+    mb.href=need?'#ack':'mailto:dmba04@gmail.com?subject='+encodeURIComponent('DM Motion brief - '+quote(document.getElementById('code').value).label+(firm?' - '+firm:''))+'&body='+encodeURIComponent(t);
   }
   f.addEventListener('change',function(e){
     if(e.target.name==='move'){var c=f.querySelectorAll('input[name="move"]:checked');if(c.length>3){e.target.checked=false}}
@@ -288,17 +427,24 @@ ol li b{font-weight:500}
   var hero=document.getElementById('examples'), formEl=document.getElementById('brief');
   function barState(){ var bar=document.getElementById('bar'); if(!bar) return; var past=window.scrollY>(hero?hero.offsetTop:400); var fr=formEl.getBoundingClientRect(); var inForm=fr.top<window.innerHeight && fr.bottom>0; bar.classList.toggle('show', past && !inForm); }
   window.addEventListener('scroll',barState,{passive:true}); window.addEventListener('resize',barState); window.addEventListener('load',barState);
+  var rv=[].slice.call(document.querySelectorAll('.rv'));
+  if('IntersectionObserver' in window){ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12}); rv.forEach(function(el){io.observe(el)}); } else { rv.forEach(function(el){el.classList.add('in')}); }
 })();
 </script>
+<section class="band dark"><div class="wrap">
+
 
 <h2 id="faq">Before you ask</h2>
 <div class="faq">
-  <details><summary>What file do you need?</summary><p>Illustrator (.ai), SVG, a vector PDF, or DXF. From Revit or AutoCAD, export to DXF or PDF, or send the DWG and I'll convert it. A JPG or PNG of a drawing isn't enough for a plan; it is enough for a clean logo.</p></details>
+  <details><summary>What do you need for line weights?</summary><p>A Rhino (.3dm) file with your 2D linework on layers (Make2D output, curves or layouts), the scale the drawing should be built to, and your line degrees for cut, profile, projection and hatch. No degrees? Ask for my default set. You get clean, consistent vector linework back to your scale and spec.</p></details>
+  <details><summary>Is the line-weight service OK for school work?</summary><p>The design, the thinking and the drawing stay yours; I do the technical line work to your specification. You are responsible for your school's rules on outside help. If your course restricts it on production work, don't order it for that submission. The order form asks you to confirm.</p></details>
+  <details><summary>Do you keep or reuse my Rhino file?</summary><p>No. I don't reuse or share client files. Your drawing stays yours.</p></details>
+  <details><summary>What file do you need for animation?</summary><p>Illustrator (.ai), SVG, a vector PDF, or DXF. From Revit or AutoCAD, export to DXF or PDF, or send the DWG and I'll convert it. A JPG or PNG of a drawing isn't enough for a plan; it is enough for a clean logo.</p></details>
   <details><summary>I only have a PDF. Does that work?</summary><p>If it came out of Revit, AutoCAD, Illustrator or a plotter, yes. If it's a scan or a photo, send the original drawing file instead.</p></details>
   <details><summary>How long does it take?</summary><p>Watermarked preview within five business days of the first payment. Clean file after two rounds of notes, usually within a week of the preview.</p></details>
   <details><summary>What if I want changes?</summary><p>Two rounds of notes are included. Send all notes in one reply each round. Changing the drawing itself after the first preview counts as a new file.</p></details>
   <details><summary>How do I pay?</summary><p>Venmo <strong>@David-Mba-1</strong>, Cash App <strong>$Dmba04</strong>, or PayPal. Half to start, half before the clean file. If your firm needs an invoice, say so and I'll send a PayPal invoice within a business day.</p></details>
-  <details><summary>Can I get a refund?</summary><p>Yes, before work starts: a full refund of the deposit if you change your mind within one business day, or if your file can't be used. After the watermarked preview, you can simply stop: the deposit covers the work done, you don't owe the balance, and the clean file isn't delivered. If the preview is late, you choose a full refund or $50 off. Once the clean file is delivered there are no refunds; that's what the two rounds of notes are for. Prepaid plans: unused clips refunded at the per-clip rate.</p></details>
+  <details><summary>Can I get a refund?</summary><p>Yes, before work starts: a full refund of the deposit if you change your mind within one business day, or if your file can't be used. After the watermarked preview, you can simply stop: the deposit covers the work done, you don't owe the balance, and the clean file isn't delivered. If the preview is late, you choose a full refund or $50 off. Once the clean file is delivered there are no refunds; that's what the two rounds of notes are for. Line weights: full refund before work starts, and corrections to match the degrees you specified are included. Prepaid plans: unused clips refunded at the per-clip rate.</p></details>
   <details><summary>Can I use the clip anywhere?</summary><p>Yes. It's yours: website, listings, social, presentations, ads. Your drawing stays yours too; I don't reuse client files.</p></details>
   <details><summary>Does it have sound?</summary><p>No. Clips are silent so you can add your own music or voiceover without a licensing problem.</p></details>
   <details><summary>Is it AI?</summary><p>The animation is built by software from your file, directed and reviewed by me. Nothing is generated: no line in the clip is invented. Same file in, same clip out.</p></details>
@@ -309,9 +455,9 @@ ol li b{font-weight:500}
 <div class="contact">
   <span>David Mba</span><span>980-677-1493</span><a href="mailto:dmba04@gmail.com">dmba04@gmail.com</a><a href="https://dmba1.myportfolio.com/work">dmba1.myportfolio.com</a>
 </div>
-<p class="fine">Add-ons: each extra 15 seconds $150; 4K delivery $75; vertical cut for social $75; logo end card $20. The MOTION offer applies once per firm and can't be combined with the three-clip card or the monthly plan. Clips are marketing material, not construction documents. Charlotte, NC.</p>
-</div>
-<div class="bar" id="bar"><div class="bar-in"><span class="bar-txt"><b>DM Motion</b> · from $450 · preview in 5 business days</span><a class="btn small choose" data-product="clip" href="#start">Order a clip</a><a class="btn small ghost" href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">Free logo</a></div></div>
+<p class="fine">Line weights: $30 simple, $60 standard, $100 complex, paid up front. Line + Motion bundle $425. Add-ons: each extra 15 seconds $150; 4K delivery $75; vertical cut for social $75; logo end card $20. The MOTION offer applies once per firm and can't be combined with the three-clip card, the monthly plan, line weights or the bundle. Clips and line-weight files are graphic deliverables, not construction documents. Charlotte, NC.</p>
+</div></section>
+<div class="bar" id="bar"><div class="bar-in"><span class="bar-txt"><b>DM Motion</b> · line weights from $30 · animation $450 · both $425</span><a class="btn small choose" data-product="bundle" href="#start">Order the bundle</a><a class="btn small ghost" href="mailto:dmba04@gmail.com?subject=Free%20logo%20write-on&body=My%20logo%20is%20attached.%0AFirm%3A%20%0AWebsite%3A%20">Free logo</a></div></div>
 
 </body>
 </html>
