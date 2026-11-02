@@ -352,8 +352,8 @@ const SH=[
 window.setT=t=>{{
  let si=0; for(let i=0;i<SH.length;i++) if(t>=SH[i].t) si=i;
  const s=SH[si], nxt=SH[si+1], span=(nxt?nxt.t:E)-s.t, pr=cl((t-s.t)/span,0,1);
- const k=s.k*(1+s.drift*ease(pr));
- const tx=540-s.cx*k, ty=s.ay-s.cy*k;
+ const k=Math.min(s.k*(1+s.drift*ease(pr)),1.0)*(1+0.03*ease(pr));  // composition rule: whole plan always in frame, centred
+ const tx=540-540*k, ty=s.ay-1000*k;
  $('cam').setAttribute('transform',`translate(${{tx.toFixed(1)}} ${{ty.toFixed(1)}}) scale(${{k.toFixed(4)}})`);
 
  // the plan lifts into 3D and turns — this is the thing being sold

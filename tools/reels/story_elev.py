@@ -9,8 +9,10 @@ seed = zlib.crc32(name.encode()) % 9999
 job, label = J.job_elev(name, seed, kind, style, 'Nobody reads<br>a flat elevation.', 'so watch this one build itself', 'Send me your drawing')
 ee = EV.LAST['e']; top = max([z for z, n in ee.levels] or [ee.Hmax])
 job['spec'] = f"{fmt_ft(ee.W)} WIDE · {fmt_ft(top)} TALL"
-job.update(mood='warm', bpm=92, seed=seed, hook_out=2.0, layers_meta=[{'id':'Le','cam':[[0,1.22,556,1100]]}])
+job.update(mood='warm', bpm=92, seed=seed, hook_out=2.0, cam_y=0)
 import os
+FC=engine2.fit_cam([job['layers'][0]['svg']], margin=84)
+job.update(cam_y=FC['cam_y'], layers_meta=[{'id':'Le','cam':[[0,FC['s']*0.97,FC['cx'],FC['cy']]]}]); print('FIT',FC)
 if os.environ.get('FX'): job['fx']=os.environ['FX']
 art = 'an' if label[0].lower() in 'aeiou' else 'a'
 MODE = sys.argv[4] if len(sys.argv) > 4 else 'nobody'

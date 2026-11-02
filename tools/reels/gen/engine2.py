@@ -34,7 +34,7 @@ def build_html(job):
         filt = ' filter="url(#rough)"' if st.get('rough') else ''
         layers_html.append(f'<g id="{L["id"]}" style="opacity:{L.get("op0", 1)}"><g id="{L["id"]}_cam"{filt}>{L["svg"]}</g></g>')
     iso_html = '<g id="iso" style="opacity:0"></g>' if job.get('iso') else ''
-    data = {k: job.get(k) for k in ('layers_meta', 'iso', 'end', 'tint_windows', 'hook_out', 'figs', 'timer', 'subs')}
+    data = {k: job.get(k) for k in ('layers_meta', 'iso', 'end', 'tint_windows', 'hook_out', 'figs', 'timer', 'subs', 'cam_y', 'accent')}
     sched = job['sched']
     fx_html = '<div id="fx"></div>' if job.get('fx') else ''
     fxc = json.dumps(FX.get(job.get('fx') or 'blue'))
@@ -47,7 +47,7 @@ svg{{position:absolute;left:0;top:0}} .t{{position:absolute;left:60px;right:60px
 #spec{{position:absolute;left:0;right:0;top:{job.get('hook_top', 250) - 92}px;text-align:center}} #spec span{{display:inline-block;border:2.5px solid {st['hook']};color:{st['hook']};font:700 27px Helvetica,Arial,sans-serif;letter-spacing:3px;padding:9px 20px;border-radius:8px}}
 #fx{{position:absolute;inset:0;z-index:0;pointer-events:none}}
 #timer{{position:absolute;top:120px;right:60px;font:600 30px Menlo,monospace;color:{st['hook2']};opacity:0;letter-spacing:1px}}
-#subs{{position:absolute;left:90px;right:90px;top:{job.get('subs_top', 1420)}px;text-align:center}} #subs span{{display:inline-block;background:rgba(0,0,0,.72);color:#fff;font-size:40px;font-weight:700;line-height:1.3;padding:12px 22px;border-radius:12px}}
+#subs{{position:absolute;left:70px;right:70px;bottom:360px;text-align:center}} #subs span{{display:inline-block;color:#f7f2e6;font-size:46px;font-weight:700;line-height:1.16;letter-spacing:-.4px;padding:20px 38px 24px;border-radius:24px;background:linear-gradient(180deg,rgba(10,32,60,.80),rgba(6,20,40,.88));border:1.5px solid rgba(247,242,230,.30);box-shadow:0 16px 44px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.12);backdrop-filter:blur(10px)}} #subs span::before{{content:'';display:block;width:64px;height:5px;border-radius:3px;background:{job.get('accent') or {'blue':'#6db8ff','green':'#58e0a4','gray':'#e8e8e8'}.get(job.get('fx') or '', '#f3ecd8')};margin:0 auto 14px}} #subs em{{font-style:normal;color:{job.get('accent') or {'blue':'#6db8ff','green':'#58e0a4','gray':'#e8e8e8'}.get(job.get('fx') or '', '#f3ecd8')}}}
 #e3{{top:1140px;opacity:0}} #e3 span{{display:inline-block;background:#fff;color:#141414;font-size:40px;font-weight:700;padding:24px 44px;border-radius:14px}}
 </style></head><body>
 {fx_html}<div id="spec">{('<span>' + job['spec'] + '</span>') if job.get('spec') else ''}</div><div class="t" id="hook">{job['hook']}</div><div class="t" id="sub">{job['sub']}</div>
@@ -110,7 +110,7 @@ window.setT=t=>{{
  tints.forEach(o=>o.els.forEach(x=>x.style.opacity=cl((t-o.a)/(o.b-o.a),0,1)));
  for(const L of (D.layers_meta||[])){{ const g=$(L.id); if(!g) continue;
    if(L.op){{ g.style.opacity=kf(L.op,t)[0]; }}
-   if(L.cam){{ const [s,cx,cy]=kf(L.cam,t); $(L.id+'_cam').setAttribute('transform',`translate(540 960) scale(${{s}}) translate(${{-cx}} ${{-cy}})`); }} }}
+   if(L.cam){{ const [s,cx,cy]=kf(L.cam,t); $(L.id+'_cam').setAttribute('transform',`translate(540 ${{D.cam_y||960}}) scale(${{s}}) translate(${{-cx}} ${{-cy}})`); }} }}
  if(ISO){{ const I=ISO.I; const m=ease(cl((t-I.tilt[0])/(I.tilt[1]-I.tilt[0]),0,1)); const h=ease(cl((t-I.rise[0])/(I.rise[1]-I.rise[0]),0,1))*I.H;
    $('iso').style.opacity=cl((t-I.tilt[0]+0.05)/0.25,0,1);
    ISO.floors.forEach(({{r,p}})=>{{ const [x,y,w,hh]=r; p.setAttribute('points',[[x,y],[x+w,y],[x+w,y+hh],[x,y+hh]].map(q=>isoPt(q[0],q[1],0,m).join(',')).join(' ')); }});
@@ -124,7 +124,7 @@ window.setT=t=>{{
    if(f.type==='top'){{ g.setAttribute('transform',`translate(${{px}} ${{py}}) rotate(${{ang*180/Math.PI+90}})`); }}
    else {{ const bob=(u>0&&u<1)?Math.abs(Math.sin(t*9))*f.s*0.12:0; g.setAttribute('transform',`translate(${{px}} ${{py-bob}}) scale(${{f.flip?-1:1}} 1)`); }} }});
  if(D.timer){{ const [a,b]=D.timer, tm=$('timer'); const sec=Math.floor(cl(t-a,0,b-a)); tm.textContent='0:'+String(sec).padStart(2,'0'); tm.style.opacity=cl((t-a)/0.3,0,1)*(1-cl((t-E)/0.4,0,1)); }}
- if(D.subs){{ let txt=''; for(const [a,b,w] of D.subs){{ if(t>=a&&t<b){{ txt=w; break; }} }} const el=$('subs'); el.innerHTML=txt?`<span>${{txt}}</span>`:''; el.style.opacity=1-cl((t-E)/0.3,0,1); }}
+ if(D.subs){{ let txt='',a0=0,b0=0; for(const [a,b,w] of D.subs){{ if(t>=a&&t<b){{ txt=w;a0=a;b0=b; break; }} }} const el=$('subs'); el.innerHTML=txt?`<span>${{txt}}</span>`:''; if(txt){{ const sp=el.firstChild, p=ease(cl((t-a0)/0.28,0,1)), q=cl((b0-t)/0.12,0,1); sp.style.opacity=Math.min(p,q); sp.style.transform=`translateY(${{(1-p)*22}}px) scale(${{0.96+0.04*p}})`; }} el.style.opacity=1-cl((t-E)/0.3,0,1); }}
  const pp=ease(cl((t-(E-3))/3,0,1)); $('cam').style.transform=`scale(${{1+0.03*pp}})`;
  const ho=D.hook_out?1-cl((t-D.hook_out)/0.4,0,1):1; $('hook').style.opacity=ho; $('spec').style.opacity=ho*(1-cl((t-(E-2.4))/.6,0,1)); $('sub').style.opacity=Math.min(ho,1-cl((t-(E-2.4))/.6,0,1));
  $('end').style.opacity=cl((t-E)/.6,0,1);
@@ -158,3 +158,15 @@ def render(job, outdir, stills=None):
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-i', wav, '-c:a', 'libmp3lame', '-b:a', '192k', str(out / f'{name}_music.mp3')], check=True)
     shutil.rmtree(fr); pathlib.Path(wav).unlink()
     return mp4
+
+
+def fit_cam(svgs, margin=64, band=(470, 1290)):
+    """Measure the drawing and return camera params that centre it, whole, inside the safe band."""
+    with sync_playwright() as p:
+        b = p.chromium.launch(); pg = b.new_page(viewport={'width': W, 'height': H})
+        pg.set_content('<body style="margin:0"><svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920">' + ''.join(svgs) + '</svg></body>')
+        bb = pg.evaluate("(()=>{const g=[...document.querySelectorAll('#s > g')];let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const e of g){if(e.id.endsWith('tint')||e.id.endsWith('shade'))continue;const r=e.getBBox();if(r.width===0)continue;x0=Math.min(x0,r.x);y0=Math.min(y0,r.y);x1=Math.max(x1,r.x+r.width);y1=Math.max(y1,r.y+r.height);}return [x0,y0,x1,y1]})()")
+        b.close()
+    x0, y0, x1, y1 = bb; bw, bh = x1 - x0, y1 - y0
+    sc = min((W - 2 * margin) / bw, (band[1] - band[0] - 2 * 10) / bh)
+    return dict(s=round(sc, 3), cx=round((x0 + x1) / 2, 1), cy=round((y0 + y1) / 2, 1), cam_y=(band[0] + band[1]) // 2, bbox=bb)
