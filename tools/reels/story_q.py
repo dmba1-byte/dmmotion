@@ -15,7 +15,7 @@ SP = {
    lines=["Which part of this house is closest to you?", "Take three seconds.", "You can't tell. Every line has the same weight.", "So at two a.m. you're still fixing it, line by line.",
           "Now watch the profile.", "Heavy profile. Light detail. The closest edge finally comes forward.", "Line weights to your spec. Simple sheets are thirty dollars.", "Message me your file."],
    caps=["Which part of this<br>house is closest<br>to you?", "Take three<br>seconds.", "You can't tell.<br>Every line has the<br><em>same weight</em>.", "So at 2 a.m.<br>you're still fixing it<br><em>line by line</em>.", "Now watch<br>the profile.", "Heavy profile.<br>Light detail.<br>The edge <em>comes forward</em>.", "Simple sheets<br>are <em>$30</em>.", "Message me<br>your file."]),
- 'sun': dict(kind='craftsman', style='dark', fx='gray', acc='#e8e8e8', mode='light', scene=('sunarc','gray','SUN PATH'),
+ 'sun': dict(kind='craftsman', style='dark', fx='gray', acc='#e8e8e8', mode='light', scene=('sunarc','gray',''),
    hook='Why does this drawing<br>feel flat?', chip='NO LIGHT ON IT', rings=['e_roof','e_openings','e_walls'], price='CLIPS FROM $450', cta='Send me your drawing',
    lines=["Why does this drawing feel flat?", "Take three seconds.", "No light. No shade. Nothing pushes back.", "In real life, light moves across a building all day.",
           "Now let the sun in.", "Shade. Depth. Now it's a place.", "I animate your drawings like this. Clips start at four hundred fifty dollars.", "Send me your drawing."],

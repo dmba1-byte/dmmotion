@@ -110,7 +110,7 @@ F.sunarc=()=>{
  const lit=E('polygon',{fill:P.ink,opacity:0},w);
  [[hx+40,gy-110],[hx+hw-110,gy-110]].forEach(p=>E('rect',{x:p[0],y:p[1],width:70,height:70,fill:'none',stroke:P.ink,'stroke-width':4},w));
  E('rect',{x:hx+hw/2-28,y:gy-100,width:56,height:100,fill:'none',stroke:P.ink,'stroke-width':4},w);
- const clk=E('text',{x:540,y:430,'text-anchor':'middle','font-size':120,'font-weight':800,fill:P.ink,'font-family':'Helvetica,Arial'},w);
+ const clk=E('text',{x:540,y:300,'text-anchor':'middle','font-size':84,'font-weight':800,fill:P.ink,'font-family':'Helvetica,Arial'},w);
  const arcp=E('path',{d:`M110 ${gy-60} A430 ${gy-420} 0 0 1 970 ${gy-60}`,fill:'none',stroke:P.ink,'stroke-opacity':.25,'stroke-width':3,'stroke-dasharray':'8 14'},w);
  upd=(t)=>{
   const u=ease(cl(t/DUR,0,1));const ang=Math.PI*(1-u);const sx=540+Math.cos(ang)*430,sy=(gy-60)-Math.sin(ang)*(gy-420)*0.95;
