@@ -670,5 +670,19 @@
   "status": "hold",
   "seed": 73147,
   "spec": "1,896 SQ FT · 3 BED · 2 BATH"
+ },
+ {
+  "name": "r1031_2230_rule_hallway",
+  "when_et": "2026-11-01T22:30:00",
+  "hook": "Two people can't pass in this hall",
+  "caption": "Two people can't pass in this hall 👀\nWould your plan pass this one? 👇\nWant your plan or elevation animated like this? Email it to dmba04@gmail.com and I'll send you pricing (the address is in our bio).\n\n36\" is the code minimum for a hallway — 42\" is the width that actually works. Source: Irc R311.6.\nAt 36\" two people turn sideways. At 42\" they don't. Original drawing, animated from vector linework. From $450.\n.\n#customhomes #homedesign #housedesign #houseplans #architecture #homebuilder #dreamhome",
+  "duration": 20.63,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_2230_rule_hallway.mp4",
+  "silent_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_2230_rule_hallway_silent.mp4",
+  "music_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1031_2230_rule_hallway_music.mp3",
+  "voice": null,
+  "ai_label": false,
+  "spec": "HALLWAY WIDTH",
+  "status": "approved"
  }
 ]
