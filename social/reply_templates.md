@@ -39,3 +39,10 @@ Send me the drawing you'd animate (PDF, CAD, Revit or Illustrator) and where you
 
 ## Plan realism rule (David, Nov 3)
 Every plan in a reel must read correctly to an architect: a door is drawn where the wall has its opening, the leaf and swing arc sit on that opening, and no furniture or fixture sits in the swing or blocks the path in or out. Check layouts against real references (ArchDaily, firm sites, Pinterest plans) before building.
+
+
+## Reel rules added Nov 3 (David)
+
+- Sound-off test: every reel must be fully understandable with no audio. Captions + visuals alone must carry the question, the real number, the right answer and why.
+- No blueprint-blue gradient theme (David deleted the grab-bar reel: glitchy, blue didn't look good). 3D walkthroughs stay cream/black like the line-weight reel (green and red used sparingly).
+- Line-weight reels perform best; make more of them.
