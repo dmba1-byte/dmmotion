@@ -818,7 +818,10 @@
   "voice": null,
   "ai_label": true,
   "spec": "ADA TURNING SPACE",
-  "status": "approved"
+  "status": "posted",
+  "posted_at": "2026-11-03T15:50:00Z",
+  "permalink": "https://www.instagram.com/reel/DfSOuc-Dy3t/",
+  "container_id": "18154809277501612"
  },
  {
   "name": "r1103_1223_lineweight_walk",
@@ -830,6 +833,9 @@
   "voice": "see lw.py SCRIPT",
   "ai_label": true,
   "spec": "LINE WEIGHT",
-  "status": "approved"
+  "status": "posted",
+  "posted_at": "2026-11-03T15:50:00Z",
+  "permalink": "https://www.instagram.com/reel/DfSOugilJY3/",
+  "container_id": "18154809292501612"
  }
 ]
