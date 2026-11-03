@@ -73,17 +73,19 @@ const mvK=t=>ss(P(t,T.turn+.35,1.1));
 const CHY=t=>lerp(3.75,2.15,mvK(t));
 const KEYS=[
  [0,6,5.5,13.8,-90,-90],
- [T.hunt,6,5.5,13.4,-90,-90],
- [T.reveal-.4,6,5.5,12.8,-90,-90],
- [T.reveal+.6,6,5.9,12.0,-90,-86],
- [T.stakes+1.6,6,8.4,8.2,-90,-48],
+ [T.hunt-.3,6,5.7,13.5,-90,-88],
+ [T.hunt+1.6,6,6.4,12.2,-90,-76],
+ [T.reveal-.4,6,7.2,10.2,-90,-60],
+ [T.reveal+.6,6,7.0,9.6,-90,-52],
+ [T.stakes+.2,6.4,8.6,7.2,-92,-38],
+ [T.stakes+1.8,6,9.6,6.0,-90,-26],
  [T.door-.4,6,10.4,5.0,-90,-12],
- [T.door+1.0,5.8,9.4,4.5,-90,-7],
- [T.turn-.5,7.7,6.2,4.65,-121,-13],
- [T.turn+1.6,7.4,5.4,4.6,-118,-17],
- [T.sell,7.0,5.6,5.0,-108,-20],
+ [T.door+1.0,5.4,9.4,4.5,-90,-7],
+ [T.turn-.5,4.9,7.4,4.7,-90,-12],
+ [T.turn+1.6,4.9,6.8,4.7,-90,-14],
+ [T.sell,5.2,7.0,5.0,-92,-18],
 ];
-const ORB={cx:6,cy:5.5,R:17,ph0:Math.atan2(22-5.5,18-6),w:0.2,z:12.5};
+const ORB={cx:6,cy:5.5,R:11.5,ph0:Math.atan2(22-5.5,18-6),w:0.2,z:9.5};
 function key(t){const K=KEYS; if(t<=K[0][0])return K[0].slice(1);
   for(let i=0;i<K.length-1;i++){ if(t<K[i+1][0]){const a=K[i],b=K[i+1],h=b[0]-a[0],u=(t-a[0])/h,pr=K[i-1]||a,nx=K[i+2]||b,out=[];
     for(let j=1;j<6;j++){const m0=((b[j]-pr[j])/Math.max(b[0]-pr[0],1e-3))*h,m1=((nx[j]-a[j])/Math.max(nx[0]-a[0],1e-3))*h,u2=u*u,u3=u2*u;
@@ -134,7 +136,7 @@ function boxR(cx,cy,w,d,z0,z1,ang,fill,o){const ca=Math.cos(ang),sa=Math.sin(ang
 /* ------------- frame ------------- */
 function setT(t){
   C=camAt(t); B=basis(C);
-  const rise=Math.max(0.03,eo(P(t,T.stakes-.4,1.8))), wh=WH*rise;
+  const rise=Math.max(0.03,eo(P(t,0.5,2.6))), wh=WH*rise;
   
   const redC='#c0392b', grnC='#1f9d63';
   let floorS='',decS='',labS='',F=[],overS='';
@@ -148,8 +150,8 @@ function setT(t){
       const L=Math.max(Math.hypot(f.c[1][0]-f.c[0][0],f.c[1][1]-f.c[0][1]),.01),H=Math.abs(f.c[3][2]-f.c[0][2]);
       F.push(...subdiv(f,Math.max(1,Math.round(L/2)),Math.max(1,Math.round(H/2))).map(q=>({...q,o:{wall:1}}))); } };
   mk(-WT,RW+WT,-WT,0,wh);                                   // north (sink wall)
-  mk(-WT,0,0,RD,wh); mk(RW,RW+WT,0,RD,wh);                  // west, east
   const nearH=wh*(1-0.9*ss(P(t,T.sell+.2,1.4)));
+  mk(-WT,0,0,RD,nearH); mk(RW,RW+WT,0,RD,nearH);                  // west, east
   mk(DX0-.6,DX0,RD+WT,RD+3.6,nearH); mk(DX1,DX1+.6,RD+WT,RD+3.6,nearH); mk(DX0-.6,DX1+.6,RD+3.6,RD+4.2,nearH);
   mk(-WT,DX0,RD,RD+WT,nearH); mk(DX1,RW+WT,RD,RD+WT,nearH); mk(DX0,DX1,RD,RD+WT,Math.max(nearH,DH*rise+.01),DH*rise);   // south either side of the door, header
   
@@ -163,7 +165,7 @@ function setT(t){
   F.push({n:[0,1,0],c:[[3.3,.03,3.6*rise],[5.9,.03,3.6*rise],[5.9,.03,6.6*rise],[3.3,.03,6.6*rise]],fill:'#cfe0f2',o:{bias:.8,thin:1}});
   // fridge, table (clear of the door swing and the path to the sink)
   F.push(...boxF(9.3,11.9,0.1,2.6,0,6.0*rise,'#d9d5c8',{furn:1}));
-  F.push(...boxF(5.0,8.0,6.6,8.6,0,2.5*rise,'#d6cdb9',{furn:1}));
+  F.push(...boxF(0.8,3.4,7.0,9.0,0,2.5*rise,'#d6cdb9',{furn:1}));
   // the sink run: counter slab at 36 in -> 34 in; cabinets at either side; the middle cabinet goes away
   const mv=mvK(t), chH=lerp(36,34,mv)/12, slab=.14, cabH=(chH-slab)*rise, midH=cabH*(1-ss(P(t,T.turn+.35,.9)));
   F.push(...boxF(1.0,3.1,0,CABD,0,cabH,'#c9bfa8',{furn:1}));
