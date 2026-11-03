@@ -29,6 +29,9 @@ def times(c, total):
 def build(c, total):
     T = times(c, total)
     html = HTML.replace('__DATA__', json.dumps(dict(T=T, dur=T['end'], caps=CAPS)))
+    import os
+    if os.environ.get('BP','1')=='1':
+        from gen import bp; html = bp.theme(html)
     return html, T['end'], T
 
 
@@ -72,13 +75,14 @@ const mvK=t=>ss(P(t,T.turn+.35,1.1));
 const AIS=t=>lerp(36,40,mvK(t))/12;            // aisle width in feet
 const KEYS=[
  [0,7,3.6,13.0,-90,-90],
- [T.hunt,7,3.6,12.6,-90,-90],
- [T.reveal-.4,7,3.6,12.0,-90,-90],
- [T.reveal+.6,7,3.8,11.2,-90,-86],
+ [T.hunt-.3,7,3.7,12.8,-90,-88],
+ [T.hunt+1.6,7,4.2,11.8,-90,-76],
+ [T.reveal-.4,7,5.2,9.8,-90,-62],
+ [T.reveal+.6,7.6,5.6,9.2,-100,-56],
  [T.stakes+1.6,9.5,3.9,7.6,-135,-52],
- [T.door-.4,13.6,3.5,5.4,-180,-22],
- [T.door+1.0,14.4,3.45,5.0,-180,-15],
- [T.turn-.5,13.2,3.45,5.0,-180,-17],
+ [T.door-.4,13.6,3.5,5.6,-180,-26],
+ [T.door+1.0,14.4,3.45,5.8,-180,-24],
+ [T.turn-.5,13.2,3.45,5.4,-180,-21],
  [T.turn+1.6,10.6,3.5,5.1,-178,-20],
  [T.sell,8.8,3.6,5.5,-165,-24],
 ];
@@ -133,7 +137,7 @@ function boxR(cx,cy,w,d,z0,z1,ang,fill,o){const ca=Math.cos(ang),sa=Math.sin(ang
 /* ------------- frame ------------- */
 function setT(t){
   C=camAt(t); B=basis(C);
-  const rise=Math.max(0.03,eo(P(t,T.stakes-.4,1.8))), wh=WH*rise;
+  const rise=Math.max(0.03,eo(P(t,0.5,2.6))), wh=WH*rise;
   
   const redC='#c0392b', grnC='#1f9d63';
   let floorS='',decS='',labS='',F=[],overS='';
@@ -150,7 +154,7 @@ function setT(t){
       F.push(...subdiv(f,Math.max(1,Math.round(L/2)),Math.max(1,Math.round(H/2))).map(q=>({...q,o:{wall:1}}))); } };
   const nearH=wh*(1-0.9*ss(P(t,T.sell+.2,1.4)));
   mk(-WT,RW+WT,-WT,0,wh);                                   // north
-  mk(-WT,0,0,RDt,wh);                                       // west
+  mk(-WT,0,0,RDt,nearH);                                    // west
   mk(-WT,RW+WT,RDt,RDt+WT,nearH);                           // south
   mk(RW,RW+WT,0,DY0,nearH); mk(RW,RW+WT,DY1,RDt,nearH); mk(RW,RW+WT,DY0,DY1,Math.max(nearH,DH*rise+.01),DH*rise);
   mk(RW+WT,RW+3.6,DY0-.6,DY0,nearH); mk(RW+WT,RW+3.6,DY1,DY1+.6,nearH); mk(RW+3.6,RW+4.2,DY0-.6,DY1+.6,nearH);
@@ -173,7 +177,7 @@ function setT(t){
     labS+=`<g opacity="${dA.toFixed(3)}">`+badge([6.2,(CABD+S0)/2,4.1],Math.round(ais*12)+'″',dC,46)+`</g>`; }
   if(t>T.reveal+1.2 && mv<.3) labS+=badge([6.2,(CABD+S0)/2,.8],'MIN 40″','#161616',34);
   // the seated person rolling down the aisle (faces west)
-  const chK=ss(P(t,T.door+.4,.6)); const px=lerp(10.5,4.5,ss(P(t,T.door+.6,5.0)))-mv*0;
+  const chK=ss(P(t,T.door+.4,.6)); const px=lerp(9.4,4.5,ss(P(t,T.door+.6,5.0)))-mv*0;
   if(chK>0){ const k=chK, cyA=(CABD+S0)/2, add=(lx,ly,w,d,z0,z1,fill)=>{F.push(...boxR(px+ly,cyA-lx,w,d,z0*k,z1*k,-Math.PI/2,fill,{thin:1}));};
     // local frame: boxR rotates by +90deg so local -y points west (-x)
     add(-1.05,0,.16,2.1,0,1.95,'#3d3d3d'); add(1.05,0,.16,2.1,0,1.95,'#3d3d3d');
