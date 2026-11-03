@@ -47,10 +47,11 @@ svg{position:absolute;left:0;top:0}
 #cta .b{margin-top:30px;font:900 56px Helvetica;letter-spacing:2px;color:#1f9d63;text-shadow:0 0 14px #f6f4ee}
 #cta .c{display:inline-block;margin-top:24px;font:800 30px Helvetica;background:#161616;color:#fff;border-radius:12px;padding:14px 28px}
 #ser{position:absolute;bottom:34px;left:0;width:1080px;text-align:center;font:800 22px Helvetica;letter-spacing:4px;color:#bbb5a4}
+#topfade{position:absolute;left:0;top:0;width:1080px;height:340px;background:linear-gradient(180deg,rgba(246,244,238,.94) 0,rgba(246,244,238,.82) 55%,rgba(246,244,238,0) 100%)}
 #vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 52%,rgba(0,0,0,0) 55%,rgba(20,20,20,.26) 100%)}
 #flash{position:absolute;inset:0;background:#c0392b;opacity:0}
 </style></head><body>
-<svg id="sv" width="1080" height="1920" viewBox="0 0 1080 1920"></svg><div id="vig"></div>
+<svg id="sv" width="1080" height="1920" viewBox="0 0 1080 1920"></svg><div id="vig"></div><div id="topfade"></div>
 <div id="tag"><span>KNEE CLEARANCE</span></div>
 <div class="ln" id="l0"></div><div class="ln" id="l1"></div><div class="ln red" id="l2"></div><div class="ln red" id="l3"></div>
 <div class="ln" id="l4"></div><div class="ln grn" id="l5"></div><div class="ln" id="l6"></div><div class="ln" id="l7"></div>
@@ -82,7 +83,7 @@ const KEYS=[
  [T.turn+1.6,7.4,5.4,4.6,-118,-17],
  [T.sell,7.0,5.6,5.0,-108,-20],
 ];
-const ORB={cx:6,cy:5.5,R:17,ph0:Math.atan2(22-5.5,18-6),w:0.12,z:12.5};
+const ORB={cx:6,cy:5.5,R:17,ph0:Math.atan2(22-5.5,18-6),w:0.2,z:12.5};
 function key(t){const K=KEYS; if(t<=K[0][0])return K[0].slice(1);
   for(let i=0;i<K.length-1;i++){ if(t<K[i+1][0]){const a=K[i],b=K[i+1],h=b[0]-a[0],u=(t-a[0])/h,pr=K[i-1]||a,nx=K[i+2]||b,out=[];
     for(let j=1;j<6;j++){const m0=((b[j]-pr[j])/Math.max(b[0]-pr[0],1e-3))*h,m1=((nx[j]-a[j])/Math.max(nx[0]-a[0],1e-3))*h,u2=u*u,u3=u2*u;

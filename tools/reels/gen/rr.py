@@ -48,10 +48,11 @@ svg{position:absolute;left:0;top:0}
 #cta .b{margin-top:30px;font:900 56px Helvetica;letter-spacing:2px;color:#1f9d63;text-shadow:0 0 14px #f6f4ee}
 #cta .c{display:inline-block;margin-top:24px;font:800 30px Helvetica;background:#161616;color:#fff;border-radius:12px;padding:14px 28px}
 #ser{position:absolute;bottom:34px;left:0;width:1080px;text-align:center;font:800 22px Helvetica;letter-spacing:4px;color:#bbb5a4}
+#topfade{position:absolute;left:0;top:0;width:1080px;height:340px;background:linear-gradient(180deg,rgba(246,244,238,.94) 0,rgba(246,244,238,.82) 55%,rgba(246,244,238,0) 100%)}
 #vig{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 52%,rgba(0,0,0,0) 55%,rgba(20,20,20,.26) 100%)}
 #flash{position:absolute;inset:0;background:#c0392b;opacity:0}
 </style></head><body>
-<svg id="sv" width="1080" height="1920" viewBox="0 0 1080 1920"></svg><div id="vig"></div>
+<svg id="sv" width="1080" height="1920" viewBox="0 0 1080 1920"></svg><div id="vig"></div><div id="topfade"></div>
 <div id="tag"><span>REACH RANGE</span></div>
 <div class="ln" id="l0"></div><div class="ln" id="l1"></div><div class="ln red" id="l2"></div><div class="ln red" id="l3"></div>
 <div class="ln" id="l4"></div><div class="ln grn" id="l5"></div><div class="ln" id="l6"></div><div class="ln" id="l7"></div>
@@ -64,7 +65,7 @@ const cl=(x,a,b)=>Math.max(a,Math.min(b,x)), P=(t,a,d)=>cl((t-a)/d,0,1);
 const eo=x=>1-Math.pow(1-x,3), ss=x=>x*x*(3-2*x), lerp=(a,b,k)=>a+(b-a)*k;
 const FOC=820, CYS=960, NEAR=0.25, WT=0.6, WH=8, RW=14, RD=12;
 const DX0=9, DX1=12, DH=6.8;            // door opening in the north wall, hinge at x=12, swings into the room
-const SWX=8.45, OUX=4.6, CHX=8.45, CHY=2.3;
+const SWX=8.45, OUX=4.6, CHX=8.45, CHY=2.35;
 D.caps.forEach((s,i)=>{$('l'+i).innerHTML=s;}); $('ser').textContent='REACH 01';
 const LT=[[T.setup+.02,T.hunt],[T.hunt+.06,T.reveal],[T.reveal+.06,T.stakes],[T.stakes+.06,T.door],[T.door+.08,T.turn],[T.turn+.07,T.sell],[T.sell+.1,T.cta],[T.cta,D.dur+.5]];
 const dot=(a,b)=>a[0]*b[0]+a[1]*b[1]+a[2]*b[2];
@@ -72,19 +73,20 @@ const FIX=ss(P(0,0,1));
 /* heights in feet: switch 54in -> 44in, outlet 12in -> 18in, moved at T.turn */
 const mvK=t=>ss(P(t,T.turn+.35,1.1)), swIn=t=>lerp(54,44,mvK(t)), ouIn=t=>lerp(12,18,mvK(t));
 const KEYS=[
- [0,7,6,14.4,-90,-90],
- [T.hunt,7,6,14.0,-90,-90],
- [T.reveal-.4,7,6,13.4,-90,-90],
- [T.reveal+.6,7,6.6,12.6,-90,-86],
- [T.stakes+1.6,7,9.6,8.8,-90,-48],
+ [0,7,6,14.6,-90,-90],
+ [T.hunt-.3,7,6.2,14.2,-90,-88],
+ [T.hunt+1.6,7,7.2,12.6,-90,-74],
+ [T.reveal-.4,7,8.8,10.0,-90,-58],
+ [T.reveal+.6,7,9.0,9.6,-90,-52],
+ [T.stakes+.2,7.7,10.6,6.8,-94,-32],
+ [T.stakes+1.8,7,10.9,6.0,-90,-26],
  [T.door-.4,7,11.7,5.2,-90,-12],
- [T.door+1.0,7.6,10.6,4.4,-90,-6],
- [T.door+2.5,11.4,5.8,5.0,-122,-10],
- [T.turn-.4,11.2,5.4,5.0,-121,-10],
- [T.turn+1.6,11.0,5.2,5.0,-119,-11],
- [T.sell,10.4,6.4,5.4,-110,-14],
+ [T.door+1.0,6.8,9.2,4.8,-90,-10],
+ [T.door+2.6,6.5,7.2,4.9,-90,-12],
+ [T.turn+1.8,6.5,7.0,5.0,-90,-13],
+ [T.sell,6.6,7.6,5.4,-92,-16],
 ];
-const ORB={cx:7,cy:6,R:19,ph0:Math.atan2(24-6,20-7),w:0.12,z:14};
+const ORB={cx:7,cy:6,R:19,ph0:Math.atan2(24-6,20-7),w:0.2,z:14};
 function key(t){const K=KEYS; if(t<=K[0][0])return K[0].slice(1);
   for(let i=0;i<K.length-1;i++){ if(t<K[i+1][0]){const a=K[i],b=K[i+1],h=b[0]-a[0],u=(t-a[0])/h,pr=K[i-1]||a,nx=K[i+2]||b,out=[];
     for(let j=1;j<6;j++){const m0=((b[j]-pr[j])/Math.max(b[0]-pr[0],1e-3))*h,m1=((nx[j]-a[j])/Math.max(nx[0]-a[0],1e-3))*h,u2=u*u,u3=u2*u;
@@ -135,7 +137,7 @@ function boxR(cx,cy,w,d,z0,z1,ang,fill,o){const ca=Math.cos(ang),sa=Math.sin(ang
 /* ------------- frame ------------- */
 function setT(t){
   C=camAt(t); B=basis(C);
-  const rise=Math.max(0.03,eo(P(t,T.stakes-.4,1.8))), wh=WH*rise;
+  const rise=Math.max(0.03,eo(P(t,0.5,2.6))), wh=WH*rise;
   const inRe=t>=T.reveal, okS=mvK(t)>.5, sw=swIn(t), ou=ouIn(t);
   const redC='#c0392b', grnC='#1f9d63', swC=sw<=48.01?grnC:redC, ouC=ou>=15?grnC:redC;
   let floorS='',decS='',labS='',F=[],overS='';
@@ -162,7 +164,7 @@ function setT(t){
   F.push(...boxF(DX0-.18,DX1+.18,-WT-.02,.02,DH*rise,DH*rise+.18,'#2b2b2b',{thin:1}));
   F.push(...boxF(DX1-.14,DX1,0.05,3.0,0,DH*rise,'#b79b74',{leaf:1}));
   // window on the west wall
-  F.push({n:[1,0,0],c:[[.03,4.0,3.2],[.03,8.0,3.2],[.03,8.0,6.4],[.03,4.0,6.4]],fill:'#cfe0f2',o:{bias:.8,thin:1}});
+  F.push({n:[1,0,0],c:[[.03,4.0,3.2*rise],[.03,8.0,3.2*rise],[.03,8.0,6.4*rise],[.03,4.0,6.4*rise]],fill:'#cfe0f2',o:{bias:.8,thin:1}});
   // furniture: sofa on the east wall, low table, all clear of the door swing and the path to the wall
   F.push(...boxF(11.3,13.8,4.6,10.6,0,2.4*rise,'#c9bfa8',{furn:1}));
   F.push(...boxF(4.6,7.4,6.6,8.6,0,1.4*rise,'#d6cdb9',{furn:1}));
@@ -182,18 +184,27 @@ function setT(t){
   if(t>T.reveal-.2){ labS+=badge([SWX,.1,sz+.75],Math.round(sw)+'″',swC,40)+badge([OUX,.1,oz+.75],Math.round(ou)+'″',ouC,40); }
   // the seated person at the wall, once we roll up
   const chK=ss(P(t,T.door+.4,.6)); let armS='';
-  if(chK>0){ const ang=0,k=chK, add=(lx,ly,w,d,z0,z1,fill)=>{F.push(...boxR(CHX+lx,CHY+ly,w,d,z0*k,z1*k,ang,fill,{thin:1}));};
-    add(-1.05,0,.16,2.1,0,1.95,'#3d3d3d'); add(1.05,0,.16,2.1,0,1.95,'#3d3d3d');
-    add(0,.1,1.9,2.4,1.2,1.45,'#2a5fa8'); add(0,.95,1.9,.18,1.2,2.8,'#2a5fa8'); add(0,-1.05,1.0,.7,.35,.65,'#555555');
-    add(0,.1,1.1,.85,1.45,3.2,'#6b7280'); add(0,.05,.62,.62,3.2,3.8,'#c9a27e');
-    // reaching arm: toward the switch (max reach 48 in), then the outlet
-    const tgtSwitch = t<T.turn+.2; const tx=tgtSwitch?SWX:OUX, tz=(tgtSwitch?sz:oz), hz=cl(tz,1.25,4.0);
-    const arm=ss(P(t,T.door+1.4,.8)), sh=[CHX+(tx-CHX)*.2,CHY-.15,3.35], hand=[tx,0.2,hz];
-    const hp=[lerp(sh[0],hand[0],arm),lerp(sh[1],hand[1],arm),lerp(sh[2],hand[2],arm)];
-    const miss=Math.abs(tz-hz)>0.02;
-    const a0=toCam(sh),a1=toCam(hp);
-    if(a0[2]>NEAR&&a1[2]>NEAR&&arm>0.02){ const w=cl(26*(8/a0[2]),8,40); armS=seg(sh,hp,'#c9a27e',w)+seg(sh,hp,'#a98462',w*.45);
-      if(miss&&arm>.95){ armS+=seg(hp,[tx,0.2,tz],redC,7,'12 9'); labS+=badge([tx+1.4,.1,(tz+hz)/2],Math.round(Math.abs(tz-hz)*12)+'″ SHORT',redC,34); } } }
+  const aA=ss(P(t,T.door+2.0,1.2)), bB=ss(P(t,T.turn+1.0,1.3)), px=SWX+(OUX-SWX)*(aA-bB), atOut=(aA-bB)>.5;
+  if(chK>0){ const k=chK, add=(lx,ly,w,d,z0,z1,fill)=>{F.push(...boxR(px+lx,CHY+ly,w,d,z0*k,z1*k,0,fill,{thin:1}));};
+    add(-1.05,0,.16,2.1,0,1.95,'#3d3d3d'); add(1.05,0,.16,2.1,0,1.95,'#3d3d3d');            // wheels
+    add(0,.1,1.9,2.2,1.2,1.4,'#2a5fa8'); add(0,.95,1.9,.16,1.2,2.8,'#2a5fa8'); add(0,-1.3,1.0,.6,.35,.55,'#555555'); // seat, back, footrest
+    add(0,.55,1.0,.5,1.4,3.0,'#5b6472');                                                      // torso
+    add(0,.55,.52,.5,3.05,3.6,'#c9a27e');                                                     // head
+    add(-.28,-.55,.38,1.2,1.4,1.8,'#3f4654'); add(.28,-.55,.38,1.2,1.4,1.8,'#3f4654');       // thighs
+    add(-.28,-1.1,.36,.4,.5,1.4,'#3f4654'); add(.28,-1.1,.36,.4,.5,1.4,'#3f4654');           // lower legs
+    // reaching arm: whichever plate is nearer; retracts while the chair rolls between them
+    const tx=atOut?OUX:SWX, tz=atOut?oz:sz, hz=cl(tz,1.25,4.0), side=(tx>=px)?1:-1;
+    const mvA=P(t,T.door+2.0,1.2), mvB=P(t,T.turn+1.0,1.3);
+    const rt=(mvA>0&&mvA<1)?Math.sin(Math.PI*mvA):((mvB>0&&mvB<1)?Math.sin(Math.PI*mvB):0);
+    const ext=ss(P(t,T.door+1.2,.9))*(1-rt);
+    const sh=[px+side*.5,CHY+.45,2.85], hand=[tx,0.25,hz];
+    const hp=[lerp(sh[0],hand[0],ext),lerp(sh[1],hand[1],ext),lerp(sh[2],hand[2],ext)];
+    const el=[lerp(sh[0],hp[0],.5),lerp(sh[1],hp[1],.5),lerp(sh[2],hp[2],.5)-.35*ext];
+    const miss=Math.abs(tz-hz)>0.02, a0=toCam(sh);
+    if(a0[2]>NEAR&&ext>0.03){ const w=cl(34*(8/a0[2]),9,48);
+      armS=seg(sh,el,'#8b6a4a',w+6)+seg(el,hp,'#8b6a4a',w*.85+6)+seg(sh,el,'#c9a27e',w)+seg(el,hp,'#c9a27e',w*.85);
+      {const q=toCam(hp); if(q[2]>NEAR){const c=scr(q), r=w*.55; armS+=`<circle cx="${c[0].toFixed(1)}" cy="${c[1].toFixed(1)}" r="${r.toFixed(1)}" fill="#d7b48f" stroke="#8b6a4a" stroke-width="4"/>`;}}
+      if(miss&&ext>.95){ armS+=seg(hp,[tx,0.25,tz],redC,7,'12 9'); labS+=badge([tx+(side>0?1.5:-1.5),.1,(tz+hz)/2],Math.round(Math.abs(tz-hz)*12)+'″ SHORT',redC,34); } } }
   // sort + draw
   const out=[];
   for(const f of F){const c0=f.c[0]; if(dot(f.n,[C.x-c0[0],C.y-c0[1],C.z-c0[2]])<=0)continue; const q=poly(f.c);if(!q)continue;
