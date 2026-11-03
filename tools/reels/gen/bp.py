@@ -15,6 +15,7 @@ def theme(h):
     h = h.replace('letter-spacing:2px;color:#1f9d63', 'letter-spacing:2px;color:#58e6a4')
     h = h.replace('background:#161616;color:#fff;border-radius:12px', 'background:#e8f3ff;color:#0a2a5e;border-radius:12px')
     h = h.replace('color:#666;opacity:0', 'color:#9fbbe0;opacity:0').replace('color:#bbb5a4', 'color:#7fa3d6')
+    h = h.replace('#flash{position:absolute;inset:0;background:#c0392b','#flash{position:absolute;inset:0;background:#9fcbff')
     h = h.replace('rgba(20,20,20,.26)', 'rgba(2,12,35,.45)')
     # strokes -> pale blueprint line
     h = h.replace("'#161616'", "'#cfe6ff'").replace('"#161616"', '"#cfe6ff"')
