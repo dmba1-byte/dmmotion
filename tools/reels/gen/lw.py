@@ -78,7 +78,7 @@ const DOORS=[{x0:3,x1:6,wall:'S'},{y0:5.2,y1:8.2,wall:'P'}];
 const WALLS=[ // x0,x1,y0,y1
  [-WT,HW+WT,-WT,0],[-WT,3,HD,HD+WT],[6,HW+WT,HD,HD+WT],[-WT,0,0,HD],[HW,HW+WT,0,HD],[10.7,11.3,0,5.2],[10.7,11.3,8.2,HD]];
 const FURN=[ // x0,x1,y0,y1,h,label
- [2,8.2,0.4,3.2,2.6,'SOFA'],[4.6,7.6,6,9,2.4,'TABLE'],[12.5,18.5,0.8,7.8,1.8,'BED'],[18.4,19.9,9,14,6.5,'WARDROBE']];
+ [2,8.2,0.4,3.2,2.6,'SOFA'],[4.6,7.6,6,9,2.4,'TABLE'],[14.6,19.6,0.4,6.8,1.8,'BED'],[18.4,19.9,9,14,6.5,'WARDROBE']];
 /* ------------- camera: keyframes with Hermite tangents ------------- */
 const KEYS=[
  [0,10,7,19.6,-90,-90],
@@ -149,7 +149,7 @@ function setT(t){
   for(let y=1;y<HD;y+=2) floorS+=seg([11.3,y,.01],[HW,y,.01],scol,SW);
   for(let x=12.3;x<HW;x+=2) floorS+=seg([x,0,.01],[x,HD,.01],scol,SW);
   // door swings (medium)
-  decS+=arc(3,HD,3,-Math.PI/2*0-Math.PI,-Math.PI/2,flat,FW)+seg([3,HD,.03],[3,HD-3,.03],flat,FW);
+  decS+=arc(3,HD,3,-Math.PI/2,0,flat,FW)+seg([3,HD,.03],[3,HD-3,.03],flat,FW);
   decS+=arc(11,5.2,3,0,Math.PI/2,flat,FW)+seg([11,5.2,.03],[14,5.2,.03],flat,FW);
   // walls: caps turn to solid poche as the weights go on; they rise into 3D after
   const pocheCol=wk<.02?'#fcfbf8':'rgb('+[0,1,2].map(()=>Math.round(lerp(252,22,wk))).join(',')+')';
@@ -172,7 +172,7 @@ function setT(t){
     F.push({n:[-1,0,0],c:[[HW-.04,4+e,3.4+e],[HW-.04,8-e,3.4+e],[HW-.04,8-e,6.6-e],[HW-.04,4+e,6.6-e]],fill:'#dbe6ef',o:{thin:1,bias:1.0}}); }
   // in-world tags while we walk the drawing
   const tg=ss(P(t,T.turn-.2,.6))*(1-ss(P(t,T.sell-.4,.5)));
-  if(tg>0){ labS+=`<g opacity="${tg.toFixed(3)}">`+badge([11,6.7,7.4],'HEAVY = CUT','#161616',34)+badge([15.5,4.3,2.7],'MEDIUM','#2a5fa8',34)+badge([6,3.0,0.3],'LIGHT','#6b6b60',34)+`</g>`; }
+  if(tg>0){ labS+=`<g opacity="${tg.toFixed(3)}">`+badge([11,6.7,7.4],'HEAVY = CUT','#161616',34)+badge([17,3.6,2.4],'MEDIUM','#2a5fa8',34)+badge([6,3.0,0.3],'LIGHT','#6b6b60',34)+`</g>`; }
   // sort + draw
   const out=[];
   for(const f of F){const c0=f.c[0]; if(dot(f.n,[C.x-c0[0],C.y-c0[1],C.z-c0[2]])<=0)continue; const q=poly(f.c);if(!q)continue;

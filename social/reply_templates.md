@@ -36,3 +36,6 @@ Send me the drawing you'd animate (PDF, CAD, Revit or Illustrator) and where you
 - Keep the free offers capped: about 5 free trials a week. If a request goes past that, say "I've filled this week's free spots. Next week, or I can quote the paid version now."
 - Track each request: date, which reel, which template, and whether it became a paid order. Cut the free offers back if almost none convert.
 - Reply by hand. Do not use auto-DM tools on this account.
+
+## Plan realism rule (David, Nov 3)
+Every plan in a reel must read correctly to an architect: a door is drawn where the wall has its opening, the leaf and swing arc sit on that opening, and no furniture or fixture sits in the swing or blocks the path in or out. Check layouts against real references (ArchDaily, firm sites, Pinterest plans) before building.
