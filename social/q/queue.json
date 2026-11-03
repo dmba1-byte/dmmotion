@@ -837,5 +837,19 @@
   "posted_at": "2026-11-03T15:50:00Z",
   "permalink": "https://www.instagram.com/reel/DfSOugilJY3/",
   "container_id": "18154809292501612"
+ },
+ {
+  "name": "r1103_1100_reach_range",
+  "when_et": "2026-11-03T11:02:00",
+  "hook": "Where would you put this light switch?",
+  "caption": "Where would you put the light switch? Reach range 15-48 in",
+  "duration": 36.1,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_1100_reach_range.mp4",
+  "ai_label": true,
+  "spec": "REACH RANGE",
+  "status": "posted",
+  "posted_at": "2026-11-03T16:02:00Z",
+  "permalink": "https://www.instagram.com/reel/DfSRSX6krSq/",
+  "container_id": "18154816333501612"
  }
 ]
