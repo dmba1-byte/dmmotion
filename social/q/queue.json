@@ -807,5 +807,17 @@
   "container_id": "18154520776501612",
   "posted_at": "2026-11-02T19:19:40Z",
   "permalink": "https://www.instagram.com/reel/DfQBZsUD6Kv/"
+ },
+ {
+  "name": "r1103_0841_rule_adaturn",
+  "when_et": "2026-11-03T08:41:00",
+  "hook": "A wheelchair can't turn around in here",
+  "caption": "Can a wheelchair turn around in this bathroom? \ud83d\udc40 Take three seconds.\nThe clear space here is 48 inches. ADA wants a 60 inch turning circle.\nWant your plan checked or animated like this? Comment MOTION and I'll send you the details.\n.\n#architecture #ada #accessibledesign #buildingcode #floorplan #architecturestudent #interiordesign",
+  "duration": 23.47,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_0841_rule_adaturn.mp4",
+  "voice": null,
+  "ai_label": true,
+  "spec": "ADA TURNING SPACE",
+  "status": "approved"
  }
 ]
