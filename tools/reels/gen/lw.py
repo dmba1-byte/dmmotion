@@ -118,14 +118,14 @@ const poly=pts=>{const q=clipNear(pts.map(toCam));return q.length<3?null:q.map(s
 const pts2=q=>q.map(v=>v[0].toFixed(1)+','+v[1].toFixed(1)).join(' ');
 function col(hex,f,dist){const n=parseInt(hex.slice(1),16);let r=((n>>16)&255)*f,g=((n>>8)&255)*f,b=(n&255)*f;const fog=cl((dist-10)/34,0,0.5);
   r+=(246-r)*fog;g+=(244-g)*fog;b+=(238-b)*fog;return 'rgb('+[r,g,b].map(v=>Math.round(cl(v,0,255))).join(',')+')';}
-function boxF(x0,x1,y0,y1,z0,z1,fill,o={}){const F=[],add=(n,c)=>F.push({n,c,fill,o});
+function boxF(x0,x1,y0,y1,z0,z1,fill,o={}){const F=[],add=(n,c)=>F.push({n,c,fill,o,bx:[x0,x1,y0,y1,z0,z1]});
   add([0,0,1],[[x0,y0,z1],[x1,y0,z1],[x1,y1,z1],[x0,y1,z1]]);
   if(z1-z0>0.03){add([1,0,0],[[x1,y0,z0],[x1,y1,z0],[x1,y1,z1],[x1,y0,z1]]);add([-1,0,0],[[x0,y0,z0],[x0,y1,z0],[x0,y1,z1],[x0,y0,z1]]);
     add([0,1,0],[[x0,y1,z0],[x1,y1,z0],[x1,y1,z1],[x0,y1,z1]]);add([0,-1,0],[[x0,y0,z0],[x1,y0,z0],[x1,y0,z1],[x0,y0,z1]]);}
   return F;}
 function subdiv(f,nu,nv){const [a,b,c,d]=f.c,out=[],L=(p,q,k)=>[lerp(p[0],q[0],k),lerp(p[1],q[1],k),lerp(p[2],q[2],k)];
   for(let i=0;i<nu;i++)for(let j=0;j<nv;j++){const u0=i/nu,u1=(i+1)/nu,v0=j/nv,v1=(j+1)/nv;
-    out.push({n:f.n,c:[L(L(a,b,u0),L(d,c,u0),v0),L(L(a,b,u1),L(d,c,u1),v0),L(L(a,b,u1),L(d,c,u1),v1),L(L(a,b,u0),L(d,c,u0),v1)],fill:f.fill,o:f.o});}return out;}
+    out.push({n:f.n,c:[L(L(a,b,u0),L(d,c,u0),v0),L(L(a,b,u1),L(d,c,u1),v0),L(L(a,b,u1),L(d,c,u1),v1),L(L(a,b,u0),L(d,c,u0),v1)],fill:f.fill,o:f.o,bx:f.bx});}return out;}
 const shadeOf=n=>n[2]>0?1.0:0.82+0.10*n[0]-0.06*n[1];
 function seg(A,Bp,color,w,dash){let q=[toCam(A),toCam(Bp)];if(q[0][2]<NEAR&&q[1][2]<NEAR)return '';
   if(q[0][2]<NEAR){const k=(NEAR-q[0][2])/(q[1][2]-q[0][2]);q[0]=[lerp(q[0][0],q[1][0],k),lerp(q[0][1],q[1][1],k),NEAR];}
@@ -136,6 +136,30 @@ function badge(p3,txt,color,size){const q=toCam(p3);if(q[2]<NEAR)return '';let s
   if(s[0]<-60||s[0]>1140||s[1]<250||s[1]>1700)return '';s=[cl(s[0],w/2+50,1030-w/2),cl(s[1],300,1650)];
   return `<g><rect x="${(s[0]-w/2).toFixed(1)}" y="${(s[1]-h/2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="12" fill="#fff" stroke="${color}" stroke-width="5"/><text x="${s[0].toFixed(1)}" y="${(s[1]+fs*0.36).toFixed(1)}" text-anchor="middle" font-family="Helvetica" font-weight="900" font-size="${fs.toFixed(1)}" fill="${color}">${txt}</text></g>`;}
 /* ------------- frame ------------- */
+
+function bxOf(f){ if(f.bx) return f.bx; const mn=[1e9,1e9,1e9],mx=[-1e9,-1e9,-1e9]; for(const p of f.c) for(let k=0;k<3;k++){mn[k]=Math.min(mn[k],p[k]);mx[k]=Math.max(mx[k],p[k]);} return [mn[0],mx[0],mn[1],mx[1],mn[2],mx[2]]; }
+function sortOut(out){
+  const gm=new Map();
+  out.forEach((o,i)=>{const f=o.f,k=f.bx?f.bx.map(v=>v.toFixed(3)).join(','):'u'+i; let g=gm.get(k); if(!g){g={b:bxOf(f),items:[],d:0};gm.set(k,g);} g.items.push(o);});
+  const G=[...gm.values()], n=G.length, adj=G.map(()=>[]), indeg=new Array(n).fill(0), cam=[C.x,C.y,C.z], E=1e-4;
+  for(const g of G){ g.items.sort((a,b)=>b.dist-a.dist); g.d=g.items[0].dist; }
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+    const a=G[i].b,b=G[j].b; let rel=0,sep=false;
+    for(let ax=0;ax<3&&!rel;ax++){
+      const a0=a[ax*2],a1=a[ax*2+1],b0=b[ax*2],b1=b[ax*2+1];
+      if(a1<=b0+E){ sep=true; if(cam[ax]>=b0-E) rel=-1; else if(cam[ax]<=a1+E) rel=1; }
+      else if(b1<=a0+E){ sep=true; if(cam[ax]>=a0-E) rel=1; else if(cam[ax]<=b1+E) rel=-1; }
+    }
+    if(!rel&&!sep) rel=G[i].d>=G[j].d?-1:1;
+    if(rel===-1){adj[i].push(j);indeg[j]++;} else if(rel===1){adj[j].push(i);indeg[i]++;}
+  }
+  const done=new Array(n).fill(false), res=[];
+  for(let c=0;c<n;c++){ let best=-1;
+    for(let i=0;i<n;i++) if(!done[i]&&indeg[i]===0&&(best<0||G[i].d>G[best].d)) best=i;
+    if(best<0) for(let i=0;i<n;i++) if(!done[i]&&(best<0||G[i].d>G[best].d)) best=i;
+    done[best]=true; res.push(...G[best].items); for(const j of adj[best]) indeg[j]--; }
+  return res;
+}
 function setT(t){
   C=camAt(t); B=basis(C);
   const wk=ss(P(t,T.reveal,1.4));                   // 0 = every line the same, 1 = weighted
@@ -178,7 +202,7 @@ function setT(t){
   for(const f of F){const c0=f.c[0]; if(dot(f.n,[C.x-c0[0],C.y-c0[1],C.z-c0[2]])<=0)continue; const q=poly(f.c);if(!q)continue;
     const cx=f.c.reduce((s,p)=>s+p[0],0)/f.c.length,cy=f.c.reduce((s,p)=>s+p[1],0)/f.c.length,cz=f.c.reduce((s,p)=>s+p[2],0)/f.c.length;
     out.push({q,dist:Math.hypot(cx-C.x,cy-C.y,cz-C.z)-((f.o&&f.o.bias)||0),f}); }
-  out.sort((a,b)=>b.dist-a.dist);
+  out.splice(0,out.length,...sortOut(out));
   let body='';
   for(const {q,dist,f} of out){ const o=f.o||{}; let fill,stroke,sw;
     if(o.poche){ const k=cl((wk*1.5)-o.wipe*0.5,0,1); const g=Math.round(lerp(252,22,ss(k))); fill=`rgb(${g},${g},${g})`; stroke='#161616'; sw=lerp(3.6,2.5,wk); }
