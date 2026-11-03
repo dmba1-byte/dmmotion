@@ -81,6 +81,15 @@ TOPICS = {
     mov=dict(w=6, d=3.2, label='TABLE', axis='y', base=1.5),
     rule='36" from table edge to wall to pass a chair<br>44" to walk behind someone seated', source='KITCHEN &amp; BATH PLANNING STANDARDS', verdict='CLEARS',
     note='A dining chair pulls out 24" on its own. Anything less and the chair hits the wall.'),
+ 'adaturn': dict(
+    vo_stakes="A wheelchair can't turn around in this bathroom.", room_word='bathroom', setup='This bathroom looks fine.', question='Now turn a wheelchair around.', gapname='clear space to turn', idx=8, walk=True,
+    topic='ADA TURNING SPACE', hook='A wheelchair can\'t<br>turn around in here', sub='the circle most bathrooms come up short on',
+    room=(10, 11), wrong=48, right=60, verdict='ADA',
+    fixed=[(0, 0, 10, 2.0, 'VANITY', 'counter')],
+    mov=dict(w=7, d=2.6, label='TUB', axis='y', base=2.0),
+    rule='60" clear turning circle for a wheelchair<br>48" is not enough', source='ADA STANDARDS &sect;304',
+    vo_q='Now sit in the chair. Where does it go?', cap_q='Now sit in the chair. Where does it go?', vo_hunt='Three seconds. How much room does a wheelchair need to turn around in here?', cap_hunt='How much room to turn a wheelchair?', vo_std='That is ADA section three oh four.',
+        note='A turning space is a 60 inch circle, or a T with 36 inch arms. Anything smaller and you back out.'),
 }
 
 
@@ -88,6 +97,12 @@ EXN = 14              # stacked layers that make the walls read as solid when th
 
 
 def build(spec, cues=None, total=None):
+    if spec.get('walk'):
+        import walk
+        return walk.build(spec, cues, total)
+    if spec.get('iso'):
+        import iso
+        return iso.build(spec, cues, total)
     RW, RD = spec['room']
     S = min(820 / RW, 620 / RD)
     X0 = 540 - RW * S / 2
@@ -116,7 +131,7 @@ def build(spec, cues=None, total=None):
 
     N = {6:'six',8:'eight',9:'nine',10:'ten',12:'twelve',15:'fifteen',18:'eighteen',
          20:'twenty',21:'twenty-one',24:'twenty-four',30:'thirty',36:'thirty-six',
-         42:'forty-two',48:'forty-eight'}
+         42:'forty-two',48:'forty-eight',60:'sixty'}
     w_w, w_r, w_d = N.get(spec['wrong'], spec['wrong']), N.get(spec['right'], spec['right']), N.get(delta, delta)
 
     wall_d = (f'M{X(-WALL):.1f} {Y(-WALL):.1f} H{X(RW + WALL):.1f} V{Y(RD + WALL):.1f} '
@@ -141,25 +156,26 @@ def build(spec, cues=None, total=None):
                          f'font-family="Helvetica">{lab}</text>')
         fixed.append('</g>')
 
-    L1 = f"You'd approve this {spec['room_word']}."
-    L2 = "Find what's wrong."
+    L1 = f"Would you approve this {spec['room_word']}?"
+    L2 = spec.get('cap_hunt', f"How much {spec['gapname']} does it have?")
     L3 = f"The {spec['gapname']} is {spec['wrong']}″."
     L4 = f"It needs {spec['right']}″. {delta}″ short."
-    L5 = spec['vo_stakes']
-    L6 = "Free to move on paper. Not after the pour."
-    L7 = "You didn't see it until it moved."
+    VQ = spec.get('vo_q', 'Now picture yourself in it. What goes wrong first?')
+    L5 = spec.get('cap_q', VQ)
+    L6 = "One drag on paper. Tear-out once it's built."
+    L7 = "Would your plan pass?"
 
     # The spoken script. Written as whole sentences with connective tissue —
     # clipped fragments make any voice sound staccato. It is read as ONE
     # continuous take, and the beats below are cut to where the words land.
-    SCRIPT = [f"You'd approve this {spec['room_word']}. Most people would.",
-              "You've got three seconds to find what's wrong.",
+    SCRIPT = [f"Would you approve this {spec['room_word']}? Most people would.",
+              spec.get('vo_hunt', f"Three seconds. How much {spec['gapname']} do you think it has?"),
               f"Time's up. The {spec['gapname']} is only {w_w} inches.",
-              f"It needs {w_r}, so you're {w_d} inches short.",
-              spec['vo_stakes'],
-              "On paper that's one move. After the pour it's concrete.",
+              f"It needs {w_r}, so you're {w_d} inches short. {spec.get('vo_std','')}".strip(),
+              VQ,
+              "On paper, that's one drag of the mouse. Once it's built, it means tearing it out.",
               "You didn't see it until it moved. That's what I do.",
-              "Send me your drawing."]
+              "Would your plan pass? Comment MOTION and I'll send you the details."]
 
     data = dict(T=T, S=S, X0=X0, Y0=Y0, RW=RW, RD=RD, mw=mv['w'], md=mv['d'], mx=mx,
                 yw=yw, yr=yr, gw=gap_w, gr=gap_r, base=base, label=mv['label'],
@@ -203,7 +219,7 @@ html,body{{margin:0;width:{W}px;height:{H}px;background:{BG};overflow:hidden;
 #offer span{{display:inline-block;border:3px solid {INK};background:#fff;border-radius:14px;
  font:800 34px Helvetica;letter-spacing:-0.5px;padding:18px 26px;box-shadow:8px 8px 0 {INK}}}
 #more{{position:absolute;left:55px;right:55px;top:1678px;text-align:center;opacity:0;
- font:700 31px Helvetica;letter-spacing:0.5px}}
+ font:900 44px Helvetica;letter-spacing:2px;color:{GRN}}}
 #send{{position:absolute;left:55px;right:55px;top:1760px;text-align:center;opacity:0}}
 #send span{{display:inline-block;background:{INK};color:#fff;font:800 33px Helvetica;
  letter-spacing:-0.5px;padding:17px 29px;border-radius:14px}}
@@ -269,9 +285,9 @@ html,body{{margin:0;width:{W}px;height:{H}px;background:{BG};overflow:hidden;
 <div id="dimnum"><b></b></div>
 <div id="rule"><div>{spec['rule']}</div><small>{spec['source']}</small></div>
 <div id="offer"><span>I animate plans and elevations &middot; from $450</span></div>
-<div id="more">dmba04@gmail.com</div>
+<div id="more">Comment MOTION</div>
 <div id="send"><span>Send this to whoever drew it</span></div>
-<div id="ser">CLEARANCE &nbsp;{spec['idx']:02d}&nbsp;/&nbsp;07</div>
+<div id="ser">CLEARANCE &nbsp;{spec['idx']:02d}&nbsp;/&nbsp;{len(TOPICS):02d}</div>
 <div id="flash"></div>
 <script>
 const D={json.dumps(data)}, T=D.T, E=T.end, NS='http://www.w3.org/2000/svg';
@@ -520,6 +536,13 @@ def render(key, outdir='/home/claude/reels/out2', stills=None, voice=True):
     # end == dur so the beat runs the whole clip and no end-card chime is added
     soundtrack.make(dur, draw=(0.2, 1.1), end=dur, mood='bright', bpm=100,
                     seed=zlib.crc32(key.encode()) % 999, out=wav, pen=False, beat=True)
+    import sfx
+    ev = [(T['setup']+0.05, 'whoosh')]
+    tt = T['hunt']
+    while tt < T['reveal'] - 0.3: ev.append((tt, 'tick')); tt += 1.0
+    ev += [(T['reveal']-0.5, 'riser'), (T['reveal'], 'hit'), (T['reveal']+0.05, 'buzz'),
+           (T['stakes'], 'whoosh'), (T['door'], 'whoosh'), (T['turn'], 'whoosh'), (T['turn']+0.1, 'chime'), (T['sell'], 'whoosh')]
+    sfx.add(wav, ev)
     VOICE.lay_under(wav, narration)
     mp4 = str(out / f'{name}.mp4')
     subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', '-framerate', str(FPS), '-i', str(fr / '%04d.png'), '-i', wav, '-c:v', 'libx264',

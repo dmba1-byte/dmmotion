@@ -810,14 +810,26 @@
  },
  {
   "name": "r1103_0841_rule_adaturn",
-  "when_et": "2026-11-03T08:41:00",
-  "hook": "A wheelchair can't turn around in here",
-  "caption": "Can a wheelchair turn around in this bathroom? \ud83d\udc40 Take three seconds.\nThe clear space here is 48 inches. ADA wants a 60 inch turning circle.\nWant your plan checked or animated like this? Comment MOTION and I'll send you the details.\n.\n#architecture #ada #accessibledesign #buildingcode #floorplan #architecturestudent #interiordesign",
-  "duration": 23.47,
+  "when_et": "2026-11-03T10:12:00",
+  "hook": "Would you approve this bathroom?",
+  "caption": "Can a wheelchair turn around in this bathroom? \ud83d\udc40 Take three seconds.\nThe clear space here is 48 inches. ADA \u00a7304.3 wants a 60 inch turning circle.\nWould your plan pass? Comment MOTION and I'll send you the details.\n.\n#architecture #ada #accessibledesign #buildingcode #floorplan #architecturestudent #interiordesign",
+  "duration": 29.37,
   "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_0841_rule_adaturn.mp4",
   "voice": null,
   "ai_label": true,
   "spec": "ADA TURNING SPACE",
-  "status": "hold"
+  "status": "approved"
+ },
+ {
+  "name": "r1103_1223_lineweight_walk",
+  "when_et": "2026-11-03T12:23:00",
+  "hook": "Could you build from this plan?",
+  "caption": "Could you build from this plan? \ud83d\udc40 Every line is the same weight.\nHeavy = cut lines, medium = edges below the cut, light = surface lines (University of Memphis drawing standards).\nWould your drawing hold up? Comment MOTION and I'll send you the details. Line weights from $30.\n.\n#architecture #architecturestudent #floorplan #drawing #linework #architecturedrawing #rhino",
+  "duration": 31.03,
+  "video_url": "https://dmba1-byte.github.io/dmmotion/social/q/r1103_1223_lineweight_walk.mp4",
+  "voice": "see lw.py SCRIPT",
+  "ai_label": true,
+  "spec": "LINE WEIGHT",
+  "status": "approved"
  }
 ]
