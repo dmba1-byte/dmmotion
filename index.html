@@ -206,6 +206,29 @@ h2.big{font-size:clamp(28px,4.6vw,46px);line-height:1.06;letter-spacing:-.02em;t
 .fgo .btn.ghost{color:#f3ecd8;border-color:rgba(243,236,216,.5)}
 .fgo .btn:not(.ghost){background:#f3ecd8;color:#0c2745}
 @media (prefers-reduced-motion:reduce){.fab::before{animation:none}}
+
+/* Desktop and laptop: a wider, landscape presentation. Phones (under 1100px) are untouched. */
+@media (min-width:1100px){
+  .wrap{max-width:1240px;padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}
+  .band .wrap{padding-block:88px}
+  .band.hero .wrap{padding-top:36px;padding-bottom:72px}
+  h1{font-size:clamp(52px,5vw,76px)}
+  h2.big{font-size:clamp(40px,3.6vw,58px);max-width:20ch}
+  .lead{font-size:21px;max-width:58ch}
+  .herogrid{grid-template-columns:.8fr 1.2fr;gap:40px;align-items:center}
+  .herotext{padding-bottom:0}
+  .lwgrid{grid-template-columns:1.3fr .7fr;gap:48px}
+  .grid,.cmp,.nights,.send3,.bgrid{gap:24px}
+  .card,.cmpcol{padding:26px}
+  .card .price{font-size:30px}
+  .cmpprice{font-size:44px}
+  #anim .feature,#anim .videos{max-width:1100px;margin-left:auto;margin-right:auto}
+  #anim .feature video{max-height:68vh;object-fit:contain}
+  .bar-in{max-width:1240px}
+  .lead,.brief-lead,.about,.faq p{max-width:72ch}
+  fieldset{padding:20px 24px 14px}
+}
+@media (min-width:1500px){.wrap{max-width:1360px}}
 </style>
 <script>document.documentElement.className+=" js"</script>
 </head>
