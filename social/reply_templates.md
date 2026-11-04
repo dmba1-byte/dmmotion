@@ -31,6 +31,14 @@ To see the quality first, I'll do a free 5-second logo write-on from your vector
 
 Send me the drawing you'd animate (PDF, CAD, Revit or Illustrator) and where you'll post it, and I'll confirm the price and timing.
 
+## 4. "REACH" comment (free ADA cheat sheet)
+
+Hey [name], thanks for commenting! Here's the free one-page ADA cheat sheet: https://dmba1-byte.github.io/dmmotion/social/assets/ada5_cheat_sheet.pdf
+
+It has the five numbers (reach range, clear floor space, turning space, sink height, door width) as diagrams, with the ADA section for each. Check your local adopted code too, since it can add requirements.
+
+Quick question: did you use it on a studio project, and what would make it more useful? I'm planning more of these.
+
 ## Notes for me (David)
 
 - Keep the free offers capped: about 5 free trials a week. If a request goes past that, say "I've filled this week's free spots. Next week, or I can quote the paid version now."
