@@ -1004,5 +1004,11 @@
   "file": "r1104_2200_ada_route_story.mp4",
   "status": "queued",
   "note": "30 in fails, 36 in, fail-then-fix story"
+ },
+ {
+  "id": "r1104_1730_ada_turning_3d",
+  "file": "r1104_1730_ada_turning_3d.mp4",
+  "status": "queued",
+  "note": "Blender 3D walk-in version of turning story, posted as extra reel on user approval"
  }
 ]
