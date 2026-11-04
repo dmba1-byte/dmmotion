@@ -110,5 +110,54 @@ function s6(p){const S=6.4,Y=h=>600-S*h; let o=''; const a=ss(P(p,0,.12)), ln=ss
   o+=pill(780,sy-60,mv<.5?'60 in':'44 in',col,band,28)+cross(780,sy+56,RED,band*(1-ok))+tick(780,sy+56,GRN,ok);
   return o;}
 
-const SCENES=[s1,s2,s3,s4,s5,s6];
-const META=[{n:'REACH RANGE',r:'15 to 48 in',s:'ADA 308.2.1 and 308.3.1'},{n:'CLEAR FLOOR SPACE',r:'30 x 48 in at every fixture',s:'ADA 305.3'},{n:'TURNING SPACE',r:'60 in circle',s:'ADA 304.3.1'},{n:'SINK HEIGHT',r:'34 in max to rim or counter',s:'ADA 606.3'},{n:'DOOR WIDTH',r:'32 in clear, door open 90 degrees',s:'ADA 404.2.3'},{n:'REACH RANGE',r:'15 to 48 in',s:'ADA 308.2.1 and 308.3.1'}];
+
+/* 7 — ramp slope (elevation): 1:8 fails, 1:12 passes */
+function s7(p){const S=2.35; let o=''; const a=ss(P(p,0,.1)), m=ss(P(p,.5,.3)), ok=ss(P(p,.86,.08)), run=lerp(8,12,m)*24*S, x0=50, base=560, top=base-24*S, col=m<.5?RED:GRN, lab=m<.5?'1:8':'1:12';
+  o+=`<line x1="40" y1="${base}" x2="920" y2="${base}" stroke="${INK}" stroke-width="7"/>`;
+  o+=`<g opacity="${a}"><path d="M${x0} ${base} L${x0+run} ${base} L${x0+run} ${top} Z" fill="${WALL}" stroke="${INK}" stroke-width="6"/><rect x="${x0+run}" y="${top-4}" width="${920-x0-run}" height="${base-top+4}" fill="${WALL}" stroke="${INK}" stroke-width="6"/></g>`;
+  o+=pill(x0+run/2,base-90,lab+' slope',col,a,40);
+  o+=dimLine(x0+run+20,top+2,x0+run+20,base,'24 in rise',GRND,a,Math.min(x0+run+120,830),(top+base)/2-50);
+  o+=`<g opacity="${a}"><line x1="${x0}" y1="${base+36}" x2="${x0+run}" y2="${base+36}" stroke="${col}" stroke-width="5"/><line x1="${x0}" y1="${base+22}" x2="${x0}" y2="${base+50}" stroke="${col}" stroke-width="5"/><line x1="${x0+run}" y1="${base+22}" x2="${x0+run}" y2="${base+50}" stroke="${col}" stroke-width="5"/></g>`;
+  o+=pill(x0+run/2,base+36,Math.round(run/S)+' in run',col,a,28);
+  o+=cross(x0+run/2,top-70,RED,a*(1-ok)*(m<.5?1:0))+tick(x0+run/2,top-70,GRN,ok);
+  return o;}
+
+/* 8 — handrail height (elevation): 42 in fails, 36 in passes */
+function s8(p){const S=9.5,Y=h=>600-S*h; let o=''; const a=ss(P(p,0,.1)), band=ss(P(p,.12,.16)), m=ss(P(p,.5,.3)), ok=ss(P(p,.86,.08)), h=lerp(42,36,m), col=m<.5?RED:GRN;
+  o+=`<line x1="40" y1="600" x2="920" y2="600" stroke="${INK}" stroke-width="7"/><rect x="560" y="30" width="360" height="570" fill="${WALL}" stroke="${INK}" stroke-width="6" opacity="${a}"/>`;
+  o+=`<rect x="300" y="${Y(38)}" width="260" height="${Y(34)-Y(38)}" fill="${GRN}" opacity="${.24*band}"/><line x1="300" y1="${Y(38)}" x2="560" y2="${Y(38)}" stroke="${GRN}" stroke-width="5" stroke-dasharray="14 10" opacity="${band}"/><line x1="300" y1="${Y(34)}" x2="560" y2="${Y(34)}" stroke="${GRN}" stroke-width="5" stroke-dasharray="14 10" opacity="${band}"/>`;
+  o+=`<g opacity="${a}"><rect x="520" y="${Y(h)}" width="40" height="14" fill="${INK}"/><rect x="320" y="${Y(h)-12}" width="220" height="20" rx="10" fill="${INK}"/><rect x="330" y="${Y(h)+8}" width="12" height="${28}" fill="${INK}"/></g>`;
+  o+=pill(190,Y(38)-26,'38 in max',GRND,band,28)+pill(190,Y(34)+26,'34 in min',GRND,band,28);
+  o+=pill(430,Y(h)-54,Math.round(h)+' in',col,a,36)+cross(700,Y(h),RED,a*(1-ok)*(m<.5?1:0))+tick(700,Y(h),GRN,ok);
+  return o;}
+
+/* 9 — grab bar height (elevation): 30 in fails, 34 in passes */
+function s9(p){const S=9.5,Y=h=>600-S*h; let o=''; const a=ss(P(p,0,.1)), band=ss(P(p,.12,.16)), m=ss(P(p,.5,.3)), ok=ss(P(p,.86,.08)), h=lerp(30,34,m), col=m<.5?RED:GRN;
+  o+=`<line x1="40" y1="600" x2="920" y2="600" stroke="${INK}" stroke-width="7"/><rect x="600" y="30" width="320" height="570" fill="${WALL}" stroke="${INK}" stroke-width="6" opacity="${a}"/>`;
+  o+=`<rect x="300" y="${Y(36)}" width="300" height="${Y(33)-Y(36)}" fill="${GRN}" opacity="${.24*band}"/><line x1="300" y1="${Y(36)}" x2="600" y2="${Y(36)}" stroke="${GRN}" stroke-width="5" stroke-dasharray="14 10" opacity="${band}"/><line x1="300" y1="${Y(33)}" x2="600" y2="${Y(33)}" stroke="${GRN}" stroke-width="5" stroke-dasharray="14 10" opacity="${band}"/>`;
+  o+=`<g opacity="${a}"><rect x="610" y="${Y(h)-24}" width="26" height="40" fill="${INK}"/><rect x="380" y="${Y(h)-12}" width="240" height="24" rx="12" fill="${INK}"/></g>`;
+  o+=pill(190,Y(36)-26,'36 in max',GRND,band,28)+pill(190,Y(33)+26,'33 in min',GRND,band,28);
+  o+=pill(480,Y(h)+54,Math.round(h)+' in',col,a,36)+cross(740,Y(h),RED,a*(1-ok)*(m<.5?1:0))+tick(740,Y(h),GRN,ok);
+  return o;}
+
+/* 10 — water closet centerline (plan): 21 in fails, 17 in passes */
+function s10(p){const S=10; let o=''; const a=ss(P(p,0,.1)), band=ss(P(p,.12,.16)), m=ss(P(p,.5,.3)), ok=ss(P(p,.86,.08)), d=lerp(21,17,m), wx=200, cx=wx+d*S, col=m<.5?RED:GRN;
+  o+=`<rect x="${wx-30}" y="40" width="30" height="560" fill="${WALL}" stroke="${INK}" stroke-width="6" opacity="${a}"/><rect x="${wx-30}" y="40" width="680" height="30" fill="${WALL}" stroke="${INK}" stroke-width="6" opacity="${a}"/>`;
+  o+=`<rect x="${wx+16*S}" y="70" width="${2*S}" height="500" fill="${GRN}" opacity="${.24*band}"/><rect x="${wx+16*S}" y="70" width="${2*S}" height="500" fill="none" stroke="${GRN}" stroke-width="4" stroke-dasharray="12 8" opacity="${band}"/>`;
+  o+=`<g opacity="${a}"><rect x="${cx-95}" y="70" width="190" height="80" rx="14" fill="#fff" stroke="${INK}" stroke-width="6"/><ellipse cx="${cx}" cy="260" rx="85" ry="115" fill="#fff" stroke="${INK}" stroke-width="6"/><ellipse cx="${cx}" cy="270" rx="52" ry="78" fill="none" stroke="${INK}" stroke-width="5"/></g>`;
+  o+=`<line x1="${cx}" y1="70" x2="${cx}" y2="520" stroke="${col}" stroke-width="5" stroke-dasharray="14 10" opacity="${a}"/>`;
+  o+=dimLine(wx,470,cx,470,Math.round(d)+' in',col,a,(wx+cx)/2,470);
+  o+=pill(wx+17*S+170,560,'16 to 18 in',GRND,band,28)+cross(cx+150,200,RED,a*(1-ok)*(m<.5?1:0))+tick(cx+150,200,GRN,ok);
+  return o;}
+
+/* 11 — accessible route width (plan): 30 in fails, 36 in passes */
+function s11(p){const S=8; let o=''; const a=ss(P(p,0,.1)), m=ss(P(p,.5,.3)), mv=ss(P(p,.1,.35)), ok=ss(P(p,.86,.08)), w=lerp(30,36,m)*S, cy=330, col=m<.5?RED:GRN, y1=cy-w/2, y2=cy+w/2;
+  o+=`<rect x="60" y="${y1-36}" width="840" height="36" fill="${WALL}" stroke="${INK}" stroke-width="6" opacity="${a}"/><rect x="60" y="${y2}" width="840" height="36" fill="${WALL}" stroke="${INK}" stroke-width="6" opacity="${a}"/>`;
+  o+=`<rect x="60" y="${y1}" width="840" height="${w}" fill="${col}" opacity="${.12*a}"/>`;
+  o+=`<g transform="translate(${lerp(100,720,m<.5?mv*.4:mv)} ${cy}) rotate(90)">${wcPlan(0,0,26*S*.8,42*S*.8,0)}</g>`;
+  o+=dimLine(820,y1,820,y2,Math.round(w/S)+' in',col,a,820,cy);
+  o+=cross(480,cy+w/2+110,RED,a*(1-ok)*(m<.5?1:0))+tick(480,cy+w/2+110,GRN,ok);
+  return o;}
+
+const SCENES=[s1,s2,s3,s4,s5,s6,s7,s8,s9,s10,s11];
+const META=[{n:'REACH RANGE',r:'15 to 48 in',s:'ADA 308.2.1 and 308.3.1'},{n:'CLEAR FLOOR SPACE',r:'30 x 48 in at every fixture',s:'ADA 305.3'},{n:'TURNING SPACE',r:'60 in circle',s:'ADA 304.3.1'},{n:'SINK HEIGHT',r:'34 in max to rim or counter',s:'ADA 606.3'},{n:'DOOR WIDTH',r:'32 in clear, door open 90 degrees',s:'ADA 404.2.3'},{n:'REACH RANGE',r:'15 to 48 in',s:'ADA 308.2.1 and 308.3.1'},{n:'RAMP SLOPE',r:'1:12 max slope',s:'ADA 405.2'},{n:'HANDRAIL HEIGHT',r:'34 to 38 in',s:'ADA 505.4'},{n:'GRAB BAR HEIGHT',r:'33 to 36 in',s:'ADA 609.4'},{n:'TOILET CENTERLINE',r:'16 to 18 in from the side wall',s:'ADA 604.2'},{n:'ROUTE WIDTH',r:'36 in clear minimum',s:'ADA 403.5.1'}];
