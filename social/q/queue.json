@@ -944,27 +944,27 @@
   "note": "ADA 5 numbers, icon-man host (scale figure), free cheat sheet via Comment REACH"
  },
  {
-  "id": "r1104_1500_ada_turning",
-  "file": "r1104_1500_ada_turning.mp4",
+  "id": "r1104_1400_ada_reach_corbusier",
+  "file": "r1104_1400_ada_reach_corbusier.mp4",
   "status": "queued",
-  "note": "60 in turning space, walking scale figure, Comment REACH"
+  "note": "Modulor 89 in vs 48 in reach, fail-then-fix story, walking scale figure, Comment REACH"
  },
  {
-  "id": "r1104_1700_ada_sink",
-  "file": "r1104_1700_ada_sink.mp4",
+  "id": "r1104_1500_ada_turning_story",
+  "file": "r1104_1500_ada_turning_story.mp4",
   "status": "queued",
-  "note": "34 in sink height, walking scale figure, Comment REACH"
+  "note": "48 in room fails, 60 in circle, fail-then-fix story, walking scale figure, Comment REACH"
  },
  {
-  "id": "r1104_1900_ada_door",
-  "file": "r1104_1900_ada_door.mp4",
+  "id": "r1104_1600_ada_sink_story",
+  "file": "r1104_1600_ada_sink_story.mp4",
   "status": "queued",
-  "note": "32 in door clear width, walking scale figure, Comment REACH"
+  "note": "36 in fails, 34 in, fail-then-fix story, walking scale figure, Comment REACH"
  },
  {
-  "id": "r1104_2100_ada_floorspace",
-  "file": "r1104_2100_ada_floorspace.mp4",
+  "id": "r1104_1700_ada_door_story",
+  "file": "r1104_1700_ada_door_story.mp4",
   "status": "queued",
-  "note": "30x48 clear floor space, walking scale figure, Comment REACH"
+  "note": "28 in fails, 32 in, fail-then-fix story, walking scale figure, Comment REACH"
  }
 ]
