@@ -61,7 +61,8 @@ html,body{margin:0;width:1080px;height:1920px;background:#f6f4ee;overflow:hidden
 #card{position:absolute;left:50px;top:110px;width:980px;height:870px;background:#fcfbf8;border:5px solid #161616;border-radius:22px;box-shadow:10px 10px 0 #161616;overflow:hidden}
 #hd{position:absolute;left:0;top:0;width:980px;height:104px;border-bottom:5px solid #161616;display:flex;align-items:center;gap:22px;padding:0 30px;box-sizing:border-box}
 #cnt{font:900 78px Helvetica;color:#1f9d63;letter-spacing:-2px;min-width:140px}
-#nm{font:900 50px Helvetica;color:#161616;letter-spacing:-1px}
+#stamp{margin-left:auto;font:900 24px Helvetica;letter-spacing:2px;color:#1f6d45;border:4px solid #1f6d45;border-radius:8px;padding:6px 12px;transform:rotate(-3deg);white-space:nowrap}
+#nm{font:900 44px Helvetica;color:#161616;letter-spacing:-1px}
 #rule{position:absolute;left:0;top:112px;width:980px;text-align:center;font:800 34px Helvetica;color:#1f6d45}
 #dg{position:absolute;left:10px;top:162px;width:960px;height:640px}
 #src{position:absolute;left:0;top:812px;width:980px;text-align:center;font:800 22px Helvetica;letter-spacing:3px;color:#8d8777}
@@ -83,7 +84,7 @@ html,body{margin:0;width:1080px;height:1920px;background:#f6f4ee;overflow:hidden
 </style></head><body>
 <div id="tag"><span id="tagt">ADA IN 5 NUMBERS</span></div>
 <div id="card">
- <div id="hd"><div id="cnt"></div><div id="nm"></div></div>
+ <div id="hd"><div id="cnt"></div><div id="nm"></div><div id="stamp"></div></div>
  <div id="rule"></div><svg id="dg" viewBox="0 0 960 640"></svg><div id="src"></div>
  <div id="hook"><div class="t">5 numbers<br>to check</div></div>
  <div id="cta"><img id="sheet" src="__SHEET__"></div>
@@ -100,7 +101,7 @@ const CH=D.lines.map((txt,i)=>{const ws=txt.split(/\s+/); const wt=ws.map(w=>w.l
   const chunks=[]; let cur=[]; out.forEach(o=>{cur.push(o); if(cur.length>=3||/[.,]$/.test(o.w)){chunks.push(cur);cur=[];}}); if(cur.length)chunks.push(cur); return chunks;}).flat();
 // hook thumbnails
 const hook=$('hook'); const TH=[]; const pos=[[30,130],[345,130],[660,130],[190,350],[500,350]];
-SCENES.forEach((f,i)=>{const d=document.createElement('div'); d.className='th'; d.style.left=pos[i][0]+'px'; d.style.top=(pos[i][1]+170)+'px'; d.innerHTML='<svg viewBox="0 0 960 640">'+f(1)+'</svg>'; hook.appendChild(d); TH.push(d);});
+SCENES.slice(0,5).forEach((f,i)=>{const d=document.createElement('div'); d.className='th'; d.style.left=pos[i][0]+'px'; d.style.top=(pos[i][1]+170)+'px'; d.innerHTML='<svg viewBox="0 0 960 640">'+f(1)+'</svg>'; hook.appendChild(d); TH.push(d);});
 
 function setT(t){
   const f=Math.min(D.amp.length-1,Math.floor(t*30)), A=D.amp[f]||0;
@@ -109,10 +110,10 @@ function setT(t){
   const sc=k>=1&&k<=NSEG?(D.ep?D.ep.scene:k-1):-1;
   const enter=(i)=>ss(P(t,ST[i]-0.08,0.32));
   $('hd').style.opacity=1;
-  if(D.ep&&(k===0||k<0)){ const m=META[D.ep.scene]; hook.style.display='none'; $('cta').style.opacity=0; $('cnt').textContent=D.ep.big; $('nm').textContent=m.n; $('rule').textContent=D.ep.hookRule; $('rule').style.opacity=1; $('src').textContent=m.s.toUpperCase(); $('dg').innerHTML=SCENES[D.ep.scene](.3+.2*P(t,0,3)); $('dg').style.opacity=1; $('dg').style.transform='none'; }
+  if(D.ep&&(k===0||k<0)){ const m=META[D.ep.scene]; hook.style.display='none'; $('cta').style.opacity=0; $('cnt').textContent=D.ep.fail||D.ep.big; $('cnt').style.color=D.ep.fail?'#b02a22':'#1f9d63'; $('stamp').textContent=m.s; $('nm').textContent=m.n; $('rule').textContent=D.ep.hookRule; $('rule').style.opacity=1; $('src').textContent=m.s.toUpperCase(); $('dg').innerHTML=SCENES[D.ep.scene](.12+.3*P(t,0,D.ep.hookDur||4)); $('dg').style.opacity=1; $('dg').style.transform='none'; }
   else if(k===0||k<0){ $('cnt').textContent=''; $('nm').textContent='ADA CHEAT SHEET'; $('rule').textContent=''; $('src').textContent=''; $('dg').innerHTML=''; hook.style.display='block'; $('cta').style.opacity=0; }
   else if(sc>=0){ hook.style.display='none'; $('cta').style.opacity=0; const e=enter(k), p=P(t,ST[k]+.1,(EN[k]-ST[k])*.82);
-    $('cnt').textContent=D.ep?D.ep.big:((k)+'/5'); $('nm').textContent=META[sc].n; $('rule').textContent=META[sc].r; $('src').textContent=META[sc].s.toUpperCase();
+    if(D.ep){const late=p>(D.ep.sw||.5); $('cnt').textContent=(D.ep.fail&&!late)?D.ep.fail:D.ep.big; $('cnt').style.color=(D.ep.fail&&!late)?'#b02a22':'#1f9d63'; $('stamp').textContent=META[sc].s;} else $('cnt').textContent=(k)+'/5'; $('nm').textContent=META[sc].n; $('rule').textContent=META[sc].r; $('src').textContent=META[sc].s.toUpperCase();
     $('dg').innerHTML=SCENES[sc](p); $('dg').style.opacity=e; $('dg').style.transform='translateX('+((1-e)*60).toFixed(1)+'px)'; $('rule').style.opacity=e; }
   else { hook.style.display='none'; $('cnt').textContent=''; $('nm').textContent='THE FREE CHEAT SHEET'; $('rule').textContent=''; $('src').textContent='ALL FIVE ON ONE PAGE'; $('dg').innerHTML=''; $('cta').style.opacity=ss(P(t,ST[CT]-.05,.3)); }
   // hook thumbs pop
@@ -159,7 +160,7 @@ html,body{margin:0;width:1275px;height:1650px;background:#f6f4ee;font-family:Hel
 <script>
 __DIAG__
 const g=document.getElementById('g'); const pos=[[60,200],[648,200],[60,640],[648,640],[60,1080]];
-SCENES.forEach((f,i)=>{const d=document.createElement('div'); d.className='pn'; d.style.left=pos[i][0]+'px'; d.style.top=pos[i][1]+'px';
+SCENES.slice(0,5).forEach((f,i)=>{const d=document.createElement('div'); d.className='pn'; d.style.left=pos[i][0]+'px'; d.style.top=pos[i][1]+'px';
  d.innerHTML='<div class="n">'+(i+1)+'</div><div class="h">'+META[i].n+'</div><div class="r">'+META[i].r+'</div><svg viewBox="0 0 960 640">'+f(1)+'</svg><div class="s">'+META[i].s.toUpperCase()+'</div>'; g.appendChild(d);});
 const k=document.createElement('div'); k.className='pn'; k.style.left='648px'; k.style.top='1080px';
 k.innerHTML='<div class="h" style="left:24px;top:22px;font-size:38px">How to use it</div><div style="position:absolute;left:24px;top:84px;width:520px;font:700 25px/1.4 Helvetica;color:#333">Check each number against your plan before a review.<br><br><span style="color:#1f9d63;font-weight:900">1</span> Switches and outlets between 15 and 48 in.<br><span style="color:#1f9d63;font-weight:900">2</span> A 30 x 48 in space at each fixture.<br><span style="color:#1f9d63;font-weight:900">3</span> A 60 in turning circle.<br><span style="color:#1f9d63;font-weight:900">4</span> Sink rim 34 in max.<br><span style="color:#1f9d63;font-weight:900">5</span> 32 in clear at every door.</div>'; g.appendChild(k);
