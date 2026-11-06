@@ -1106,7 +1106,8 @@
  {
   "id": "r1105_story_ada_signing",
   "file": "social/q/r1105_story_ada_signing.mp4",
-  "status": "pending",
-  "note": "David said post all, 2026-11-05"
+  "status": "posted",
+  "note": "posted; publish response had no permalink (container 18155594257501612)",
+  "posted_at": "2026-11-06T04:45:01.908128+00:00"
  }
 ]
