@@ -1116,5 +1116,15 @@
   "status": "posted",
   "note": "posted https://www.instagram.com/reel/DfZ2efniuZ1/",
   "posted_at": "2026-11-06T14:46:23.973536+00:00"
+ },
+ {
+  "id": "r1106_s2_ext",
+  "file": "social/q/r1106_s2_ext.mp4",
+  "status": "queued"
+ },
+ {
+  "id": "r1106_s2_fountain",
+  "file": "social/q/r1106_s2_fountain.mp4",
+  "status": "queued"
  }
 ]
