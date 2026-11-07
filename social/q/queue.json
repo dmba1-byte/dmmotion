@@ -1126,46 +1126,64 @@
  {
   "id": "r1106_s2_fountain",
   "file": "social/q/r1106_s2_fountain.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa0SLWn68E/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_lift",
   "file": "social/q/r1106_s2_lift.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa23q2FbZH/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_sign",
   "file": "social/q/r1106_s2_sign.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa4NVrgQTt/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_dome",
   "file": "social/q/r1106_s2_dome.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa5mHllFm6/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_rail",
   "file": "social/q/r1106_s2_rail.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa7Bj0jHIl/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_park",
   "file": "social/q/r1106_s2_park.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa8dHGEgUs/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_thresh",
   "file": "social/q/r1106_s2_thresh.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa94G3DpeN/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_counter",
   "file": "social/q/r1106_s2_counter.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/Dfa_TZ-jcTc/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  },
  {
   "id": "r1106_s2_toilet",
   "file": "social/q/r1106_s2_toilet.mp4",
-  "status": "queued"
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/DfbAu5GAUTE/",
+  "posted_at": "2026-11-07T01:36:45.800118+00:00"
  }
 ]
