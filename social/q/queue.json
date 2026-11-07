@@ -1189,6 +1189,12 @@
  {
   "id": "r1107_platform",
   "file": "social/q/r1107_platform.mp4",
+  "status": "posted",
+  "note": "https://www.instagram.com/reel/DfcW05oAD-1/"
+ },
+ {
+  "id": "r1107_grabbar",
+  "file": "social/q/r1107_grabbar.mp4",
   "status": "queued"
  }
 ]
