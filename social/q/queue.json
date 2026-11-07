@@ -1185,5 +1185,10 @@
   "status": "posted",
   "note": "https://www.instagram.com/reel/DfbAu5GAUTE/",
   "posted_at": "2026-11-07T01:36:45.800118+00:00"
+ },
+ {
+  "id": "r1107_platform",
+  "file": "social/q/r1107_platform.mp4",
+  "status": "queued"
  }
 ]
