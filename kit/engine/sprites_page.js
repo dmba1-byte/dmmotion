@@ -1,0 +1,23 @@
+const CROP={x:6,y:4,w:52,h:67};
+function snap(P,view){const ch=mk(),g=ch.getContext('2d');if(view=='side')kit(g,P);else kitFB(g,P,view);outline(ch);const o=document.createElement('canvas');o.width=CROP.w;o.height=CROP.h;o.getContext('2d').drawImage(ch,CROP.x,CROP.y,CROP.w,CROP.h,0,0,CROP.w,CROP.h);return o.toDataURL('image/png')}
+const sheet=(g,i,col)=>{const h=i.h[0],x=h[0]-1,y=h[1]-11;R(g,x,y,12,15,'#f1eddf');R(g,x,y,12,1,'#fff');R(g,x+2,y+3,8,1,'#5c8a7a');R(g,x+2,y+6,6,1,'#b8b8a8');R(g,x+2,y+8,8,1,'#b8b8a8');R(g,x+2,y+10,5,1,'#b8b8a8');R(g,x+2,y+12,7,1,'#e0534a')};
+const SP={};
+const std=[st(2,2),st(-2,-2)];
+SP.stand=()=>snap({legs:std,arms:[{ua:-4,fa:-4},{ua:4,fa:4}],face:'n',mouth:'smile',lean:1},'side');
+SP.point=()=>snap({legs:std,arms:[{ua:84,fa:88},{ua:-4,fa:-4}],face:'n',mouth:'smile',lean:3},'side');
+SP.pointup=()=>snap({legs:std,arms:[{ua:130,fa:150},{ua:-4,fa:-4}],face:'n',mouth:'smile',lean:0,hy:-1},'side');
+SP.wave0=()=>snap({legs:std,arms:[{ua:105,fa:172},{ua:-4,fa:-4}],face:'happy',mouth:'open',lean:0},'side');
+SP.wave1=()=>snap({legs:std,arms:[{ua:118,fa:150},{ua:-4,fa:-4}],face:'happy',mouth:'open',lean:0},'side');
+SP.think=()=>snap({legs:std,arms:[{ua:40,fa:150},{ua:-4,fa:-4}],armRel:[[9,-4],null],face:'look',mouth:'flat',look:true,lean:0},'side');
+SP.cheer=()=>snap({legs:[st(6,-4),st(-6,2)],air:3,arms:[{ua:118,fa:172},{ua:100,fa:168}],face:'happy',mouth:'wide',lean:-2},'side');
+SP.shock=()=>snap({legs:[st(5,5),st(-5,-5)],arms:[{ua:50,fa:60},{ua:-25,fa:-30}],face:'o',mouth:'small',lean:-6},'side');
+SP.sheet=()=>snap({legs:std,armRel:[[10,-2],[8,-1]],arms:[{ua:0,fa:0},{ua:0,fa:0}],face:'n',mouth:'smile',lean:2,mid:(g,i)=>sheet(g,i)},'side');
+SP.shrug=()=>snap({legs:std,arms:[{ua:45,fa:20},{ua:-45,fa:-20}],face:'n',mouth:'flat',lean:0},'side');
+SP.measure=()=>snap({legs:std,arms:[{ua:85,fa:88},{ua:60,fa:70}],face:'closed',mouth:'smile',lean:3,prop:(g,i)=>{R(g,i.h[0]+1,i.h[1]-1,18,2,'#f3c969');for(let k=0;k<18;k+=3)R(g,i.h[0]+1+k,i.h[1]+1,1,2,'#8a6a20')}},'side');
+SP.front=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7.5,GY-16.5-7+10.5],[CX+6.5,GY-16.5-7+10.5]],sl:1,sa:[1,1]},'f');
+SP.fwave0=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7.5,GY-16.5-7+10.5],[CX+9,GY-16.5-7-8]],sl:1,sa:[1,0],mouth:'open'},'f');
+SP.fwave1=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7.5,GY-16.5-7+10.5],[CX+12,GY-16.5-7-6]],sl:1,sa:[1,0],mouth:'open'},'f');
+SP.fcheer=()=>snap({hip:GY-16.5-3,feet:[[-3.5,3],[3.5,3]],hands:[[CX-10,GY-16.5-7-8],[CX+9,GY-16.5-7-8]],sl:1,sa:[0,0],mouth:'open'},'f');
+SP.back=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7.5,GY-16.5-7+10.5],[CX+6.5,GY-16.5-7+10.5]],sl:1,sa:[1,1]},'b');
+for(let k=0;k<8;k++)SP['walk'+k]=()=>{const P=sideWalk.f(k/8,k*2);delete P.scene;return snap(P,'side')};
+window.SP=SP;
