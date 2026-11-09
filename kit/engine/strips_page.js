@@ -20,9 +20,16 @@ const WHEEL=(t,fr)=>{const hx=CX-4,hy=GY-12,WX=CX-5,WY=GY-8,RR=8;
   prop:(g)=>{wheel(g);R(g,Math.round(hand[0])-1,Math.round(hand[1])-1,3,3,K.skin)}}};
 function R_fn(g,x,y,w,h,c){R(g,x,y,w,h,c)}
 // ---- front wave ----
-const FWAVE=(t,fr)=>{const th=t*PI2,sy=GY-16.5-7;return{hip:GY-16.5+(S(th*2)>0?0:0),feet:[[-3,0],[3,0]],hands:[[CX-7.5,sy+10.5],[CX+9.5+2.5*S(th),sy-9+1.2*C(th)]],sl:1,sa:[1,0],mouth:'open'}};
+const FWAVE=(t,fr)=>{const th=t*PI2,hip=GY-16.5,sy=hip-7;const sw=S(th),bob=Math.abs(S(th))*0;
+ // upper arm out to the side and up, forearm vertical; hand sweeps side to side (a real wave)
+ const e=[CX+10.5,sy-1.5],h=[CX+10.5+3.2*sw,sy-8.5+.8*Math.abs(sw)];
+ return{hip,feet:[[-3,0],[3,0]],hands:[[CX-7.2,sy+10.2],h],armJ:[null,{e,h}],sl:1,sa:[1,0],mouth:'open'}};
 const FIDLE=(t,fr)=>{const th=t*PI2,sy=GY-16.5-7;return{hip:GY-16.5+(S(th)>.6?-0:0),feet:[[-3,0],[3,0]],hands:[[CX-7.5,sy+10.5+.7*S(th)],[CX+6.5,sy+10.5-.7*S(th)]],sl:1,sa:[1,1],mouth:'smile'}};
+const std=[st(2,2),st(-2,-2)];
+const sheetProp=(g,i)=>{const h=i.h[0],x=h[0]-1,y=h[1]-11;R(g,x,y,12,15,'#f1eddf');R(g,x,y,12,1,'#fff');R(g,x+2,y+3,8,1,'#5c8a7a');R(g,x+2,y+6,6,1,'#b8b8a8');R(g,x+2,y+8,8,1,'#b8b8a8');R(g,x+2,y+10,5,1,'#b8b8a8');R(g,x+2,y+12,7,1,'#e0534a')};
+const SHEET=(t,fr)=>{const p=t*PI2*2;return{legs:std,armRel:[[10,-2.5+.8*S(p)],[8,-1]],arms:[{ua:0,fa:0},{ua:0,fa:0}],lean:2,dy:S(p)>0?0:-1,face:S(p)>.2?'happy':'n',mouth:'smile',mid:(g,i)=>sheetProp(g,i)}};
 window.STRIPS={
+ sheet:()=>strip(SHEET,'side'),
  fwave:()=>strip(FWAVE,'f'),
  wheel:()=>strip(WHEEL,'side'),
  walk:()=>strip((t,fr)=>{const P=sideWalk.f(t,fr);return P},'side'),

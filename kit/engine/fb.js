@@ -5,7 +5,7 @@ function kitFB(g,P,v){
  const L=fx.map((f,i)=>{const jx=cx+(i?3:-3);if(P.sl)return{jx,k:[(jx+f[0])/2,(hipY+f[1])/2],a:f};const r=ik(jx,hipY,f[0],f[1],9,8,i?1:-1);const k=pt(jx,hipY,9,r.th),a=pt(k[0],k[1],8,r.sh);return{jx,k,a}});
  const ny=hipY-10,shY=ny+3,hy=ny-12;
  const SX=[cx-6,cx+5];
- const Ar=P.hands.map((h,i)=>{if(P.sa&&P.sa[i])return{e:[(SX[i]+h[0])/2,(shY+h[1])/2],h};const r=ik(SX[i],shY,h[0],h[1],6,6,i?1:-1);const e=pt(SX[i],shY,6,r.th),hh=pt(e[0],e[1],6,r.sh);return{e,h:hh}});
+ const Ar=P.hands.map((h,i)=>{if(P.armJ&&P.armJ[i])return{e:P.armJ[i].e,h:P.armJ[i].h};if(P.sa&&P.sa[i])return{e:[(SX[i]+h[0])/2,(shY+h[1])/2],h};const r=ik(SX[i],shY,h[0],h[1],6,6,i?1:-1);const e=pt(SX[i],shY,6,r.th),hh=pt(e[0],e[1],6,r.sh);return{e,h:hh}});
  const info={hipY,ny,shY,hy,h:Ar.map(a=>a.h),SX};
  P.back&&P.back(g,info);
  (P.order||[0,1]).forEach(i=>{const l=L[i],d=P.dL&&P.dL[i],pc=d?shade(K.pants,.66):K.pants,sc=d?shade(K.shoe,.66):K.shoe,sw=(P.sw&&P.sw[i])||5;line(g,l.jx,hipY,l.k[0],l.k[1],4,pc);line(g,l.k[0],l.k[1],l.a[0],l.a[1],4,pc);R(g,Math.round(l.a[0])-Math.floor(sw/2),Math.round(l.a[1]),sw,2,sc)});
