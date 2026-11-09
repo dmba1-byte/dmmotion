@@ -54,14 +54,27 @@ def _tidy(a):
     return a[max(0, nz[0] - pad):min(len(a), nz[-1] + pad)]
 
 
+ADA_PH = 'ˈeɪdiːˈeɪ'   # David's chosen read of "ADA": one quick, even beat
+
+
+def _say(text):
+    """Kokoro read of one line. Any 'ADA' is spoken as ADA_PH (approved 2026-11-09)."""
+    k = _kokoro()
+    if 'ADA' not in text:
+        return k.create(text, voice=KVOICE, speed=SPEED, lang='en-us')
+    parts = text.split('ADA')
+    ph = (' ' + ADA_PH + ' ').join(k.tokenizer.phonemize(p.strip(), 'en-us') if p.strip() else '' for p in parts)
+    return k.create(ph.strip(), voice=KVOICE, speed=SPEED, lang='en-us', is_phonemes=True)
+
+
 def _line(text):
     """One line of script, read by Kokoro (local, free). Whole line in one pass so
     the sentence keeps its own rhythm."""
-    key = hashlib.sha1(f'kokoro|{KVOICE}|{SPEED}|{text}'.encode()).hexdigest()[:16]
+    key = hashlib.sha1(f'kokoro|{KVOICE}|{SPEED}|{text}|{ADA_PH if "ADA" in text else ""}'.encode()).hexdigest()[:16]
     p = CACHE / f'{key}.npy'
     if p.exists():
         return np.load(p)
-    a, rate = _kokoro().create(text, voice=KVOICE, speed=SPEED, lang='en-us')
+    a, rate = _say(text)
     a = _tidy(np.asarray(a, dtype=np.float32))
     if rate != SR:
         a = resample_poly(a, SR, rate)
