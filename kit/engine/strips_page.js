@@ -28,7 +28,11 @@ const FIDLE=(t,fr)=>{const th=t*PI2,sy=GY-16.5-7;return{hip:GY-16.5+(S(th)>.6?-0
 const std=[st(2,2),st(-2,-2)];
 const sheetProp=(g,i)=>{const h=i.h[0],x=h[0]-1,y=h[1]-11;R(g,x,y,12,15,'#f1eddf');R(g,x,y,12,1,'#fff');R(g,x+2,y+3,8,1,'#5c8a7a');R(g,x+2,y+6,6,1,'#b8b8a8');R(g,x+2,y+8,8,1,'#b8b8a8');R(g,x+2,y+10,5,1,'#b8b8a8');R(g,x+2,y+12,7,1,'#e0534a')};
 const SHEET=(t,fr)=>{const p=t*PI2*2;return{legs:std,armRel:[[10,-2.5+.8*S(p)],[8,-1]],arms:[{ua:0,fa:0},{ua:0,fa:0}],lean:2,dy:S(p)>0?0:-1,face:S(p)>.2?'happy':'n',mouth:'smile',mid:(g,i)=>sheetProp(g,i)}};
+const _sy=GY-16.5-7;
+const FPOINT=(t,fr)=>{const th=t*PI2;return{hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7,_sy+8],[CX+13,_sy+1]],armJ:[{e:[CX-10.5,_sy+5],h:[CX-7,_sy+8.5]},{e:[CX+9.5,_sy+1],h:[CX+15.5+1.4*S(th*2),_sy+1+.6*S(th)]}],sl:1,mouth:'smile'}};
+const FCHEER=(t,fr)=>{const th=t*PI2*2,u=.5+.5*S(th),j=Math.max(0,S(th));return{hip:GY-16.5-Math.round(2*j),feet:[[-3.2,Math.round(2*j)],[3.2,Math.round(2*j)]],hands:[[CX-9,_sy-9],[CX+9,_sy-9]],armJ:[{e:[CX-10.5,_sy-2-u],h:[CX-11.5-u*.5,_sy-9-2*u]},{e:[CX+10.5,_sy-2-u],h:[CX+11.5+u*.5,_sy-9-2*u]}],sl:1,mouth:'open'}};
 window.STRIPS={
+ fpoint:()=>strip(FPOINT,'f'),fcheer:()=>strip(FCHEER,'f'),fbox:()=>strip((t,fr)=>FB[3].f(t,fr,'f'),'f'),fwalk:()=>strip((t,fr)=>FB[0].f(t,fr,'f'),'f'),bwalk:()=>strip((t,fr)=>FB[0].f(t,fr,'b'),'b'),
  sheet:()=>strip(SHEET,'side'),
  fwave:()=>strip(FWAVE,'f'),
  wheel:()=>strip(WHEEL,'side'),

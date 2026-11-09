@@ -20,4 +20,7 @@ SP.fwave1=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7.5,GY-16.5-7+10.
 SP.fcheer=()=>snap({hip:GY-16.5-3,feet:[[-3.5,3],[3.5,3]],hands:[[CX-10,GY-16.5-7-8],[CX+9,GY-16.5-7-8]],sl:1,sa:[0,0],mouth:'open'},'f');
 SP.back=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7.5,GY-16.5-7+10.5],[CX+6.5,GY-16.5-7+10.5]],sl:1,sa:[1,1]},'b');
 for(let k=0;k<8;k++)SP['walk'+k]=()=>{const P=sideWalk.f(k/8,k*2);delete P.scene;return snap(P,'side')};
+const sy_=GY-16.5-7;
+SP.fshrug=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-9,sy_],[CX+9,sy_]],armJ:[{e:[CX-10.5,sy_+3.5],h:[CX-13.5,sy_-.5]},{e:[CX+10.5,sy_+3.5],h:[CX+13.5,sy_-.5]}],sl:1,mouth:'flat'},'f');
+SP.fthink=()=>snap({hip:GY-16.5,feet:[[-3,0],[3,0]],hands:[[CX-7,sy_+9],[CX+2,sy_-1]],armJ:[null,{e:[CX+7,sy_+5],h:[CX+2.5,sy_-1.5]}],sl:1,sa:[1,0],mouth:'flat'},'f');
 window.SP=SP;
