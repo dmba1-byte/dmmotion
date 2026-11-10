@@ -100,3 +100,9 @@ Graphics baseline: lighting pass on every scene (practical light sources glow, d
 `python3 qa.py <reel.html> <duration> <cut times>` checks: facing vs. direction of travel; any standing character inside a registered furniture footprint (`solid()`); any character frozen more than 1.6 s; fewer than 5 shot types; fewer than 2 close-up beats; any script error. Then: full-size stills of every shot and a half-second scan sheet, looked at before delivery.
 
 Gate addition (Nov 10): front and back views must use straight legs and straight arms (`sl`, `sa`) unless the pose is marked deliberate (e.g. arms around a carried box). Bent IK limbs in front view read as bow legs and inward elbows.
+
+## H. Cross-posting (from Nov 10)
+YouTube channel: DM Motion, @dm_motion1. Upload through YouTube Studio in the Claude browser (video and cover fetched from the repo's raw URLs).
+Title: the hook as a plain sentence, under 70 characters, no hashtags. Description: 2-3 sentences that restate the story with the searchable nouns (the rule, the person, the number), the cheat-sheet link, the source line, then six tags.
+Tag system (six per post): 1 topic (#ada / #buildingcode / #construction), 1 audience (#architecture), 1 specific subject (#stairs, #universaldesign, #disabilityrights), 1 genre (#history when it is a true story), #pixelart, #shorts.
+Cover: 1080x1920, DM logo top-left, category pill top-right, two-line title (second line amber), scene crop, one-line payoff, level tiles. Files in social/channel/.
