@@ -1,0 +1,9 @@
+<!doctype html><html><head><meta charset="utf-8"><title>DM Motion files</title></head><body>
+<script>
+(async()=>{
+  const q=new URLSearchParams(location.search);const files=(q.get('f')||'').split(',').filter(Boolean);const to=q.get('o');
+  const tgt=window.opener||(window.parent!==window?window.parent:null);if(!tgt||!to)return;
+  for(const name of files){const r=await fetch(name+'?v='+Date.now());const b=await r.arrayBuffer();tgt.postMessage({dmfile:name,type:r.headers.get('content-type'),buf:b},to,[b])}
+  tgt.postMessage({dmdone:files.length},to);
+})();
+</script></body></html>
