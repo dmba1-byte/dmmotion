@@ -98,3 +98,5 @@ Graphics baseline: lighting pass on every scene (practical light sources glow, d
 
 ## G. The gate (`social/qa.py`) — run before every render; a FAIL blocks the render
 `python3 qa.py <reel.html> <duration> <cut times>` checks: facing vs. direction of travel; any standing character inside a registered furniture footprint (`solid()`); any character frozen more than 1.6 s; fewer than 5 shot types; fewer than 2 close-up beats; any script error. Then: full-size stills of every shot and a half-second scan sheet, looked at before delivery.
+
+Gate addition (Nov 10): front and back views must use straight legs and straight arms (`sl`, `sa`) unless the pose is marked deliberate (e.g. arms around a carried box). Bent IK limbs in front view read as bow legs and inward elbows.

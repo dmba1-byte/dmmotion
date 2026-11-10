@@ -17,6 +17,7 @@ with sync_playwright() as p:
             if k in prev and abs(t-prev[k]['t'])<0.15 and not near(t) and not c.get('fb'):
                 dx=c['x']-prev[k]['x']
                 if abs(dx)>=1 and dx*(-1 if c['flip'] else 1)<0: bad.append((t,'FACING',k,dx))
+            if c.get('fb') and c.get('bent') and not c.get('ok'): bad.append((t,'FRONT VIEW LIMBS BENT',k,''))
             # 4 furniture overlap
             if not c.get('ok'):
                 for s in q['solids']:

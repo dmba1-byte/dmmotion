@@ -20,7 +20,7 @@ const dupF=(g,i)=>{glasses(g,i)};
 function personFB(P,ox,oy,look,v){const sv=Object.assign({},K);Object.assign(K,look||{});if(look&&P.nobag==null)P.nobag=true;
  const cx=Math.round(ox)+CX,gy=FL-Math.round(oy||0);wg.globalAlpha=.22;R(wg,cx-8,gy,16,1,'#000');R(wg,cx-6,gy+1,12,1,'#000');wg.globalAlpha=1;
  const ch=mk();let inf;try{inf=kitFB(ch.getContext('2d'),P,v)}finally{Object.assign(K,sv)}outline(ch);wg.drawImage(ch,Math.round(ox),OY-Math.round(oy||0));
- QA.chars.push({k:'fb'+((look&&look.id)||'kit'),x:Math.round(ox),cx,oy:0,flip:false,fb:true,sig:JSON.stringify([P.hip,P.feet,P.hands,P.hy,P.mouth])});return inf}
+ QA.chars.push({k:'fb'+((look&&look.id)||'kit'),x:Math.round(ox),cx,oy:0,flip:false,fb:true,ok:!!P.okOverlap,bent:!(P.sl&&(P.sa||P.armJ)),sig:JSON.stringify([P.hip,P.feet,P.hands,P.hy,P.mouth])});return inf}
 
 // big face close-up
 function portrait(g,L,o){o=o||{};const cx=45+(o.dx||0),top=72+(o.dy||0);
@@ -79,9 +79,9 @@ function sceneMission(t){const g=wg;blueprintWall(g,t);
   if(t<1.25||(t>2.2&&t<2.85))hands=[[CX-8,SHY+10],[CX+10+rat,SHY+3]];
   else if(t>=3.15)hands=[[CX-6,SHY-1+(rat?1:0)],[CX+6,SHY-1+(rat?1:0)]];
   else hands=[[CX-8,SHY+10+br],[CX+8,SHY+10+br]];
-  personFB({hip:GY-17,feet:[[-3,0],[3,0]],hands,hy:(t>1.25&&t<2.2)?-1:br},13,(t>=3.15&&rat)?1:0,null,'b')}
+  personFB({hip:GY-17,feet:[[-3,0],[3,0]],sl:1,sa:[1,1],hands,hy:(t>1.25&&t<2.2)?-1:br},13,(t>=3.15&&rat)?1:0,null,'b')}
  else{const sh=Math.round(Math.sin((t-3.95)*7)*1);
-  personFB({hip:GY-17,feet:[[-3,0],[3,0]],hands:[[CX-11,SHY+3+sh],[CX+11,SHY+3+sh]],mouth:'open',hy:br},13,0,null,'f')}
+  personFB({hip:GY-17,feet:[[-3,0],[3,0]],sl:1,sa:[1,1],hands:[[CX-14,SHY+5+sh],[CX+13,SHY+5+sh]],mouth:'open',hy:br},13,0,null,'f')}
  if(t>=T.s2&&t>6.4){} return{}}
 // ---------- Carl, close-up, in the shop ----------
 function shelves(g,dim){
@@ -247,7 +247,7 @@ function sceneLean(t){const g=wg;R(g,0,0,WW,56,NAVY);brick(g,false);
  const w=Math.round(30*(1-u*.82));
  if(w>=28)bigDoor(g,30,0,{bar:true});else{R(g,30,58,w,62,'#6b4a2e');R(g,30,58,w,1,'#9a7250');R(g,30+w-1,58,1,62,'#3a2616');R(g,31,95,Math.max(1,w-2),3,BRASS)}
  const fr=t*30/2,tt=((t-T.s6c)*1.25)%1;const B=FB[3].f(tt,fr,'b');delete B.scene;
- const bump=(t>28.66&&t<28.8)?1:0;B.front=(gg,i)=>{R(gg,CX-7,i.hy-6,14,5,HAT);R(gg,CX-7,i.hy-6,14,1,'#423a4c');R(gg,CX-9,i.hy-1,18,1,HAT)};
+ const bump=(t>28.66&&t<28.8)?1:0;B.okOverlap=true;B.front=(gg,i)=>{R(gg,CX-7,i.hy-6,14,5,HAT);R(gg,CX-7,i.hy-6,14,1,'#423a4c');R(gg,CX-9,i.hy-1,18,1,HAT)};
  personFB(B,13,bump,LOOK.carl,'b');
  return{u}}
 // ---------- today ----------
@@ -305,8 +305,8 @@ function sceneWin(t){const g=wg;
  R(g,0,FL,WW,40,'#7fb060');R(g,0,FL,WW,1,'#9ccf7c');for(let k=0;k<30;k++)px(g,(k*31)%WW,FL+3+(k*7)%36,'#6a9a52');
  for(let k=0;k<7;k++)R(g,38-k*2,FL+k*6,14+k*4,6,k%2?'#d8d2c6':'#cfc8ba');
  const ph=((t-T.s8)*1.6)%1,air=Math.round(Math.sin(ph*PI)*7);
- const up=ph<.5;
- personFB({hip:GY-17-air,feet:[[-3-(air>3?1:0),air],[3+(air>3?1:0),air]],hands:[[CX-10,SHY-air-(up?6:2)],[CX+10,SHY-air-(up?6:2)]],mouth:'open',nobag:false},13,0,null,'f');
+ const lift=Math.round(Math.sin(ph*PI)*3);
+ personFB({hip:GY-17-air,feet:[[-3,air],[3,air]],sl:1,sa:[1,1],hands:[[CX-14,SHY-air-6-lift],[CX+13,SHY-air-6-lift]],mouth:'open',nobag:false},13,0,null,'f');
  for(let k=0;k<26;k++){const y=56+((t*22+k*29)%104),x=(k*37+Math.round(Math.sin(t*2+k)*3))%WW;R(g,x,y,2,1,[MINT,AMBER,CORAL,'#9fc3ff'][k%4])}
  return{}}
 
