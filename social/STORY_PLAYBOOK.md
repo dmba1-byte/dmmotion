@@ -106,3 +106,12 @@ YouTube channel: DM Motion, @dm_motion1. Upload through YouTube Studio in the Cl
 Title: the hook as a plain sentence, under 70 characters, no hashtags. Description: 2-3 sentences that restate the story with the searchable nouns (the rule, the person, the number), the cheat-sheet link, the source line, then six tags.
 Tag system (six per post): 1 topic (#ada / #buildingcode / #construction), 1 audience (#architecture), 1 specific subject (#stairs, #universaldesign, #disabilityrights), 1 genre (#history when it is a true story), #pixelart, #shorts.
 Cover: 1080x1920, DM logo top-left, category pill top-right, two-line title (second line amber), scene crop, one-line payoff, level tiles. Files in social/channel/.
+
+## I. Level choices (set Nov 10, 2026)
+
+1. Three options, and every one must sound like a good idea. If one is obviously silly, rewrite it.
+2. Nothing before the countdown may reveal or hint at the answer: not the hook, the headline, the level title, the setup narration, the scene art, the option icons, the caption or the video title. Reveal facts move to the play-out.
+3. Each option is its own spoken beat: "Option A." with a pause before and after, a chime, a letter badge and its own scene. Always say "Option A/B/C"; never start a sentence with a bare "A" (the voice reads it as "uh").
+4. A 3-second "lock it in" countdown in silence before any answer.
+5. Every option is played out on screen and in the voice, with a verified fact for why it fails or works.
+6. Back views: a character working on something in front of them never shows hands over their own body; arms reach past the head or out to the sides.
