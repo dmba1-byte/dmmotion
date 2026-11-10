@@ -61,6 +61,16 @@ Nothing found guarantees views. These raise the odds; we measure every reel.
 5. Sound: silence before the climax, a hit on the reveal, music lifts at the win.
 6. Real people are drawn respectfully and generically, not as caricatures.
 
+## D2. Pre-render checklist (set in stone; run before every render)
+1. Direction: every character faces the way it travels, always. Wheels spin the way the chair moves; arms push the way the chair moves. Run `motioncheck.py <reel.html> <duration>`; the only allowed hits are scene cuts.
+2. Holding: anything carried shows the hands on it (sign poles, crates, bags, papers). Nothing floats.
+3. Resting: every prop sits on a surface or hangs from a fixture. Shadows under things that stand on the floor.
+4. Path of travel: nothing stands in a character's path unless the story puts it there; characters are never half-hidden behind furniture unless that is the point, and then the overlap must read cleanly.
+5. Scale: doors taller than people; furniture at human scale; one consistent pixel scale per scene.
+6. Camera: if the camera moves, every layer moves with its own parallax, including the characters.
+7. Idle life: nobody freezes while a line plays (breathing, blinks, small shifts).
+8. Full-size stills from every scene, then a frame every half second across the whole render, viewed before delivery.
+
 ## E. Process
 1. Find the story (person, injustice, action, twist, win, rule). Verify each fact.
 2. Script to the spine; test against the rules above.
