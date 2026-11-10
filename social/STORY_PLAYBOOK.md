@@ -77,3 +77,24 @@ Nothing found guarantees views. These raise the odds; we measure every reel.
 3. Storyboard (one frame per beat) and check stills.
 4. Build, render, watch the whole thing, fix.
 5. Post only when ready. 24 h later: skip rate, average watch %, sends, saves. Keep what works, change one thing at a time.
+
+## F. Mission format (from Nov 10) — what the early-November reels did that the Nov 9 batch dropped
+
+Shot-by-shot comparison of the 1,300–1,500-play story reels (Nov 5) against the Nov 9 batch (130–140 plays, 42–49% skip):
+
+| | Early Nov (worked) | Nov 9 (flopped) | Rule now |
+|---|---|---|---|
+| Vantage | front, face close-up, top-down plan, side, door elevation, diagram card | side profile only, medium distance | At least 5 shot types per reel; no two side shots back to back for more than ~6 s |
+| Emotion | full-screen face at the turning points | never closer than full body | At least 2 face close-up beats |
+| Opening | question over a strange moving picture | static title card | Frame 0 is a moving scene with the objective on it. No cover card |
+| Collectible | "one of five numbers" tile grid | none | Mission tracker tiles on screen all reel; tile fills, then checks |
+| CTA | "Comment REACH" | "Save this" | "Follow for mission 02" (test against comment CTA) |
+
+Mission spine: (1) objective that sounds impossible, with the constraints listed, outcome hidden; (2) rewind to the real person; (3) why it mattered (stakes, stated soberly, never gamified); (4) the puzzle restated; (5) the unconventional answer, shown not told; (6) "rule unlocked": the code requirement today, with its number; (7) mission complete, tile checks, next mission teased. Subjects alternate: construction/code stories and accessibility stories; not every reel features a wheelchair.
+
+Audio: no noise bursts, nothing sustained above ~2.5 kHz, all effects low-passed and under the voice. Fire, alarms and crowds are a low rumble or silence, never a screech.
+
+Graphics baseline: lighting pass on every scene (practical light sources glow, daylight shafts, dusk/night grade), contact shadow under every character, pixel lettering on signs, parallax on any camera move, ambient motion in every shot. Seated characters: hips on the seat, knees bent, both feet flat on the floor (`sitP`).
+
+## G. The gate (`social/qa.py`) — run before every render; a FAIL blocks the render
+`python3 qa.py <reel.html> <duration> <cut times>` checks: facing vs. direction of travel; any standing character inside a registered furniture footprint (`solid()`); any character frozen more than 1.6 s; fewer than 5 shot types; fewer than 2 close-up beats; any script error. Then: full-size stills of every shot and a half-second scan sheet, looked at before delivery.
