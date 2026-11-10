@@ -1,5 +1,8 @@
 # DM Motion Story Playbook, v2 (Kit reels)
 
+## Rule zero: quality over speed, always
+Never compromise quality for speed, for any reel, ever. A reel is finished only when every part of the whole video is at a standard of excellence: background, midground and foreground with depth; props drawn so they are recognizable and physically make sense (held, resting, attached, never floating); characters with natural movement (breathing, blinks, weight shifts, arms doing what the action needs); lighting and shadows; sound tied to the beats. Nothing is rushed. Check every scene at full size before rendering, and watch the whole render before delivering. If a number of reels is requested for a day, state only the honest time it takes to make all of them at this standard. Reels get posted only when they meet it.
+
 Purpose: every reel is a true, verified story, told with top-tier pixel graphics. The ADA rule is the payoff, never the opening.
 
 ## A. What the research shows (strongest first)
