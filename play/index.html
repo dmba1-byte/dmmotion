@@ -953,7 +953,9 @@ function update(dt){G.time+=dt;const k=G.kit;
  G.spawnIn-=dt;if(G.spawnIn<=0)spawn();
  let waiting=0;
  for(const s of G.sites){
-  if(s.guest.mad>0){s.guest.mad-=dt;if(s.guest.mad<=0)s.guest.gone=true}
+  if(s.guest.mad>0){s.guest.mad-=dt;const G2=s.guest;
+   if(G2.mad<=1.5){if(!G2.dir)G2.dir=(LIFT<guestX(s)?-1:1);G2.off=(G2.off||0)+G2.dir*34*dt;G2.walk=(G2.walk||0)+34*dt}
+   if(G2.mad<=0)G2.gone=true}
   if((s.st==='open'||(s.st==='build'&&s.by==='kit'))&&!s.guest.gone&&!(s.guest.mad>0)){if(s.st==='open')waiting++;s.pat-=dt/(70*patMul()*G.B.pat);
    if(s.pat<=0){s.pat=0;s.guest.mad=2.6;G.rating-=10;G.combo=0;sfx.angry();toast(s.guest.name+' RAN OUT OF PATIENCE · RATING -10');G.floats.push({f:s.f,x:guestX(s)-8,y:60,text:'-10',col:CORAL,life:1.6});if(s.f===G.f)G.shake=.3}}
   if(s.st==='build'&&s.by==='crew'&&s.crew.st==='work'){s.prog+=dt/(9*buildMul());if(Math.random()<dt*7&&s.f===G.f)dust(s);if(Math.random()<dt*3&&s.f===G.f)sfx.hit();if(s.prog>=1)finish(s)}
@@ -1273,14 +1275,19 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
  g.clearRect(0,0,WW,WH);floorBase(F,cam,t,u);
  for(const s of G.sites)if(s.f===F&&s.st!=='wait')drawSite(s,cam,t);
  const ents=[];
- for(const s of G.sites){if(s.f!==F||s.st==='wait'||s.guest.gone)continue;const gx=guestX(s)-cam;if(gx<-40||gx>WW+40)continue;
+ for(const s of G.sites){if(s.f!==F||s.st==='wait'||s.guest.gone)continue;const gx=guestX(s)+(s.guest.off||0)-cam;if(gx<-40||gx>WW+40)continue;
   ents.push(()=>{const L=LOOK[s.guest.look],happy=s.st==='done';let P;
    if(s.chair){const ty=hY(Math.min(s.v,60))-OY;P=s.type==='reach'&&!happy?seated({mode:'reach',target:[CX+22,Math.max(GY-40,ty)],face:'n',mouth:'flat',lean:10}):roll(t,happy?t*14:0,false);if(!happy&&P.mouth)P.mouth='flat'}
-   else P=happy&&s.guest.joy>0?CHEER(t):s.guest.mad>0?{legs:stand2,arms:[{ua:-140+Math.sin(t*30)*14,fa:-160},{ua:-140-Math.sin(t*30)*14,fa:-160}],lean:Math.sin(t*30)*3,dy:Math.abs(Math.sin(t*18))>.5?-1:0,face:'n',mouth:'open'}:Object.assign(IDLE(t,s.id),{mouth:happy?'smile':'flat'});
-   person(P,gx-CX+(s.guest.mad>0?Math.round(Math.sin(t*46)):0),0,L,null,false);
+   const md=s.guest.mad||0,out=md>0&&md<=1.5;
+   if(out)P=s.chair?roll(t,s.guest.walk||0,true):walkP(s.guest.walk||0);
+   else if(md>0)P={legs:stand2,arms:[{ua:-140+Math.sin(t*30)*14,fa:-160},{ua:-140-Math.sin(t*30)*14,fa:-160}],lean:Math.sin(t*30)*3,dy:Math.abs(Math.sin(t*18))>.5?-1:0,face:'n',mouth:'open'};
+   else P=happy&&s.guest.joy>0?CHEER(t):Object.assign(IDLE(t,s.id),{mouth:happy?'smile':'flat'});
+   if(md>0&&md<.55)g.globalAlpha=Math.max(0,md/.55);
+   person(P,gx-CX+(md>1.5?Math.round(Math.sin(t*46)):0),0,L,null,out&&s.guest.dir<0);
+   g.globalAlpha=1;
    if(s.cane&&!happy)line(g,gx+7,96,gx+12,119,1,'#f6f0e2');
    if((s.st==='open'||(s.st==='build'&&s.by==='kit'))&&!(s.guest.mad>0))bubble(gx,56,t+s.id,s.pat,!!s.chair);
-   if(s.guest.mad>0){const my=64+(s.chair?10:0)-Math.round(Math.abs(Math.sin(t*12))*2);R(g,gx-6,my-2,13,9,'#1a162e');ptext(g,'!!',gx-3,my,CORAL);ptext(g,'-10',gx+8,my,'#fff6c8')}})}
+   if(md>1.5){const my=64+(s.chair?10:0)-Math.round(Math.abs(Math.sin(t*12))*2);R(g,gx-6,my-2,13,9,'#1a162e');ptext(g,'!!',gx-3,my,CORAL);ptext(g,'-10',gx+8,my,'#fff6c8')}})}
  for(const c of G.crews){if(c.st==='idle'||c.f!==F)continue;const X=c.x-cam;if(X<-40||X>WW+40)continue;
   ents.push(()=>{const sw=c.st==='work'?.5+.5*Math.sin(t*11):0;const P=c.st==='work'?HAMMER(sw):walkP(c.dist||0);
    const fl=c.dir<0,ey=-elev(F,c.x);const inf=person(P,X-CX,ey,LOOK.p2,hardhat,fl);if(c.st==='work'){const h=handW(inf,0,X-CX,fl);hammerProp(h[0],h[1]+ey,sw,fl)}})}
