@@ -106,6 +106,7 @@ button.chip0{font-family:var(--fp);font-weight:700;cursor:pointer;color:var(--go
   <canvas class="px" id="tcv" width="120" height="100"></canvas>
   <h1>UP TO <b>CODE</b></h1><div class="sub" id="t_sub"></div>
   <button class="btn" id="play">▶ Start</button>
+  <button class="ghost gold" id="b_bld" style="display:none"></button>
   <div class="row"><button class="ghost" id="b_how">How to play</button><button class="ghost gold" id="b_lock" style="display:none">Locker</button></div>
   <button class="ghost" id="reset" style="display:none">Start over from Day 1</button>
   <div class="foot">Ages 13+ · © 2026 David Mba · DM Motion™ · <a href="../privacy.html" style="color:inherit">Privacy</a> · <a href="../" style="color:inherit">dmmotion</a><br>Measurements follow the 2010 ADA Standards for Accessible Design.</div>
@@ -799,6 +800,10 @@ const SPEC={
    hi:'Too high. That\'s a shoulder workout.',lo:'Too low. I\'d have to stoop the whole way.',verb:'Raise it'},
  ramp:{unit:'',vals:[4,6,8,12,16],fmt:v=>'1 IN '+v,ok:v=>v>=12,rule:'Ramps: no steeper than 1 in 12.',sec:'405.2',
    hi:'',lo:'Still too steep. I rolled right back down.',verb:'Rebuild it'},
+ knee:{unit:'IN',vals:[20,24,27,30,34],ok:v=>v>=27&&v<=31,rule:'Knee space under a desk: at least 27 inches high.',sec:'306.3.3',
+   hi:'Now the desk top is up at my chest.',lo:'My knees hit the desk. I can\'t roll under it.',verb:'Raise the underside'},
+ fountain:{unit:'IN',vals:[30,36,42,46,50],ok:v=>v<=36,rule:'Drinking fountain spout: 36 inches high at most.',sec:'602.4',
+   hi:'I still can\'t get my mouth up to the spout.',lo:'',verb:'Lower the spout'},
  force:{unit:'LB',vals:[5,8,12,15,20],ok:v=>v<=5,rule:'Interior doors: 5 pounds of push at most.',sec:'404.2.9',
    hi:'Still fighting me. My wrists lose.',lo:'',verb:'Adjust the closer'},
 };
@@ -820,9 +825,35 @@ const SITES=[
  {f:3,x:262,type:'rail',cur:50,name:'TERRACE RAIL',chair:0,say:'I can\'t even get my hand up to that rail.'},
  {f:3,x:338,type:'sign',cur:30,name:'RESTROOM SIGN',chair:0,cane:1,say:'I walked past it twice. Is there a sign?'},
 ];
+const SITES2=[
+ {f:0,x:62,type:'reach',cur:60,name:'DOOR BUZZER',chair:1,say:'I\'ve got a nine o\'clock and I can\'t reach the buzzer.'},
+ {f:0,x:132,type:'counter',cur:50,name:'SECURITY DESK',chair:1,say:'Security can\'t even see me to sign me in.'},
+ {f:0,x:204,type:'fountain',cur:46,name:'WATER FOUNTAIN',chair:1,say:'The fountain is up at my forehead.'},
+ {f:0,x:350,type:'ramp',cur:6,name:'LOADING RAMP',chair:1,say:'Deliveries go up that ramp. I don\'t.'},
+ {f:1,x:96,type:'sign',cur:74,name:'OFFICE SIGN',chair:0,cane:1,say:'Which office is this? The sign is on the ceiling.'},
+ {f:1,x:170,type:'knee',cur:20,name:'WORK DESK',chair:1,say:'My knees hit the desk. I work sideways.'},
+ {f:1,x:246,type:'reach',cur:54,name:'LIGHT SWITCH',chair:1,say:'First one in, and I can\'t turn the lights on.'},
+ {f:1,x:318,type:'force',cur:20,name:'COPY ROOM DOOR',chair:0,say:'That copy room door is a gym machine.'},
+ {f:2,x:64,type:'table',cur:42,name:'LUNCH TABLE',chair:1,say:'Lunch break is thirty minutes and I can\'t reach my plate.'},
+ {f:2,x:152,type:'counter',cur:46,name:'COFFEE BAR',chair:1,say:'I order coffee by shouting at a wall.'},
+ {f:2,x:236,type:'fountain',cur:50,name:'CAFE FOUNTAIN',chair:1,say:'Who is this fountain for? Giraffes?'},
+ {f:2,x:300,type:'rail',cur:22,name:'STAGE STEPS RAIL',chair:0,say:'I\'m presenting in five minutes and that rail is at my shin.'},
+ {f:3,x:92,type:'rail',cur:50,name:'DECK STAIR RAIL',chair:0,say:'I can\'t get a hand on that rail.'},
+ {f:3,x:186,type:'sign',cur:30,name:'DECK SIGN',chair:0,cane:1,say:'Is there a sign out here? I can\'t find one.'},
+ {f:3,x:262,type:'knee',cur:24,name:'PICNIC DESK',chair:1,say:'Great view. Can\'t get under the table to enjoy it.'},
+ {f:3,x:336,type:'reach',cur:66,name:'HEATER SWITCH',chair:1,say:'It\'s freezing up here and the heater switch is out of reach.'},
+];
+LOOK.w1={skin:'#8a5a3c',skinD:'#6e452d',hair:'#1c1418',top:'#e8eef4',topL:'#ffffff',pants:'#2a3350',shoe:'#121016'};
+LOOK.w2={skin:'#f0caa8',skinD:'#d2a886',hair:'#7a3a2a',top:'#3a5a8a',topL:'#5a80b8',pants:'#2f3248',shoe:'#3a2a20'};
+LOOK.w3={skin:'#c98b69',skinD:'#a86f52',hair:'#2a1f28',top:'#b85a6a',topL:'#d88a98',pants:'#3a3550',shoe:'#121016'};
+LOOK.w4={skin:'#6e4430',skinD:'#563322',hair:'#121014',top:'#4a7a5a',topL:'#6aa07a',pants:'#24212c',shoe:'#cfc6b6'};
+const NAMES2=['MS. ABARA','MR. LINDQVIST','DR. OYELARAN','MS. TORRES','MR. KWAME','MS. HOLT','MR. DESAI','MS. FRANKLIN','MR. ODUYA','MS. CHO','MR. BELL','MS. IYER'];
 const NAMES=['MR. OKAFOR','MS. REYES','MRS. ADEYEMI','MR. CHEN','MS. LAURENT','MR. BROOKS','COACH DANA','MR. SINGH','MS. PARK','MR. ALVAREZ','MS. NWOSU','MR. HALE','DR. IBE','MS. COLE'];
 const LOOKK=['judy','a1','a2','a3','a4'];
 const FLN=['LOBBY','ROOMS','POOL','ROOF'];
+const BLDS=[{name:'THE MERIDIAN',short:'the Meridian',fln:['LOBBY','ROOMS','POOL','ROOF'],sites:()=>SITES,names:()=>NAMES,looks:['judy','a1','a2','a3','a4'],tip:1,pat:1,crew:6,tint:null},
+ {name:'ATLAS TOWER',short:'Atlas Tower',fln:['LOBBY','OFFICES','CAFE','SKY DECK'],sites:()=>SITES2,names:()=>NAMES2,looks:['w1','w2','w3','w4','a2'],tip:1.6,pat:.72,crew:10,tint:'#1f8f8a'}];
+const BD=()=>BLDS[SV.b||0],curDay=()=>SV.b?SV.day2||0:SV.day,setDay=v=>{if(SV.b)SV.day2=v;else SV.day=v},atlasOpen=()=>SV.day>=5&&SV.up.crew>=2;
 const DAYS=[{n:3,floors:1,gap:15},{n:5,floors:2,gap:14},{n:6,floors:3,gap:13},{n:7,floors:4,gap:12},{n:9,floors:4,gap:11}];
 const LETTERS=[
  ['Kit,','If you are reading this, the Meridian is yours. I opened these doors in 1958 and swore every guest would feel at home. I did not keep that promise. Not to everyone.'],
@@ -848,7 +879,7 @@ const curFit=()=>OUTFITS.find(o=>o.k===SV.fit)||OUTFITS[0];
 function kitd(P,ox,oy,flip){const o=curFit();P.nobag=false;return person(P,ox,oy,o.look,o.hat?hardhat:null,flip)}
 LOOK.gran=Object.assign({},LOOK.judy,{hair:'#d8d8e2',top:'#7a5aa0',topL:'#9a7ac0'});
 /* ---------- save ---------- */
-let SV={day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:0,seenIntro:0,fits:['classic'],fit:'classic'};
+let SV={day2:0,b:0,day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:0,seenIntro:0,fits:['classic'],fit:'classic'};
 try{const s=JSON.parse(localStorage.getItem('utc2')||'null');if(s)SV=Object.assign(SV,s)}catch(e){}
 const save=()=>{try{localStorage.setItem('utc2',JSON.stringify(SV))}catch(e){}};
 
@@ -877,20 +908,20 @@ $('act').addEventListener('pointerdown',e=>{e.preventDefault();act()});
 
 /* ---------- state ---------- */
 let G=null,last=0,raf=0,TT=0;
-function startDay(){const D=DAYS[Math.min(SV.day,DAYS.length-1)],extra=Math.max(0,SV.day-4);
- const pool=shuffle(SITES.map((s,i)=>i).filter(i=>SITES[i].f<D.floors));
+function startDay(){const B=BD(),SS=B.sites(),cd=curDay(),D=DAYS[Math.min(cd,DAYS.length-1)],extra=Math.max(0,cd-4);
+ const pool=shuffle(SS.map((s,i)=>i).filter(i=>SS[i].f<D.floors));
  let ids=pool.slice(0,Math.min(pool.length,D.n+extra));
- if(SV.day===0)ids=[0,1,2];
- const names=shuffle(NAMES.slice());
- G={day:SV.day,f:0,kit:{x:110,dir:1,dist:0,moving:false},cam:60,rating:75,tips:0,combo:0,time:0,hints:2,
-  sites:ids.map((i,k)=>Object.assign({id:i,st:'wait',v:SITES[i].cur,prog:0,tried:[],pat:1,guest:{name:names[k%names.length],look:LOOKK[(i+k)%5],gone:false,joy:0},stamp:null},SITES[i])),
+ if(cd===0)ids=[0,1,2];
+ const names=shuffle(B.names().slice());
+ G={day:cd,b:SV.b||0,B,fln:B.fln,bname:B.name,f:0,kit:{x:110,dir:1,dist:0,moving:false},cam:60,rating:75,tips:0,combo:0,time:0,hints:2,
+  sites:ids.map((i,k)=>Object.assign({id:i,st:'wait',v:SS[i].cur,prog:0,tried:[],pat:1,guest:{name:names[k%names.length],look:B.looks[(i+k)%5],gone:false,joy:0},stamp:null},SS[i])),
   queue:ids.slice(),spawnIn:1,gap:Math.max(7,D.gap-extra),crews:Array.from({length:1+SV.up.crew},()=>({site:null,x:LIFT,f:0,st:'idle'})),
-  z:0,zhold:0,ride:null,parts:[],floats:[],sheet:null,diy:null,over:false,paused:false,near:null,shake:0,fade:0,firsts:0,fails:0,tut:SV.day===0?0:9,clock:0};
- if(SV.day===0){G.sites.sort((a,b)=>a.id-b.id);G.queue=[0,1,2]}
+  z:0,zhold:0,ride:null,parts:[],floats:[],sheet:null,diy:null,over:false,paused:false,near:null,shake:0,fade:0,firsts:0,fails:0,tut:cd===0&&!SV.b?0:9,clock:0};
+ if(cd===0){G.sites.sort((a,b)=>a.id-b.id);G.queue=[0,1,2]}
  show('game');closeSheet();cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(loop)}
 const site=id=>G.sites.find(s=>s.id===id);
 function spawn(){if(!G.queue.length)return;const s=site(G.queue.shift());s.st='open';s.pat=1;
- if(G.time>2){sfx.alert();toast(s.f===G.f?'NEW GUEST ON THIS FLOOR':'GUEST WAITING: '+(s.f+1)+' '+FLN[s.f])}
+ if(G.time>2){sfx.alert();toast(s.f===G.f?'NEW GUEST ON THIS FLOOR':'GUEST WAITING: '+(s.f+1)+' '+G.fln[s.f])}
  G.spawnIn=G.queue.length?G.gap:1e9}
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2400)}
 const bal=()=>SV.stars+(G&&!G.over?G.tips:0);
@@ -919,7 +950,7 @@ function update(dt){G.time+=dt;const k=G.kit;
  G.spawnIn-=dt;if(G.spawnIn<=0)spawn();
  let waiting=0;
  for(const s of G.sites){
-  if(s.st==='open'&&!s.guest.gone){waiting++;s.pat-=dt/(70*patMul());
+  if(s.st==='open'&&!s.guest.gone){waiting++;s.pat-=dt/(70*patMul()*G.B.pat);
    if(s.pat<=0){s.guest.gone=true;G.rating-=8+G.day;G.combo=0;sfx.angry();toast(s.guest.name+' GAVE UP AND LEFT');if(s.f===G.f)G.shake=.3}}
   if(s.st==='build'&&s.by==='crew'&&s.crew.st==='work'){s.prog+=dt/(9*buildMul());if(Math.random()<dt*7&&s.f===G.f)dust(s);if(Math.random()<dt*3&&s.f===G.f)sfx.hit();if(s.prog>=1)finish(s)}
   if(s.guest.joy>0)s.guest.joy-=dt;
@@ -934,7 +965,7 @@ function update(dt){G.time+=dt;const k=G.kit;
  for(const f of G.floats){f.y-=dt*10;f.life-=dt}G.floats=G.floats.filter(f=>f.life>0);
  G.shake=Math.max(0,G.shake-dt);
  if(!G.over&&G.sites.every(s=>s.st==='done'))endDay(true)}
-const POS={reach:[14,-1,-22],counter:[26,-1,-30],sign:[14,-1,-20],bar:[14,-1,-28],table:[22,-1,-24],rail:[44,-1,-30],ramp:[14,-1,-98],force:[32,-1,-30]};
+const POS={knee:[24,-1,-22],fountain:[16,-1,-22],reach:[14,-1,-22],counter:[26,-1,-30],sign:[14,-1,-20],bar:[14,-1,-28],table:[22,-1,-24],rail:[44,-1,-30],ramp:[14,-1,-98],force:[32,-1,-30]};
 const guestX=s=>s.type==='ramp'?s.x-Math.round((s.st==='build'?lerp(s.from,s.target,ease(s.prog)):s.v)*5)-16:s.x+POS[s.type][2];
 function elev(F,x){let e=0;if(!G)return 0;for(const s of G.sites){if(s.f!==F||s.st==='wait')continue;
   if(s.type==='ramp'){const v=s.st==='build'?lerp(s.from,s.target,ease(s.prog)):s.v,run=v*5;if(x>=s.x&&x<=s.x+40)e=6;else if(x>s.x-run&&x<s.x)e=6*(x-(s.x-run))/run}
@@ -952,10 +983,10 @@ function drawSheet(){const sh=G.sheet,el=$('sheet');if(!sh){el.classList.remove(
  $('pad').style.visibility='hidden';el.classList.add('show');
  if(sh.t==='lift'){el.innerHTML='<div class="sh-h">LIFT<span>where to?</span></div><div class="lift">'+[3,2,1,0].map(f=>{const D=DAYS[Math.min(G.day,4)];const lock=f>=D.floors;
    const n=G.sites.filter(s=>s.f===f&&s.st==='open').length;
-   return `<button class="chip big${f===G.f?' here':''}" ${lock?'disabled':''} data-f="${f}"><b>${f+1}</b> ${FLN[f]}${lock?' · LOCKED':''}${n?`<i>${n} waiting</i>`:''}</button>`}).join('')+'</div><button class="ghost" id="shx">Stay here</button>';
+   return `<button class="chip big${f===G.f?' here':''}" ${lock?'disabled':''} data-f="${f}"><b>${f+1}</b> ${G.fln[f]}${lock?' · LOCKED':''}${n?`<i>${n} waiting</i>`:''}</button>`}).join('')+'</div><button class="ghost" id="shx">Stay here</button>';
   el.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>ride(+b.dataset.f));$('shx').onclick=closeSheet;return}
  const s=sh.s,P=SPEC[s.type],fmt=P.fmt||(v=>v+' '+P.unit),known=SV.notes.includes(s.type);
- const crewFree=G.crews.some(c=>c.st==='idle'),cost=6;
+ const crewFree=G.crews.some(c=>c.st==='idle'),cost=G.B.crew;
  el.innerHTML=`<div class="sh-h">${s.name}<span>NOW: ${fmt(s.v)}</span></div>
   <div class="say">${s.guest.gone?'The guest gave up. Fix it anyway.':'<b>'+s.guest.name+':</b> "'+s.say+'"'}</div>
   <div class="lbl">${P.verb} to:</div>
@@ -976,7 +1007,7 @@ function closeSheet(){if(G)G.sheet=null;drawSheet()}
 function openLift(){G.sheet={t:'lift'};drawSheet()}
 function ride(f){const D=DAYS[Math.min(G.day,4)];if(f>=D.floors||f<0||G.ride)return;closeSheet();if(f===G.f)return;G.ride={from:G.f,to:f,u:0};sfx.lift()}
 function begin(by){const sh=G.sheet,s=sh.s;if(sh.sel==null)return;s.from=s.v;s.target=sh.sel;s.prog=0;s.by=by;s.st='build';closeSheet();
- if(by==='crew'){const c=G.crews.find(c=>c.st==='idle');if(!c||!spend(6))return;
+ if(by==='crew'){const c=G.crews.find(c=>c.st==='idle');if(!c||!spend(G.B.crew))return;
   c.site=s;c.st='go';c.f=s.f;c.x=LIFT;c.dist=0;s.crew=c;toast('CREW ON THE WAY')}
  else{G.kit.x=siteStand(s);G.kit.dir=POS[s.type][1];G.diy={s,ph:0,spd:1.5+G.day*.12,cool:0,swing:0,msg:''};if(G.tut<3)G.tut=3}}
 function swing(){const d=G.diy;if(d.cool>0)return;const pos=.5+.5*Math.sin(d.ph*2.2),off=Math.abs(pos-.5);d.cool=.22;d.swing=1;
@@ -988,7 +1019,7 @@ function finish(s){s.prog=1;s.v=s.target;const P=SPEC[s.type],ok=P.ok(s.v);
  if(s.crew){s.crew.st='back';s.crew=null}
  s.stamp={ok,t:0};const here=s.f===G.f;if(here&&(s.by==='kit'||Math.abs(G.kit.x-s.x)<70))G.zhold=1.9;
  if(ok){s.st='done';const first=!s.tried.length;if(first){G.combo++;G.firsts++}else G.combo=0;
-  const tip=s.guest.gone?3:Math.round((8+rnd(0,6)+(first?G.combo*3:0))*(SV.fit==='suit'?1.25:1));G.tips+=tip;if(!s.guest.gone&&(here||G.z<.5))flyCoins(tip,s);G.rating=Math.min(100,G.rating+(s.guest.gone?3:10));s.guest.joy=3;
+  const tip=s.guest.gone?3:Math.round((8+rnd(0,6)+(first?G.combo*3:0))*(SV.fit==='suit'?1.25:1)*G.B.tip);G.tips+=tip;if(!s.guest.gone&&(here||G.z<.5))flyCoins(tip,s);G.rating=Math.min(100,G.rating+(s.guest.gone?3:10));s.guest.joy=3;
   if(!SV.notes.includes(s.type)){SV.notes.push(s.type);save();setTimeout(()=>toast('NEW PAGE IN THE BINDER'),900)}
   if(here){sfx.pass();G.shake=.2;for(let i=0;i<14;i++)G.parts.push({f:s.f,x:s.x-6,y:84,vx:rnd(-40,40),vy:rnd(-80,-30),life:rnd(.5,1),col:pick([MINT,AMBER,'#fff6c8',CORAL])})}else toast('CREW FINISHED: '+s.name+' PASSED');
   G.floats.push({f:s.f,x:s.x-8,y:104,text:'+'+tip+'*'+(G.combo>1&&first?' X'+G.combo:''),col:AMBER,life:1.4});setTimeout(sfx.coin,350);
@@ -1008,19 +1039,20 @@ function flyCoins(amount,s){const chip=$('h_star').getBoundingClientRect(),[sx,s
   a.onfinish=land;a.oncancel=land}}
 
 /* ---------- end of day ---------- */
-function endDay(won){G.over=true;G.paused=true;closeSheet();
- if(!won){sfx.lose();$('end').innerHTML=`<h2 class="lose">THE GUESTS CHECKED OUT</h2><p>The Meridian's rating hit zero on Day ${G.day+1}. Inspector Vale is not impressed, and Sterling Crane is circling.</p><p class="dim">Tip: call a crew for one job while you hammer another.</p><button class="btn" id="again">Try the day again</button>`;
+function endDay(won){G.over=true;G.paused=true;closeSheet();document.querySelectorAll('.coinfx').forEach(e=>e.remove());
+ if(!won){sfx.lose();$('end').innerHTML=`<h2 class="lose">THE GUESTS CHECKED OUT</h2><p>${G.b?'Atlas Tower':'The Meridian'}'s rating hit zero on Day ${G.day+1}. Inspector Vale is not impressed, and Sterling Crane is circling.</p><p class="dim">Tip: call a crew for one job while you hammer another.</p><button class="btn" id="again">Try the day again</button>`;
   show('end');$('again').onclick=startDay;return}
  sfx.win();const stars=G.rating>=80?3:G.rating>=55?2:1,bonus=stars*5,total=G.tips+bonus;SV.stars+=total;SV.best=Math.max(SV.best,G.day+1);
- const letter=G.day<5&&SV.letters<=G.day?LETTERS[G.day]:null;if(letter)SV.letters=G.day+1;const gift=G.day===0&&!SV.fits.includes('hivis');if(gift)SV.fits.push('hivis');G.pend=0;SV.day=G.day+1;save();
- const nextD=DAYS[Math.min(SV.day,4)],unlock=SV.day<4&&nextD.floors>DAYS[G.day].floors?FLN[nextD.floors-1]:null;
- let h=`<h2 class="win">DAY ${G.day+1} UP TO CODE</h2><div class="stars">${'★'.repeat(stars)}<span>${'★'.repeat(3-stars)}</span></div>
+ const letter=!G.b&&G.day<5&&SV.letters<=G.day?LETTERS[G.day]:null;if(letter)SV.letters=G.day+1;const gift=!G.b&&G.day===0&&!SV.fits.includes('hivis');if(gift)SV.fits.push('hivis');G.pend=0;setDay(G.day+1);save();
+ const nd=curDay(),nextD=DAYS[Math.min(nd,4)],unlock=nd<4&&nextD.floors>DAYS[G.day].floors?G.fln[nextD.floors-1]:null;
+ let h=`<h2 class="win">${G.b?'ATLAS · ':''}DAY ${G.day+1} UP TO CODE</h2><div class="stars">${'★'.repeat(stars)}<span>${'★'.repeat(3-stars)}</span></div>
   <p>${G.sites.length} jobs passed inspection · ${G.firsts} right the first time${G.fails?' · '+G.fails+' redone':''}<br>Tips ★${G.tips} + rating bonus ★${bonus} = <b>★${total}</b></p>`;
  if(letter)h+=`<div class="letter"><i>From the desk drawer, page ${G.day+1} of 5</i><b>${letter[0]}</b>${letter[1]}</div>`;
- if(G.day===4)h+=`<p><b>Inspector Vale signs the certificate.</b> The Meridian stays open, and Crane's offer goes in the bin. Guests keep coming, though, and so do the problems.</p>`;
+ if(G.day===4&&!G.b)h+=`<p><b>Inspector Vale signs the certificate.</b> The Meridian stays open, and Crane's offer goes in the bin.</p><div class="gift"><div><i>NEXT DOOR</i><b>Atlas Tower needs you</b><span>${SV.up.crew>=2?'Your three crews are ready. Switch buildings from the title screen.':'Hire three crews in the Locker, then take on the office tower next door. Tenants are impatient, but they tip more.'}</span></div></div>`;
+ if(G.day===4&&G.b)h+=`<p><b>Atlas Tower passes inspection.</b> Two buildings on the block are up to code because of you.</p>`;
  if(gift)h+=`<div class="gift"><canvas id="giftcv" width="64" height="80"></canvas><div><i>FREE OUTFIT UNLOCKED</i><b>Hi-vis + hard hat</b><span>Your hammer hits build 25% more.</span><button class="go" id="wear">WEAR IT</button></div></div>`;
  h+=`<button class="btn alt" id="lockb">Locker: outfits and upgrades · ★${SV.stars}</button><div class="dim2">Progress saved.</div>`;
- h+=`<button class="btn" id="next">${unlock?'Day '+(SV.day+1)+': open the '+unlock+' ▶':'Start Day '+(SV.day+1)+' ▶'}</button>`;
+ h+=`<button class="btn" id="next">${unlock?'Day '+(nd+1)+': open the '+unlock+' ▶':'Start Day '+(nd+1)+' ▶'}</button>`;
  $('end').innerHTML=h;show('end');$('next').onclick=startDay;$('lockb').onclick=()=>openLocker('end');
  if(gift){fitSprite(OUTFITS[1],$('giftcv'));$('wear').onclick=()=>{SV.fit='hivis';save();sfx.coin();$('wear').textContent='WEARING IT';$('wear').disabled=true}}}
 function fitSprite(o,c){const sv=Object.assign({},K);Object.assign(K,o.look);const sp=charFrame(FCHEER(.3,0),'f');Object.assign(K,sv);const x=c.getContext('2d');x.imageSmoothingEnabled=false;x.clearRect(0,0,64,80);x.drawImage(sp,0,0);
@@ -1042,7 +1074,7 @@ function hud(){$('h_day').textContent='DAY '+(G.day+1);const p=Math.round(G.rati
  $('h_fill').style.background=p<30?'var(--red)':p<55?'var(--gold)':'var(--green)';$('h_txt').textContent='RATING '+p;
  $('h_star').textContent='★ '+Math.max(0,bal()-(G.pend||0));$('h_combo').textContent=G.combo>1?'X'+G.combo:'';
  const D=DAYS[Math.min(G.day,4)];let h='';for(let f=0;f<4;f++){const n=G.sites.filter(s=>s.f===f&&s.st==='open').length,b=G.sites.filter(s=>s.f===f&&s.st==='build').length;
-  h+=`<div class="fl${f===G.f?' here':''}${n&&f!==G.f?' alert':''}${f>=D.floors?' lock':''}">${f+1} ${FLN[f]}${n?' !'.repeat(Math.min(n,3)):''}${b?' ⚒':''}</div>`}
+  h+=`<div class="fl${f===G.f?' here':''}${n&&f!==G.f?' alert':''}${f>=D.floors?' lock':''}">${f+1} ${G.fln[f]}${n?' !'.repeat(Math.min(n,3)):''}${b?' ⚒':''}</div>`}
  if($('floors').dataset.h!==h){$('floors').innerHTML=h;$('floors').dataset.h=h}
  const n=G.near,a=$('act');a.disabled=!(n||G.diy);$('actT').textContent=G.diy?'HIT!':!n?'ACT':n.t==='lift'?'LIFT':'FIX';
  const pr=$('prompt');let msg='';
@@ -1070,7 +1102,7 @@ function floorBase(f,cam,t,u){
   for(let x=0;x<FWID;x+=96){const X=wx(x+70);if(X>-30&&X<WW){R(g,X,62,26,30,'#1c1830');const[a,b]=skyAt(u);R(g,X+2,64,22,26,a);R(g,X+2,78,22,12,b);R(g,X+12,64,2,26,'#1c1830');R(g,X+2,76,22,2,'#1c1830');
     R(g,X-3,60,4,34,'#b85a6a');R(g,X+25,60,4,34,'#b85a6a')}}
   for(let x=44;x<FWID;x+=96){const X=wx(x);if(X>-10&&X<WW){R(g,X,50,1,6,'#8a84aa');R(g,X-4,56,9,3,'#d9b34a');R(g,X-2,59,5,2,'#fff2c8');g.globalAlpha=.05;for(let k=0;k<4;k++)R(g,X-6-k*3,61,13+k*6,35+k*8,'#fff2c8');g.globalAlpha=1}}
-  const bx=wx(131);if(bx>-60&&bx<WW+30){R(g,bx-27,64,53,9,'#241f3b');ptext(g,'THE MERIDIAN',bx-24,66,'#d9b34a')}
+  const bx=wx(131);if(bx>-60&&bx<WW+30){R(g,bx-27,64,53,9,'#241f3b');ptext(g,G.bname||'THE MERIDIAN',bx-(ptw(G.bname||'THE MERIDIAN')>>1),66,'#d9b34a')}
   // sofa + plant
   [[100,0],[270,1]].forEach(([x,pl])=>{const X=wx(x);if(X<-30||X>WW)return;R(g,X,106,24,10,'#b85a6a');R(g,X,102,24,5,'#d06a7a');R(g,X-2,104,3,12,'#9a4a5a');R(g,X+23,104,3,12,'#9a4a5a');R(g,X+1,116,2,4,'#3a2a30');R(g,X+21,116,2,4,'#3a2a30');
    if(pl){R(g,X+32,110,8,10,'#9a5a3a');R(g,X+30,96,12,14,'#2f9c63');R(g,X+33,92,6,6,'#49d08a')}});
@@ -1099,6 +1131,7 @@ function floorBase(f,cam,t,u){
   R(g,0,108,WW,12,'#4a4668');R(g,0,108,WW,2,'#6a6490');for(let x=-(cam%9);x<WW;x+=9)R(g,x,110,1,10,'#3a3658');
   for(let x=-(cam%60);x<WW+60;x+=60){for(let k=0;k<10;k++){const xx=x+k*6,yy=58+Math.round(Math.sin(k/9*Math.PI)*6);px(g,xx,yy,'#3a3456');if(k%2==0){R(g,xx,yy+1,2,2,[AMBER,CORAL,MINT][((xx+cam)/6|0)%3]);g.globalAlpha=.15;R(g,xx-2,yy-1,6,6,'#fff2c8');g.globalAlpha=1}}R(g,x,52,1,60,'#3a3456')}
   R(g,0,120,WW,30,'#6a5038');for(let y=121;y<150;y+=5)R(g,0,y,WW,1,'#523c28');for(let k=0;k<6;k++)for(let x=-((cam+k*11)%23);x<WW;x+=23)R(g,x,121+k*5,1,5,'#523c28');R(g,0,120,WW,1,'#3a2a1c')}
+ if(G.B&&G.B.tint){g.globalAlpha=.2;R(g,0,50,WW,70,G.B.tint);g.globalAlpha=.1;R(g,0,120,WW,30,G.B.tint);g.globalAlpha=1}
  liftDraw(cam,f,t)}
 
 function cones(X){[[-4],[18]].forEach(([d])=>{const x=X+d;R(g,x,116,5,2,'#e8703a');R(g,x+1,112,3,4,'#f0903a');R(g,x+1,114,3,1,'#fff6e0');R(g,x+2,110,1,2,'#f0903a')})}
@@ -1117,12 +1150,14 @@ function drawSite(s,cam,t){const X=Math.round(s.x-cam),P=SPEC[s.type];if(X<-110|
    const y0=y,y1=y-12;line(g,X-2,y0,X+22,y1,1,c('#d9b34a'));if(!gh){line(g,X-2,y0+1,X+22,y1+1,1,'#8a6a2a');R(g,X-2,y0,1,FL-y0,'#8a6a2a');R(g,X+22,y1,1,FL-12-y1,'#8a6a2a')}}
   if(s.type==='ramp'){const run=val*5;if(!gh){R(g,X,FL-6,40,6,'#b8ae98');R(g,X,FL-6,40,1,'#e0d8c4')}
    for(let i=0;i<run;i++){const hh=Math.round(6*(i+1)/run);if(gh)px(g,X-run+i,FL-hh,MINT);else{R(g,X-run+i,FL-hh,1,hh,'#a89e88');px(g,X-run+i,FL-hh,'#e0d8c4')}}}
+  if(s.type==='knee'){if(gh){R(g,X-12,y,24,1,MINT)}else{R(g,X-12,y-4,24,4,'#8a6a4a');R(g,X-12,y-4,24,1,'#b08a62');R(g,X+10,y,2,FL-y,'#5a4030');R(g,X+4,y,7,Math.min(10,FL-y),'#6e543e');R(g,X-2,y-12,9,7,'#1c1830');R(g,X-1,y-11,7,5,'#6df2c4');R(g,X+2,y-5,2,1,'#1c1830')}}
+  if(s.type==='fountain'){if(gh){R(g,X-5,y-1,10,1,MINT);R(g,X-5,y-1,1,7,MINT);R(g,X+4,y-1,1,7,MINT)}else{R(g,X-2,y+5,5,FL-y-5,'#6a6a88');R(g,X-6,y,12,6,'#c8c8dc');R(g,X-6,y,12,1,'#f0f0ff');R(g,X-5,y+5,10,1,'#8a8aa6');R(g,X-3,y-2,2,2,'#8a8aa6');px(g,X-1,y-3,'#9fdcf6');px(g,X,y-2,'#9fdcf6');px(g,X+1,y-1,'#9fdcf6')}}
   if(s.type==='force'){if(!gh){R(g,X-1,64,20,56,'#2a2440');R(g,X,65,18,55,'#7a8fb8');R(g,X+2,68,14,20,'#6a7fa8');R(g,X+14,94,2,4,'#d9b34a');ptext(g,'WC',X+5,72,'#f6f0e2');R(g,X+4,61,10,3,'#3a3456')}
    R(g,X-12,74,10,9,c('#1c1830'));if(!gh){R(g,X-11,75,8,7,'#f6f0e2');const a=Math.PI*(1-Math.min(1,val/20)*.9);line(g,X-7,81,X-7+Math.cos(a)*3,81-Math.sin(a)*4,1,CORAL)}}
   g.globalAlpha=1};
  one(v,false);if(ghost!=null&&ghost!==s.v)one(ghost,true);
  // measuring tape while the order is open
- if(G.sheet&&G.sheet.s===s&&['reach','counter','sign','bar','table'].includes(s.type)){const u=cl01((t-G.sheet.t0)/.5);ruler(g,X-(s.type==='counter'?20:s.type==='table'?15:s.type==='bar'?16:9),FL,hY(s.v),u)}
+ if(G.sheet&&G.sheet.s===s&&['reach','counter','sign','bar','table','knee','fountain'].includes(s.type)){const u=cl01((t-G.sheet.t0)/.5);ruler(g,X-(s.type==='counter'?20:s.type==='table'||s.type==='knee'?15:s.type==='bar'?16:9),FL,hY(s.v),u)}
  if(s.st==='build'){cones(X+POS[s.type][0]-8);const bw=24,bx=X-12;R(g,bx-1,56,bw+2,5,'#1a162e');R(g,bx,57,Math.round(bw*s.prog),3,AMBER)}
  if(s.st==='done'){check(g,X-3,hY(s.type==='ramp'?26:s.type==='force'?40:Math.max(v,20))-10+Math.round(Math.sin(t*3+s.id)),MINT)}
 }
@@ -1191,7 +1226,7 @@ function drawBuilding(t){const u=cl01(G.time/170),[a,b]=skyAt(Math.min(1,u+.45))
   BR(HX-22,FTOP[f]+26,16,13,'#1a162e');bg.fillStyle=f===G.f?MINT:'#9a94b8';bg.font='700 10px Silk';bg.textBaseline='top';bg.fillText(String(f+1),HX-18,FTOP[f]+27)}
  BR(HX-5,FTOP[3]+70,3,268-FTOP[3]+0,'#2a2440');BR(HX+FWID+2,FTOP[3]+70,3,268-FTOP[3],'#2a2440');
  // rooftop sign
- BR(HX+150,FTOP[3]-2,84,2,'#3a3456');bg.font='700 12px Silk';bg.fillStyle='#d9b34a';bg.fillText('THE MERIDIAN',HX+150,FTOP[3]-16);
+ BR(HX+150,FTOP[3]-2,84,2,'#3a3456');bg.font='700 12px Silk';bg.fillStyle='#d9b34a';bg.fillText(G.bname||'THE MERIDIAN',HX+150,FTOP[3]-16);
  // awning over the entry
  BR(HX+FWID-2,300,26,4,'#b85a6a');BR(HX+FWID+22,304,2,34,'#3a3654');
  // the lift car while riding
@@ -1210,7 +1245,7 @@ function titleArt(t,tc){g.clearRect(0,0,WW,WH);for(let y=50;y<150;y++)R(g,0,y,WW
  skyline(0,0,132,'#1c1a3a',2);
  R(g,30,62,60,70,'#4a3f6e');R(g,28,60,64,3,'#6a5f92');R(g,30,62,2,70,'#3a305a');
  for(let f=0;f<4;f++)for(let c=0;c<5;c++){const lit=((f*5+c+Math.floor(t/1.7))*7)%9>2;R(g,35+c*11,67+f*15,7,9,lit?'#f4d27a':'#241f3b');if(lit){g.globalAlpha=.12;R(g,33+c*11,65+f*15,11,13,'#fff2c8');g.globalAlpha=1}}
- R(g,52,124,16,8,'#9fc0e0');R(g,46,121,28,3,'#b85a6a');R(g,36,54,48,7,'#1a162e');ptext(g,'THE MERIDIAN',37,55,'#d9b34a');
+ R(g,52,124,16,8,'#9fc0e0');R(g,46,121,28,3,'#b85a6a');R(g,36,54,48,7,'#1a162e');{const nm=BD().name;ptext(g,nm,60-(ptw(nm)>>1),55,'#d9b34a')}
  R(g,0,132,WW,18,'#2a2846');R(g,0,132,WW,1,'#46446a');
  QA.chars.length=0;const P=IDLE(t,0);const sv=FL;wg.save();wg.translate(0,12);kitd(P,18-CX,0,false);wg.restore();
  const c=(tc||$('tcv')).getContext('2d');c.imageSmoothingEnabled=false;if(tc)c.drawImage(wc,0,VY,WW,VH,0,0,tc.width,tc.height);else c.drawImage(wc,0,-VY)}
@@ -1229,8 +1264,8 @@ const HOW=[
  {cap:'HIT IN THE GREEN',line:'Or pay a crew and keep moving.',k:'hammer'},
  {cap:'PASS = PAID',line:'Wrong size? You build it again.',k:'pass'}];
 let howI=0,howRaf=0;
-function demoG(){const mk=(i,st,lk)=>Object.assign({id:i,st,v:SITES[i].cur,prog:0,tried:[],pat:.8,guest:{name:'',look:lk,gone:false,joy:0},stamp:null},SITES[i]);
- G={day:0,f:0,kit:{x:76,dir:-1,dist:0,moving:false},cam:8,rating:75,tips:0,combo:0,time:60,sites:[mk(0,'open','a1'),mk(5,'open','a3'),mk(9,'open','a2'),mk(12,'open','a4'),mk(6,'open','judy')],queue:[],crews:[],z:1,zhold:0,ride:null,parts:[],floats:[],sheet:null,diy:null,over:true,paused:true,near:null,shake:0}}
+function demoG(){const B=BLDS[0];const mk=(i,st,lk)=>Object.assign({id:i,st,v:SITES[i].cur,prog:0,tried:[],pat:.8,guest:{name:'',look:lk,gone:false,joy:0},stamp:null},SITES[i]);
+ G={day:0,f:0,kit:{x:76,dir:-1,dist:0,moving:false},cam:8,rating:75,tips:0,combo:0,time:60,B,fln:B.fln,bname:B.name,b:0,sites:[mk(0,'open','a1'),mk(5,'open','a3'),mk(9,'open','a2'),mk(12,'open','a4'),mk(6,'open','judy')],queue:[],crews:[],z:1,zhold:0,ride:null,parts:[],floats:[],sheet:null,diy:null,over:true,paused:true,near:null,shake:0}}
 function howFrame(ms){const H=HOW[howI],t=ms/1000,u=t%4,s=G.sites[0],k=G.kit,c=$('howcv').getContext('2d');c.imageSmoothingEnabled=false;
  s.st='open';s.v=60;s.stamp=null;s.guest.joy=0;s.guest.look='a1';G.sheet=null;G.diy=null;k.moving=false;k.x=76;k.dir=-1;G.z=1;G.f=0;G.time=60;
  if(H.k==='hotel'){titleArt(t,$('howcv'));howRaf=requestAnimationFrame(howFrame);return}
@@ -1252,9 +1287,11 @@ function howStep(i){cancelAnimationFrame(howRaf);if(i>=HOW.length){SV.seenIntro=
  show('lore');$('ln').onclick=()=>howStep(i+1);$('lskip').onclick=()=>howStep(HOW.length);howRaf=requestAnimationFrame(howFrame)}
 $('b_notes').onclick=()=>{if(G)G.paused=true;$('notes').innerHTML='<h2>GRANDMA\'S BINDER</h2><p class="dim">'+SV.notes.length+' of '+Object.keys(SPEC).length+' pages found. Pass an inspection to earn a page.</p>'+Object.keys(SPEC).map(k=>SV.notes.includes(k)?`<div class="pg"><b>${SPEC[k].rule}</b><i>ADA 2010 Standards §${SPEC[k].sec}</i></div>`:'<div class="pg q">? ? ?</div>').join('')+'<button class="btn" id="nb">Back to work</button>';
  show('notes');$('nb').onclick=()=>{show('game');G.paused=false;last=performance.now()}};
-function boot(){cancelAnimationFrame(howRaf);$('t_sub').textContent=SV.day?'Saved game · Day '+(SV.day+1)+' · ★'+SV.stars:'A hotel. A promise. Five days.';$('play').textContent=SV.day?'▶ Continue Day '+(SV.day+1):'▶ Start';$('b_lock').style.display=SV.day?'block':'none';
+function boot(){cancelAnimationFrame(howRaf);if(SV.b&&!atlasOpen())SV.b=0;const cd=curDay();$('t_sub').textContent=SV.day?'Saved · '+BD().name+' · Day '+(cd+1)+' · ★'+SV.stars:'A hotel. A promise. Five days.';$('play').textContent=SV.day?'▶ Continue Day '+(cd+1):'▶ Start';
+ const bb=$('b_bld');bb.style.display=SV.day>=5?'block':'none';bb.textContent=!atlasOpen()?'Atlas Tower next door: hire 3 crews to unlock':SV.b?'◀ Back to the Meridian':'Go next door: Atlas Tower ▶';bb.disabled=!atlasOpen();$('b_lock').style.display=SV.day?'block':'none';
  $('reset').style.display=SV.day?'block':'none';show('title');requestAnimationFrame(titleLoop)}
-$('reset').onclick=()=>{SV={day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:SV.best,seenIntro:0,fits:['classic'],fit:'classic'};save();boot()};
+$('b_bld').onclick=()=>{if(!atlasOpen())return;SV.b=SV.b?0:1;save();boot()};
+$('reset').onclick=()=>{SV={day2:0,b:0,day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:SV.best,seenIntro:0,fits:['classic'],fit:'classic'};save();boot()};
 boot();
 </script>
 </body></html>
