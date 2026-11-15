@@ -121,7 +121,7 @@ button.chip0{font-family:var(--fp);font-weight:700;cursor:pointer;color:var(--go
     <button class="act" id="act" disabled><span id="actT">ACT</span></button></div>
    <div class="keys">A / D or ← → to walk · E or Space to act</div>
    <div class="sheet" id="sheet"></div>
-   <div class="kb"><kbd>A</kbd><span>walk left</span><kbd>D</kbd><span>walk right</span><kbd>E / SPACE</kbd><span>fix, hit, call the lift</span><kbd>W / S</kbd><span>ride the lift up or down</span><kbd>← →</kbd><span>choose a size on a work order</span><kbd>B / C</kbd><span>Kit builds it / call a crew</span></div>
+   <div class="kb"><kbd>A</kbd><span>walk left</span><kbd>D</kbd><span>walk right</span><kbd>E / SPACE</kbd><span>fix, mark, lock, build, call the lift</span><kbd>W / S</kbd><span>ride the lift up or down</span><kbd>← →</kbd><span>choose a size on a work order</span><kbd>B / C</kbd><span>Kit builds it / call a crew</span></div>
   </div>
  </section>
  <section class="scr" id="end"></section>
@@ -871,7 +871,7 @@ const SHOP=[
 
 const OUTFITS=[
  {k:'classic',name:'Hoodie',d:'Kit\'s everyday fit. No perk.',cost:0,look:{}},
- {k:'hivis',name:'Hi-vis + hard hat',d:'Your hammer hits build 25% more.',cost:0,gift:1,look:{top:'#e8703a',topL:'#f6e04a',pants:'#3a4660'},hat:1},
+ {k:'hivis',name:'Hi-vis + hard hat',d:'Hands-on jobs are 25% more forgiving.',cost:0,gift:1,look:{top:'#e8703a',topL:'#f6e04a',pants:'#3a4660'},hat:1},
  {k:'track',name:'Tracksuit',d:'Walk 20% faster.',cost:45,look:{top:'#2f9c7a',topL:'#6df2c4',pants:'#1f6a55',shoe:'#fff6e0'}},
  {k:'suit',name:'Manager suit',d:'Guests tip 25% more.',cost:60,look:{top:'#2a2f55',topL:'#5a62a8',pants:'#22264a',shoe:'#121016'}},
  {k:'coat',name:'Concierge coat',d:'The rating drops 30% slower.',cost:80,look:{top:'#8a2f3f',topL:'#d9b34a',pants:'#1f1d26',shoe:'#121016'}}];
@@ -905,6 +905,9 @@ addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=0});addEventListener('blu
  b.addEventListener('pointerdown',e=>{e.preventDefault();dk[d]=1;b.classList.add('on');try{b.setPointerCapture(e.pointerId)}catch(_){}});
  ['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,off))});
 $('act').addEventListener('pointerdown',e=>{e.preventDefault();act()});
+{let pd=false;const pt=(e,dn)=>{if(!G||!G.diy)return;const r=cv.getBoundingClientRect();jobPoint((e.clientX-r.left)/r.width*120,(e.clientY-r.top)/r.height*100,dn)};
+ cv.style.touchAction='none';cv.addEventListener('pointerdown',e=>{if(G&&G.diy){e.preventDefault();pd=true;try{cv.setPointerCapture(e.pointerId)}catch(_){}pt(e,true)}});
+ cv.addEventListener('pointermove',e=>{if(pd)pt(e,true)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>cv.addEventListener(ev,e=>{if(pd){pd=false;pt(e,false)}}))}
 
 /* ---------- state ---------- */
 let G=null,last=0,raf=0,TT=0;
@@ -935,7 +938,7 @@ function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;TT=t/1000;
 function update(dt){G.time+=dt;const k=G.kit;
  const locked=G.diy||G.sheet||G.ride;
  const want=(G.sheet&&G.sheet.t==='order')||G.diy||G.zhold>0?1:0;G.zhold=Math.max(0,G.zhold-dt);G.z+=(want-G.z)*Math.min(1,dt*7);if(Math.abs(want-G.z)<.004)G.z=want;
- let ix=locked?0:((keys.d||keys.arrowright||dk.r)?1:0)-((keys.a||keys.arrowleft||dk.l)?1:0);
+ const rx=((keys.d||keys.arrowright||keys.arrowup||dk.r)?1:0)-((keys.a||keys.arrowleft||keys.arrowdown||dk.l)?1:0);let ix=locked?0:((keys.d||keys.arrowright||dk.r)?1:0)-((keys.a||keys.arrowleft||dk.l)?1:0);
  k.moving=!!ix;if(ix){k.dir=ix;k.x=Math.max(14,Math.min(FWID-14,k.x+ix*speed()*dt));k.dist+=speed()*dt;if(G.tut===0)G.tut=1}
  const fs=G.diy?G.diy.s:(G.sheet&&G.sheet.t==='order'?G.sheet.s:null),cx0=fs?(guestX(fs)+siteStand(fs))/2:k.x+k.dir*10;
  G.cam+=(Math.max(0,Math.min(FWID-WW,cx0-WW/2))-G.cam)*Math.min(1,dt*6);
@@ -950,8 +953,9 @@ function update(dt){G.time+=dt;const k=G.kit;
  G.spawnIn-=dt;if(G.spawnIn<=0)spawn();
  let waiting=0;
  for(const s of G.sites){
-  if(s.st==='open'&&!s.guest.gone){waiting++;s.pat-=dt/(70*patMul()*G.B.pat);
-   if(s.pat<=0){s.guest.gone=true;G.rating-=8+G.day;G.combo=0;sfx.angry();toast(s.guest.name+' GAVE UP AND LEFT');if(s.f===G.f)G.shake=.3}}
+  if(s.guest.mad>0){s.guest.mad-=dt;if(s.guest.mad<=0)s.guest.gone=true}
+  if((s.st==='open'||(s.st==='build'&&s.by==='kit'))&&!s.guest.gone&&!(s.guest.mad>0)){if(s.st==='open')waiting++;s.pat-=dt/(70*patMul()*G.B.pat);
+   if(s.pat<=0){s.pat=0;s.guest.mad=2.6;G.rating-=10;G.combo=0;sfx.angry();toast(s.guest.name+' RAN OUT OF PATIENCE · RATING -10');G.floats.push({f:s.f,x:guestX(s)-8,y:60,text:'-10',col:CORAL,life:1.6});if(s.f===G.f)G.shake=.3}}
   if(s.st==='build'&&s.by==='crew'&&s.crew.st==='work'){s.prog+=dt/(9*buildMul());if(Math.random()<dt*7&&s.f===G.f)dust(s);if(Math.random()<dt*3&&s.f===G.f)sfx.hit();if(s.prog>=1)finish(s)}
   if(s.guest.joy>0)s.guest.joy-=dt;
   if(s.stamp)s.stamp.t+=dt}
@@ -960,7 +964,7 @@ function update(dt){G.time+=dt;const k=G.kit;
  for(const c of G.crews){if(c.st==='go'){const tx=siteStand(c.site);const d=tx-c.x;c.dir=Math.sign(d)||1;c.x+=c.dir*56*dt;c.dist=(c.dist||0)+56*dt;if(Math.abs(d)<2){c.x=tx;c.st='work';c.dir=POS[c.site.type][1]}}
   else if(c.st==='back'){c.dir=-1;c.x-=56*dt;c.dist+=56*dt;if(c.x<=LIFT){c.st='idle';c.site=null}}}
  // diy timing bar
- if(G.diy){const d=G.diy;d.ph+=dt*d.spd;d.cool=Math.max(0,d.cool-dt);d.swing=Math.max(0,d.swing-dt*4)}
+ if(G.diy)jobTick(dt,rx);
  for(const p of G.parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=(p.g==null?90:p.g)*dt;p.life-=dt}G.parts=G.parts.filter(p=>p.life>0);
  for(const f of G.floats){f.y-=dt*10;f.life-=dt}G.floats=G.floats.filter(f=>f.life>0);
  G.shake=Math.max(0,G.shake-dt);
@@ -976,7 +980,7 @@ function dust(s){for(let i=0;i<2;i++)G.parts.push({f:s.f,x:s.x+rnd(-5,5),y:hY(s.
 
 /* ---------- actions ---------- */
 function act(){if(!G||G.over||G.paused||G.ride)return;try{AC&&AC.resume()}catch(e){}
- if(G.diy)return swing();if(G.sheet)return;const n=G.near;if(!n)return;
+ if(G.diy)return jobAct();if(G.sheet)return;const n=G.near;if(!n)return;
  if(n.t==='lift')openLift();else openOrder(n.s)}
 function openOrder(s){G.kit.x=siteStand(s);G.kit.dir=POS[s.type][1];G.sheet={t:'order',s,sel:null,t0:TT};sfx.tape();if(G.tut<2)G.tut=2;drawSheet()}
 function drawSheet(){const sh=G.sheet,el=$('sheet');if(!sh){el.classList.remove('show');$('pad').style.visibility='visible';return}
@@ -1009,12 +1013,7 @@ function ride(f){const D=DAYS[Math.min(G.day,4)];if(f>=D.floors||f<0||G.ride)ret
 function begin(by){const sh=G.sheet,s=sh.s;if(sh.sel==null)return;s.from=s.v;s.target=sh.sel;s.prog=0;s.by=by;s.st='build';closeSheet();
  if(by==='crew'){const c=G.crews.find(c=>c.st==='idle');if(!c||!spend(G.B.crew))return;
   c.site=s;c.st='go';c.f=s.f;c.x=LIFT;c.dist=0;s.crew=c;toast('CREW ON THE WAY')}
- else{G.kit.x=siteStand(s);G.kit.dir=POS[s.type][1];G.diy={s,ph:0,spd:1.5+G.day*.12,cool:0,swing:0,msg:''};if(G.tut<3)G.tut=3}}
-function swing(){const d=G.diy;if(d.cool>0)return;const pos=.5+.5*Math.sin(d.ph*2.2),off=Math.abs(pos-.5);d.cool=.22;d.swing=1;
- let gain;if(off<.07){gain=.4;d.msg='PERFECT';sfx.perfect();G.shake=.12}else if(off<.2){gain=.26;d.msg='GOOD';sfx.hit()}else{gain=.08;d.msg='MISS';sfx.miss()}
- d.s.prog+=gain*(SV.fit==='hivis'?1.25:1)/Math.max(.6,buildMul());for(let i=0;i<4;i++)dust(d.s);
- G.floats.push({f:d.s.f,x:G.kit.x+8,y:70,text:d.msg,col:off<.07?MINT:off<.2?AMBER:CORAL,life:.6});
- if(d.s.prog>=1){G.diy=null;finish(d.s)}}
+ else{G.kit.x=siteStand(s);G.kit.dir=POS[s.type][1];G.diy=startJob(s);if(G.tut<3)G.tut=3}}
 function finish(s){s.prog=1;s.v=s.target;const P=SPEC[s.type],ok=P.ok(s.v);
  if(s.crew){s.crew.st='back';s.crew=null}
  s.stamp={ok,t:0};const here=s.f===G.f;if(here&&(s.by==='kit'||Math.abs(G.kit.x-s.x)<70))G.zhold=1.9;
@@ -1027,6 +1026,103 @@ function finish(s){s.prog=1;s.v=s.target;const P=SPEC[s.type],ok=P.ok(s.v);
  else{s.st='open';s.tried.push(s.v);G.fails++;G.combo=0;G.rating-=6;const high=s.v>P.vals.filter(P.ok).slice(-1)[0];s.gripe=high?P.hi:P.lo;
   if(here){sfx.fail();G.shake=.3}toast(here?'FAILED INSPECTION':'CREW FINISHED: '+s.name+' FAILED');
   G.floats.push({f:s.f,x:s.x-8,y:104,text:'REDO',col:CORAL,life:1.4})}}
+
+/* ---------- hands-on jobs: a different mini-game for each kind of fix ---------- */
+const JOB={reach:'mark',sign:'mark',bar:'mark',rail:'mark',fountain:'mark',table:'level',counter:'level',knee:'level',ramp:'ramp',force:'force'};
+const JOBACT={mark:'MARK',level:'LOCK',ramp:'BUILD',force:'HOLD'};
+const jlvl=()=>G.day+(G.b?2:0),tolMul=()=>(SV.fit==='hivis'?1.25:1)*(1+.15*SV.up.tools);
+function startJob(s){const k=JOB[s.type],L=jlvl(),d={s,k,t:0,round:0,miss:0,msg:'',msgT:0,col:MINT,done:0,swing:0,hold:0,tap:0,rev:0};
+ if(k==='mark'){d.rounds=L>=3?3:L>=1?2:1;d.h=6+Math.random()*10;d.tol=Math.max(.9,2-.3*L)*tolMul();d.lab=L>=4?2:L>=2?1:0;d.side=0}
+ if(k==='level'){d.rounds=L>=3?3:L>=1?2:1;d.a=(Math.random()<.5?-1:1)*(4+Math.random()*3);d.b=0;d.bv=0;d.drift=L>=2?.5+.25*L:0;d.sens=1+.12*L;d.zone=Math.max(.09,.2-.025*L)*tolMul()}
+ if(k==='ramp'){d.rounds=1;d.rise=pick(L>=2?[5,7,9]:[4,6]);d.run=d.rise*2;d.tol=(L>=2?1:2)*tolMul();d.show=L<2}
+ if(k==='force'){d.rounds=1;d.set=s.from>10?14:11;d.read=d.set;d.rv=0;d.tol=Math.max(.45,.9-.1*L)*tolMul();d.need=1+.15*L;d.noise=.12*L;d.stiff=Math.max(14,34-4*L)}
+ return d}
+function jobMsg(d,m,col,rev){d.msg=m;d.msgT=1.1;d.col=col;d.rev=rev||0}
+function jobRound(d,perfect){d.round++;jobMsg(d,perfect?'PERFECT':'GOOD',perfect?MINT:AMBER,.7);if(perfect){sfx.perfect();G.shake=.1}else sfx.hit();
+ if(d.round>=d.rounds){d.done=1;d.fin=1.0;return}
+ if(d.k==='mark'){d.side^=1;d.nextH=4+Math.random()*14}
+ if(d.k==='level'){d.a=(Math.random()<.5?-1:1)*(3+Math.random()*4);d.bv=0}}
+function jobMiss(d,m){d.miss++;jobMsg(d,m,CORAL,1.1);sfx.miss();G.shake=.14}
+function jobAct(){const d=G.diy;if(!d||d.done||d.msgT>.55)return;const T=d.s.target;
+ if(d.k==='mark'){const e=Math.abs(d.h-T);if(e<=d.tol)jobRound(d,e<=d.tol/2);else jobMiss(d,'OFF BY '+Math.max(1,Math.round(e))+' IN')}
+ else if(d.k==='level'){if(Math.abs(d.b)<=d.zone&&Math.abs(d.a)<1.2)jobRound(d,Math.abs(d.b)<=d.zone/2);else{jobMiss(d,'NOT LEVEL');d.a+=(Math.random()<.5?-1:1)*2}}
+ else if(d.k==='ramp'){const e=d.run-d.rise*T;if(Math.abs(e)<=d.tol)jobRound(d,Math.abs(e)<.6);else jobMiss(d,(e<0?'TOO SHORT':'TOO LONG')+(d.show?' BY '+Math.abs(Math.round(e)):''))}}
+function jobTick(dt,ix){const d=G.diy;d.t+=dt;d.msgT=Math.max(0,d.msgT-dt);d.rev=Math.max(0,d.rev-dt);
+ if(d.done){d.fin-=dt;d.swing=.5+.5*Math.sin(d.t*14);if(Math.random()<dt*9)dust(d.s);if(Math.random()<dt*5)sfx.hit();d.s.prog=1-Math.max(0,d.fin);
+  if(d.fin<=0){const s=d.s,clean=d.miss===0;G.diy=null;finish(s);if(clean&&s.st==='done'){G.tips+=2;G.floats.push({f:s.f,x:G.kit.x-10,y:66,text:'CLEAN WORK +2*',col:MINT,life:1.5})}}return}
+ if(d.nextH!=null&&d.msgT<.4){d.h=d.nextH;d.nextH=null}
+ const a=ix||d.tap;
+ if(d.k==='mark'){if(d.msgT<.55)d.h=Math.max(0,Math.min(78,d.h+a*16*dt))}
+ if(d.k==='level'){d.a=Math.max(-9,Math.min(9,d.a+a*d.sens*7*dt+Math.sin(d.t*1.3+d.s.id)*d.drift*dt));d.bv+=((-d.a/8)-d.b)*46*dt-d.bv*5*dt;d.b=Math.max(-1,Math.min(1,d.b+d.bv*dt))}
+ if(d.k==='ramp'){if(d.msgT<.55)d.run=Math.max(d.rise,Math.min(148,d.run+a*30*dt))}
+ if(d.k==='force'){d.set=Math.max(1,Math.min(20,d.set+a*4.5*dt));const n=Math.sin(d.t*7.3)*d.noise;d.rv+=((d.set+n)-d.read)*d.stiff*dt-d.rv*3.2*dt;d.read+=d.rv*dt;
+  if(Math.abs(d.read-d.s.target)<=d.tol){d.hold+=dt;if(d.hold>=d.need)jobRound(d,Math.abs(d.set-d.s.target)<d.tol/2)}else d.hold=Math.max(0,d.hold-dt*2.5)}}
+function jobPoint(xl,yl,down){const d=G.diy;if(!d||d.done)return;
+ if(!down){d.tap=0;return}
+ if(d.k==='mark'){if(d.msgT<.55)d.h=Math.max(0,Math.min(78,92-yl))}
+ else if(d.k==='ramp'){if(d.msgT<.55)d.run=Math.max(d.rise,Math.min(148,(108-xl)/.72))}
+ else d.tap=xl<60?-1:1}
+const JY=y=>VY+y;
+function jobHead(d,title){R(g,0,JY(0),WW,13,'#14112a');ptext(g,title,3,JY(4),MINT);
+ for(let i=0;i<d.rounds;i++){const x=WW-6-i*6;R(g,x,JY(4),4,5,i<d.rounds-d.round?'#3a3668':MINT)}
+ const s=d.s,p=Math.max(0,s.pat),gone=s.guest.gone||s.guest.mad>0;R(g,0,JY(13),WW,4,'#0a0818');if(!gone)R(g,1,JY(14),Math.round((WW-2)*p),2,p<.25?(Math.sin(d.t*14)>0?CORAL:'#ffb0a4'):p<.55?AMBER:MINT)}
+function jobFoot(d){if(d.msgT>0){const w=ptw(d.msg)+8,x=Math.round(60-w/2),y=JY(40)-Math.round((1.1-d.msgT)*6);R(g,x,y,w,11,'#1a162e');R(g,x+1,y+1,w-2,9,d.col);R(g,x+2,y+2,w-4,7,'#1a162e');ptext(g,d.msg,x+4,y+3,d.col)}}
+function jobObj(s,x,y){const t=s.type;
+ if(t==='sign'){R(g,x-7,y-5,14,10,'#2f4a7a');R(g,x-6,y-4,12,1,'#5a7ab8');ptext(g,'WC',x-4,y-2,'#fff');for(let i=0;i<4;i++)px(g,x-4+i*2,y+4,'#fff')}
+ else if(t==='bar'){R(g,x-16,y-1,32,2,'#c8ccd4');R(g,x-16,y-1,32,1,'#fff');R(g,x-17,y-2,2,4,'#8a8e98');R(g,x+15,y-2,2,4,'#8a8e98')}
+ else if(t==='reach'){R(g,x-5,y-5,10,10,'#efe6d0');R(g,x-5,y-5,10,1,'#fff');R(g,x-3,y-3,6,3,'#7fc4ff');R(g,x-1,y+2,2,2,'#c43c3c')}
+ else if(t==='fountain'){R(g,x-8,y,16,8,'#c8ccd4');R(g,x-8,y,16,1,'#fff');R(g,x+2,y-3,2,3,'#8a8e98');px(g,x,y-4,'#7fc4ff');px(g,x-1,y-3,'#7fc4ff');px(g,x-2,y-1,'#7fc4ff')}
+ else{R(g,x-22,y-1,44,2,'#6b452d');R(g,x-22,y-1,44,1,'#a9793f');R(g,x-18,y+1,1,91-y,'#2a2630');R(g,x+17,y+1,1,91-y,'#2a2630')}}
+function jobMark(d,t){const s=d.s,T=s.target,F=JY(92);
+ R(g,0,JY(17),WW,75,'#e9dfc8');for(let x=6;x<WW;x+=12)R(g,x,JY(17),1,75,'#ded2b6');R(g,0,JY(62),WW,1,'#cbbd9c');R(g,0,F,WW,8,'#6a4a30');R(g,0,F,WW,1,'#3a2a1c');
+ const dx=d.side?8:86;R(g,dx,F-80,26,80,'#8a6640');R(g,dx+2,F-78,22,76,'#9a744a');R(g,dx+(d.side?20:3),F-40,2,4,'#e0b24a');
+ if(s.type==='rail'){for(let i=0;i<3;i++)R(g,40+i*12,F-(i+1)*3+3,40-i*12,3,'#b8b2a4')}
+ const tx=d.side?100:14;R(g,tx,F-80,7,80,'#f2c230');R(g,tx,F-80,1,80,'#ffe58a');R(g,tx+6,F-80,1,80,'#b98a18');R(g,tx-1,F-1,9,2,'#2a2630');
+ for(let h=6;h<=78;h+=6){const big=h%12===0;R(g,tx+(big?1:4),F-h,big?6:3,1,'#2a2630');
+  if(big){const lab=d.lab===0?String(h):d.lab===1?(h/12)+'F':(h%24===0?String(h):'');if(lab)ptext(g,lab,d.side?tx-ptw(lab)-2:tx+9,F-h-2,'#3a2a1c')}}
+ const y=Math.round(F-d.h),x0=d.side?34:tx+8,x1=d.side?tx-1:86;
+ for(let x=x0;x<x1;x+=3)px(g,x,y,CORAL);R(g,d.side?tx+7:tx-4,y-1,4,3,CORAL);px(g,d.side?tx+6:tx,y,'#fff');
+ jobObj(s,60,y);
+ if(d.rev>0){const q=Math.round(d.h)+' IN',w=ptw(q)+4;R(g,60-w/2,y-17,w,9,'#1a162e');ptext(g,q,62-w/2,y-15,'#fff6c8')}
+ jobHead(d,'MARK '+T+' IN')}
+function jobLevel(d,t){const s=d.s,F=JY(92),H=Math.round(Math.min(46,Math.max(22,s.target*.9))),k=d.a*.9,yl=F-H+k,yr=F-H-k;
+ R(g,0,JY(17),WW,75,'#dfe6ea');for(let y=24;y<92;y+=9)R(g,0,JY(y),WW,1,'#cfd8de');R(g,0,F,WW,8,'#7a6a5a');R(g,0,F,WW,1,'#4a3e34');
+ const col=s.type==='counter'?'#8a6f8f':s.type==='knee'?'#6f7fa3':'#a9793f';
+ R(g,28,Math.round(yl)+3,4,F-Math.round(yl)-3,'#5a4632');R(g,88,Math.round(yr)+3,4,F-Math.round(yr)-3,'#5a4632');
+ for(let i=0;i<Math.max(0,Math.round(-d.a/2));i++)R(g,26,F-2-i*2,8,2,i%2?'#e0b24a':'#c8962a');for(let i=0;i<Math.max(0,Math.round(d.a/2));i++)R(g,86,F-2-i*2,8,2,i%2?'#e0b24a':'#c8962a');
+ line(g,22,yl+1,98,yr+1,4,col);line(g,22,yl-1,98,yr-1,1,'#ffffff');
+ line(g,44,(yl+yr)/2-4+k*.3,76,(yl+yr)/2-4-k*.3,4,'#2f9c7a');
+ // the vial, big
+ R(g,14,JY(22),92,14,'#1a162e');R(g,16,JY(24),88,10,'#bfe8c8');R(g,16,JY(24),88,2,'#e6fff0');
+ const zw=Math.round(d.zone*40);R(g,60-zw,JY(24),zw*2,10,'#8fd8a8');R(g,60-zw-1,JY(23),1,12,'#1a162e');R(g,60+zw,JY(23),1,12,'#1a162e');
+ const bx=Math.round(60+d.b*38),inz=Math.abs(d.b)<=d.zone;R(g,bx-5,JY(25),10,8,inz?'#fff6c8':'#ffffff');R(g,bx-6,JY(26),12,6,inz?'#fff6c8':'#ffffff');R(g,bx-3,JY(26),3,2,'#fff');
+ ptext(g,'<',5,JY(27),a2c(d.a<-.5));ptext(g,'>',111,JY(27),a2c(d.a>.5));
+ jobHead(d,'LEVEL THE '+(s.type==='knee'?'DESK':s.type.toUpperCase()))}
+const a2c=on=>on?AMBER:'#6a668a';
+function jobRamp(d,t){const s=d.s,F=JY(92),sx=.72,sy=2.2,px1=108,top=Math.round(F-d.rise*sy),x0=Math.round(px1-d.run*sx);
+ for(let y=17;y<92;y++)R(g,0,JY(y),WW,1,mixc('#bfe3f2','#eaf4e4',(y-17)/75));R(g,0,F,WW,8,'#8a857a');R(g,0,F,WW,1,'#55514a');
+ R(g,px1,top,12,F-top,'#9a8f84');R(g,px1,top,12,1,'#d8d0c4');R(g,px1+3,top-30,9,30,'#8a6640');R(g,px1+4,top-28,7,26,'#9a744a');px(g,px1+5,top-14,'#e0b24a');
+ for(let x=x0;x<px1;x++){const h=Math.round((x-x0)/(px1-x0)*(F-top));R(g,x,F-h,1,h,'#b8b2a4');px(g,x,F-h,'#e8e2d4')}
+ R(g,x0-2,F-3,4,4,CORAL);px(g,x0-1,F-2,'#fff');
+ R(g,x0,F+3,px1-x0,1,'#fff6c8');R(g,x0,F+2,1,3,'#fff6c8');R(g,px1-1,F+2,1,3,'#fff6c8');
+ const rl='RUN '+Math.round(d.run),rw=ptw(rl);R(g,Math.max(1,Math.min(WW-rw-4,(x0+px1)/2-rw/2-2)),F-13-Math.min(20,(F-top)/2+8),rw+4,9,'#1a162e');ptext(g,rl,Math.max(3,Math.min(WW-rw-2,(x0+px1)/2-rw/2)),F-11-Math.min(20,(F-top)/2+8),'#fff6c8');
+ R(g,px1+13>WW-1?px1-1:px1+13,top,1,F-top,CORAL);const ri='RISE '+d.rise;R(g,WW-ptw(ri)-5,top-42,ptw(ri)+4,9,'#1a162e');ptext(g,ri,WW-ptw(ri)-3,top-40,CORAL);
+ if(d.show){const q='1 IN '+(Math.round(d.run/d.rise*10)/10);R(g,3,JY(22),ptw(q)+4,9,'#1a162e');ptext(g,q,5,JY(24),Math.abs(d.run-d.rise*s.target)<=d.tol?MINT:AMBER)}
+ else{const q='RUN IS RISE X '+s.target;R(g,3,JY(22),ptw(q)+4,9,'#1a162e');ptext(g,q,5,JY(24),AMBER)}
+ jobHead(d,'BUILD 1 IN '+s.target)}
+function jobForce(d,t){const s=d.s,T=s.target,cx=60,cy=JY(74),r=30;
+ R(g,0,JY(17),WW,83,'#2a2f45');for(let y=22;y<100;y+=8)R(g,0,JY(y),WW,1,'#343a55');
+ R(g,6,JY(20),108,9,'#8a8e98');R(g,6,JY(20),108,1,'#c8ccd4');R(g,84,JY(22),24,5,'#5a5e68');
+ const ang=v=>Math.PI*(1-v/20);
+ for(let v=0;v<=20;v+=.25){const a=ang(v),inz=Math.abs(v-T)<=d.tol;for(let rr=r-4;rr<=r;rr++)px(g,cx+Math.cos(a)*rr,cy-Math.sin(a)*rr,inz?MINT:'#565c7a')}
+ for(let v=0;v<=20;v+=5){const a=ang(v);line(g,cx+Math.cos(a)*(r-7),cy-Math.sin(a)*(r-7),cx+Math.cos(a)*(r+1),cy-Math.sin(a)*(r+1),1,'#fff6c8');const q=String(v);ptext(g,q,Math.round(cx+Math.cos(a)*(r+7)-ptw(q)/2),Math.round(cy-Math.sin(a)*(r+7)-2),'#fff6c8')}
+ const a=ang(Math.max(0,Math.min(20,d.read)));line(g,cx,cy,cx+Math.cos(a)*(r-6),cy-Math.sin(a)*(r-6),1,Math.abs(d.read-T)<=d.tol?MINT:CORAL);R(g,cx-2,cy-2,5,5,'#fff6c8');
+ const q=(Math.round(d.read*10)/10)+' LB';ptext(g,q,cx-ptw(q)/2,cy+6,'#fff6c8');
+ R(g,19,JY(32),82,5,'#1a162e');R(g,20,JY(33),Math.round(80*Math.min(1,d.hold/d.need)),3,MINT);
+ ptext(g,'<',5,cy-8,a2c(true));ptext(g,'>',111,cy-8,a2c(true));
+ jobHead(d,'SET CLOSER TO '+T+' LB')}
+function drawJob(t){const d=G.diy;g.clearRect(0,0,WW,WH);({mark:jobMark,level:jobLevel,ramp:jobRamp,force:jobForce})[d.k](d,t);jobFoot(d)}
+const JOBTIP={mark:'Drag the mark to the height on the tape, then <b>MARK</b>',level:'Hold <b>◀ ▶</b> to shim. <b>LOCK</b> when the bubble is centered',ramp:'Drag the ramp out. Rise × slope = run. Then <b>BUILD</b>',force:'Hold <b>◀ ▶</b> to turn the screw. Keep the needle in the green'};
 
 /* ---------- money that visibly moves ---------- */
 function scrPos(f,wx,wy){const r=cv.getBoundingClientRect(),sc=r.width/480;const x=G.z>.5?(wx-G.cam)*4:HX+wx,y=G.z>.5?(wy-VY)*4:FTOP[f]+(wy-56)-(f===3?6:0);return[r.left+x*sc,r.top+y*sc]}
@@ -1076,9 +1172,9 @@ function hud(){$('h_day').textContent='DAY '+(G.day+1);const p=Math.round(G.rati
  const D=DAYS[Math.min(G.day,4)];let h='';for(let f=0;f<4;f++){const n=G.sites.filter(s=>s.f===f&&s.st==='open').length,b=G.sites.filter(s=>s.f===f&&s.st==='build').length;
   h+=`<div class="fl${f===G.f?' here':''}${n&&f!==G.f?' alert':''}${f>=D.floors?' lock':''}">${f+1} ${G.fln[f]}${n?' !'.repeat(Math.min(n,3)):''}${b?' ⚒':''}</div>`}
  if($('floors').dataset.h!==h){$('floors').innerHTML=h;$('floors').dataset.h=h}
- const n=G.near,a=$('act');a.disabled=!(n||G.diy);$('actT').textContent=G.diy?'HIT!':!n?'ACT':n.t==='lift'?'LIFT':'FIX';
+ const n=G.near,a=$('act');a.disabled=!(n||G.diy);$('actT').textContent=G.diy?(G.diy.done?'...':JOBACT[G.diy.k]):!n?'ACT':n.t==='lift'?'LIFT':'FIX';
  const pr=$('prompt');let msg='';
- if(G.diy)msg='Hit when the marker is in the <b>green</b>';
+ if(G.diy)msg=G.diy.done?'':JOBTIP[G.diy.k];
  else if(G.tut===0)msg='Hold <b>◀ ▶</b> or A / D to walk';
  else if(G.tut===1&&!n)msg='Walk to the guest with the <b>!</b>';
  else if(n&&n.t==='site')msg=`<i>${n.s.guest.gone?n.s.name:n.s.guest.name}:</i> ${n.s.gripe&&n.s.tried.length?n.s.gripe:n.s.say}`;
@@ -1164,8 +1260,9 @@ function drawSite(s,cam,t){const X=Math.round(s.x-cam),P=SPEC[s.type];if(X<-110|
 function drawStamp(s,cam,close){const X=Math.round(s.x-cam),P=SPEC[s.type];
  if(s.stamp&&s.stamp.t<1.6){const u=Math.min(1,s.stamp.t*6),col=s.stamp.ok?MINT:CORAL,tx=s.stamp.ok?'PASS':'REDO',w=ptw(tx)+6,sx0=close?Math.max(2,Math.min(WW-w-2,X-w/2)):Math.round(X-w/2);
   if(u>=1){R(g,sx0,66,w,11,'#1a162e');R(g,sx0+1,67,w-2,9,col);R(g,sx0+2,68,w-4,7,'#1a162e');ptext(g,tx,sx0+3,69,col);if(s.stamp.ok){const q='ADA '+P.sec,qw=ptw(q)+4,qx=close?Math.max(2,Math.min(WW-qw-2,X-qw/2)):Math.round(X-qw/2);R(g,qx-1,78,qw+2,11,col);R(g,qx,79,qw,9,'#1a162e');ptext(g,q,qx+2,81,'#fff6c8')}}}}
-function bubble(X,y,t,pat){const b=Math.round(Math.sin(t*5)*1.5);R(g,X-4,y+b,9,10,CORAL);R(g,X-5,y+1+b,11,8,CORAL);R(g,X-1,y+10+b,3,2,CORAL);R(g,X-1,y+2+b,3,5,'#fff');R(g,X-1,y+8+b,3,1,'#fff');
- R(g,X-6,y+14,13,3,'#1a162e');R(g,X-5,y+15,Math.round(11*Math.max(0,pat)),1,pat<.3?CORAL:pat<.6?AMBER:MINT)}
+function bubble(X,y,t,pat,low){const b=Math.round(Math.sin(t*5)*1.5),hot=pat<.25&&Math.sin(t*14)>0,by=y+13+(low?9:0);
+ R(g,X-3,y+b-2,7,8,CORAL);R(g,X-4,y+b-1,9,6,CORAL);R(g,X-1,y+b+6,3,2,CORAL);R(g,X-1,y+b-1,2,4,'#fff');R(g,X-1,y+b+4,2,1,'#fff');
+ R(g,X-10,by,21,6,'#1a162e');R(g,X-9,by+1,19,4,'#3a3668');R(g,X-9,by+1,Math.round(19*Math.max(0,pat)),4,hot?'#fff':pat<.25?CORAL:pat<.55?AMBER:MINT);R(g,X-9,by+1,Math.round(19*Math.max(0,pat)),1,'#ffffff55')}
 const IDLE=(t,k)=>({legs:stand2,arms:[{ua:4,fa:8},{ua:-4,fa:2}],lean:2,dy:Math.sin(t*2+k)>.6?-1:0,face:((t+k)%3.4)<.12?'closed':'n',mouth:'smile'});
 const CHEER=(t)=>{const j=Math.abs(Math.sin(t*9));return{legs:stand2,arms:[{ua:-150-10*j,fa:-170},{ua:-150+10*j,fa:-165}],lean:0,dy:-Math.round(j*3),face:'happy',mouth:'open'}};
 const HAMMER=(sw)=>({legs:[st(10,10),st(-12,-8)],arms:[{ua:-40-70*sw,fa:-90-70*sw},{ua:8,fa:20}],lean:6,face:'n',mouth:'flat',prop:(gg,i)=>{}});
@@ -1179,15 +1276,16 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
  for(const s of G.sites){if(s.f!==F||s.st==='wait'||s.guest.gone)continue;const gx=guestX(s)-cam;if(gx<-40||gx>WW+40)continue;
   ents.push(()=>{const L=LOOK[s.guest.look],happy=s.st==='done';let P;
    if(s.chair){const ty=hY(Math.min(s.v,60))-OY;P=s.type==='reach'&&!happy?seated({mode:'reach',target:[CX+22,Math.max(GY-40,ty)],face:'n',mouth:'flat',lean:10}):roll(t,happy?t*14:0,false);if(!happy&&P.mouth)P.mouth='flat'}
-   else P=happy&&s.guest.joy>0?CHEER(t):Object.assign(IDLE(t,s.id),{mouth:happy?'smile':'flat'});
+   else P=happy&&s.guest.joy>0?CHEER(t):s.guest.mad>0?{legs:stand2,arms:[{ua:-140+Math.sin(t*30)*14,fa:-160},{ua:-140-Math.sin(t*30)*14,fa:-160}],lean:Math.sin(t*30)*3,dy:Math.abs(Math.sin(t*18))>.5?-1:0,face:'n',mouth:'open'}:Object.assign(IDLE(t,s.id),{mouth:happy?'smile':'flat'});
    person(P,gx-CX,0,L,null,false);
    if(s.cane&&!happy)line(g,gx+7,96,gx+12,119,1,'#f6f0e2');
-   if(s.st==='open')bubble(gx,58,t+s.id,s.pat)})}
+   if((s.st==='open'||(s.st==='build'&&s.by==='kit'))&&!(s.guest.mad>0))bubble(gx,56,t+s.id,s.pat,!!s.chair);
+   if(s.guest.mad>0){ptext(g,'!!',gx-3+Math.round(Math.sin(t*40)),60+(s.chair?9:0),CORAL)}})}
  for(const c of G.crews){if(c.st==='idle'||c.f!==F)continue;const X=c.x-cam;if(X<-40||X>WW+40)continue;
   ents.push(()=>{const sw=c.st==='work'?.5+.5*Math.sin(t*11):0;const P=c.st==='work'?HAMMER(sw):walkP(c.dist||0);
    const fl=c.dir<0,ey=-elev(F,c.x);const inf=person(P,X-CX,ey,LOOK.p2,hardhat,fl);if(c.st==='work'){const h=handW(inf,0,X-CX,fl);hammerProp(h[0],h[1]+ey,sw,fl)}})}
  const k=G.kit,KX=k.x-cam;
- if(F===G.f&&!G.ride&&KX>-40&&KX<WW+40)ents.push(()=>{let P,inf;const ey=-elev(F,k.x);if(G.diy){const sw=G.diy.swing;const fl=k.dir<0;P=HAMMER(1-sw);inf=kitd(P,KX-CX,ey,fl);const h=handW(inf,0,KX-CX,fl);hammerProp(h[0],h[1]+ey,1-sw,fl)}
+ if(F===G.f&&!G.ride&&KX>-40&&KX<WW+40)ents.push(()=>{let P,inf;const ey=-elev(F,k.x);if(G.diy&&(G.diy.done||G.diy.demo)){const sw=G.diy.swing;const fl=k.dir<0;P=HAMMER(1-sw);inf=kitd(P,KX-CX,ey,fl);const h=handW(inf,0,KX-CX,fl);hammerProp(h[0],h[1]+ey,1-sw,fl)}
   else{P=k.moving?walkP(k.dist):IDLE(t,0);kitd(P,KX-CX,ey,k.dir<0)}});
  ents.forEach(f=>f());
  for(const p of G.parts)if(p.f===F)px(g,p.x-cam,p.y,p.col);
@@ -1195,7 +1293,7 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
  for(const s of G.sites)if(s.f===F&&s.stamp&&s.stamp.t<1.6)drawStamp(s,cam,close);
  if(!close)return;
  for(const s of G.sites){if(s.f!==F||s.st!=='open')continue;const X=s.x-cam;if(X<-4){ptext(g,'<!',2,84,CORAL)}else if(X>WW+4){ptext(g,'!>',WW-9,84,CORAL)}}
- if(G.diy){const d=G.diy,bx=Math.round(KX-20),by=62,pos=.5+.5*Math.sin(d.ph*2.2);R(g,bx-1,by-1,42,7,'#1a162e');R(g,bx,by,40,5,'#4a4668');R(g,bx+12,by,16,5,AMBER);R(g,bx+17,by,6,5,MINT);R(g,bx+Math.round(pos*38),by-2,2,9,'#fff')}}
+}
 
 /* ---------- the whole building, zoomed out ---------- */
 const BW=480,BH=400,HX=40,SH=70,FTOP=[268,194,120,46];   // top y of each floor strip in the building view
@@ -1233,7 +1331,7 @@ function drawBuilding(t){const u=cl01(G.time/170),[a,b]=skyAt(Math.min(1,u+.45))
  if(G.ride){const r=G.ride,y=lerp(FTOP[r.from],FTOP[r.to],ease(r.u))+14;const x=HX+LIFT-11;BR(x-2,y-2,26,56,'#1a162e');BR(x,y,22,52,'#fff2c8');BR(x+7,y+18,8,10,'#e6b84c');BR(x+7,y+9,8,9,'#c98b69');BR(x+7,y+7,8,3,'#2a1f28');BR(x+8,y+28,6,22,'#5b5f7a')}
  const kx=HX+G.kit.x,ky=FTOP[G.f];if(!G.ride){const bob=Math.round(Math.sin(t*6));BR(kx-3,ky-4+bob,7,3,MINT);BR(kx-1,ky-1+bob,3,2,MINT)}}
 function render(t){const cam=Math.round(G.cam),sh=G.shake>0?Math.round(Math.sin(t*90)*G.shake*24):0;cg2.imageSmoothingEnabled=false;
- if(G.z>.995){drawWorld(G.f,cam,t,true);cg2.setTransform(1,0,0,1,0,0);cg2.fillStyle='#0a0818';cg2.fillRect(0,0,BW,BH);cg2.drawImage(wc,0,VY,WW,VH,sh,0,BW,BH);return}
+ if(G.z>.995){if(G.diy&&!G.diy.done&&!G.diy.demo)drawJob(t);else drawWorld(G.f,cam,t,true);cg2.setTransform(1,0,0,1,0,0);cg2.fillStyle='#0a0818';cg2.fillRect(0,0,BW,BH);cg2.drawImage(wc,0,VY,WW,VH,sh,0,BW,BH);return}
  updateStrip(G.f,t);stripTurn=(stripTurn+1)%4;if(stripTurn!==G.f)updateStrip(stripTurn,t);
  drawBuilding(t);const u=ease(G.z),sc=1+3*u,bx=HX+G.kit.x,by=FTOP[G.f]+(FL-56);
  const tx=u*((G.kit.x-cam)*4-4*bx),ty=u*((FL-VY)*4-4*by);
@@ -1261,7 +1359,8 @@ const HOW=[
  {cap:'5 DAYS',line:'Bring it up to code, or Sterling Crane paves it.',k:'tower'},
  {cap:'WALK TO THE !',line:'Use the arrows, or A and D.',k:'walk'},
  {cap:'PICK THE SIZE',line:'Watch the outline next to the guest.',k:'pick'},
- {cap:'HIT IN THE GREEN',line:'Or pay a crew and keep moving.',k:'hammer'},
+ {cap:'WATCH THE BAR',line:'Bar runs out, they storm off. Rating drops 10.',k:'bar'},
+ {cap:'DO THE JOB',line:'Measure it, level it, build it. Or pay a crew.',k:'hammer'},
  {cap:'PASS = PAID',line:'Wrong size? You build it again.',k:'pass'}];
 let howI=0,howRaf=0;
 function demoG(){const B=BLDS[0];const mk=(i,st,lk)=>Object.assign({id:i,st,v:SITES[i].cur,prog:0,tried:[],pat:.8,guest:{name:'',look:lk,gone:false,joy:0},stamp:null},SITES[i]);
@@ -1275,7 +1374,8 @@ function howFrame(ms){const H=HOW[howI],t=ms/1000,u=t%4,s=G.sites[0],k=G.kit,c=$
  if(H.k==='reach'){k.x=-90;s.guest.look='gran'}
  if(H.k==='walk'){k.x=Math.max(76,176-u*34);k.moving=k.x>76;k.dist=u*46;G.cam=Math.max(0,Math.min(60,k.x-70))}else G.cam=8;
  if(H.k==='pick')G.sheet={t:'order',s,sel:[66,54,48][Math.floor(u/1.34)%3],t0:TT-9};
- if(H.k==='hammer'){s.st='build';s.from=60;s.target=48;s.prog=u/4;s.by='kit';const ph=t*1.6;G.diy={s,ph,spd:1.6,cool:0,swing:Math.max(0,1-(((ph*2.2+Math.PI/2)/Math.PI)%1)*4)}}
+ if(H.k==='hammer'){s.st='build';s.from=60;s.target=48;s.prog=u/4;s.by='kit';const ph=t*1.6;G.diy={s,demo:1,swing:.5+.5*Math.sin(t*11)}}
+ if(H.k==='bar')s.pat=Math.max(0,1-u/3.6);
  if(H.k==='pass'){s.st='done';s.v=48;s.guest.joy=1;s.stamp={ok:true,t:Math.min(1.5,.2+u)}}
  TT=t;drawWorld(0,Math.round(G.cam),t,true);
  if(H.k==='walk'){const on=k.moving;R(g,44,128,14,14,'#1a162e');R(g,45,129,12,12,on?MINT:'#4a4668');ptext(g,'<',49,133,'#1a162e');R(g,62,128,14,14,'#1a162e');R(g,63,129,12,12,'#4a4668');ptext(g,'>',67,133,'#1a162e')}
