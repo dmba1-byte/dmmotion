@@ -1277,10 +1277,10 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
   ents.push(()=>{const L=LOOK[s.guest.look],happy=s.st==='done';let P;
    if(s.chair){const ty=hY(Math.min(s.v,60))-OY;P=s.type==='reach'&&!happy?seated({mode:'reach',target:[CX+22,Math.max(GY-40,ty)],face:'n',mouth:'flat',lean:10}):roll(t,happy?t*14:0,false);if(!happy&&P.mouth)P.mouth='flat'}
    else P=happy&&s.guest.joy>0?CHEER(t):s.guest.mad>0?{legs:stand2,arms:[{ua:-140+Math.sin(t*30)*14,fa:-160},{ua:-140-Math.sin(t*30)*14,fa:-160}],lean:Math.sin(t*30)*3,dy:Math.abs(Math.sin(t*18))>.5?-1:0,face:'n',mouth:'open'}:Object.assign(IDLE(t,s.id),{mouth:happy?'smile':'flat'});
-   person(P,gx-CX,0,L,null,false);
+   person(P,gx-CX+(s.guest.mad>0?Math.round(Math.sin(t*46)):0),0,L,null,false);
    if(s.cane&&!happy)line(g,gx+7,96,gx+12,119,1,'#f6f0e2');
    if((s.st==='open'||(s.st==='build'&&s.by==='kit'))&&!(s.guest.mad>0))bubble(gx,56,t+s.id,s.pat,!!s.chair);
-   if(s.guest.mad>0){ptext(g,'!!',gx-3+Math.round(Math.sin(t*40)),60+(s.chair?9:0),CORAL)}})}
+   if(s.guest.mad>0){const my=64+(s.chair?10:0)-Math.round(Math.abs(Math.sin(t*12))*2);R(g,gx-6,my-2,13,9,'#1a162e');ptext(g,'!!',gx-3,my,CORAL);ptext(g,'-10',gx+8,my,'#fff6c8')}})}
  for(const c of G.crews){if(c.st==='idle'||c.f!==F)continue;const X=c.x-cam;if(X<-40||X>WW+40)continue;
   ents.push(()=>{const sw=c.st==='work'?.5+.5*Math.sin(t*11):0;const P=c.st==='work'?HAMMER(sw):walkP(c.dist||0);
    const fl=c.dir<0,ey=-elev(F,c.x);const inf=person(P,X-CX,ey,LOOK.p2,hardhat,fl);if(c.st==='work'){const h=handW(inf,0,X-CX,fl);hammerProp(h[0],h[1]+ey,sw,fl)}})}
