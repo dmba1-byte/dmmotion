@@ -1170,7 +1170,7 @@ function drawShop(after){const el=$('shop');if(!el)return;el.innerHTML=SHOP.map(
 function show(id){['title','lore','game','end','notes','locker'].forEach(k=>$(k).classList.toggle('on',k===id))}
 function hud(){$('h_day').textContent='DAY '+(G.day+1);const p=Math.round(G.rating);$('h_fill').style.width=p+'%';
  $('h_fill').style.background=p<30?'var(--red)':p<55?'var(--gold)':'var(--green)';$('h_txt').textContent='RATING '+p;
- $('h_star').textContent='★ '+Math.max(0,bal()-(G.pend||0));$('h_combo').textContent=G.combo>1?'X'+G.combo:'';
+ $('h_star').textContent='★ '+Math.max(0,Math.round(bal()-(G.pend||0)));$('h_combo').textContent=G.combo>1?'X'+G.combo:'';
  const D=DAYS[Math.min(G.day,4)];let h='';for(let f=0;f<4;f++){const n=G.sites.filter(s=>s.f===f&&s.st==='open').length,b=G.sites.filter(s=>s.f===f&&s.st==='build').length;
   h+=`<div class="fl${f===G.f?' here':''}${n&&f!==G.f?' alert':''}${f>=D.floors?' lock':''}">${f+1} ${G.fln[f]}${n?' !'.repeat(Math.min(n,3)):''}${b?' ⚒':''}</div>`}
  if($('floors').dataset.h!==h){$('floors').innerHTML=h;$('floors').dataset.h=h}
