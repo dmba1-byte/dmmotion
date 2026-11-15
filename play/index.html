@@ -1126,9 +1126,9 @@ function drawSite(s,cam,t){const X=Math.round(s.x-cam),P=SPEC[s.type];if(X<-110|
  if(s.st==='build'){cones(X+POS[s.type][0]-8);const bw=24,bx=X-12;R(g,bx-1,56,bw+2,5,'#1a162e');R(g,bx,57,Math.round(bw*s.prog),3,AMBER)}
  if(s.st==='done'){check(g,X-3,hY(s.type==='ramp'?26:s.type==='force'?40:Math.max(v,20))-10+Math.round(Math.sin(t*3+s.id)),MINT)}
 }
-function drawStamp(s,cam){const X=Math.round(s.x-cam),P=SPEC[s.type];
- if(s.stamp&&s.stamp.t<1.6){const u=Math.min(1,s.stamp.t*6),col=s.stamp.ok?MINT:CORAL,tx=s.stamp.ok?'PASS':'REDO',w=ptw(tx)+6,sx0=Math.max(2,Math.min(WW-w-2,X-w/2));
-  if(u>=1){R(g,sx0,66,w,11,'#1a162e');R(g,sx0+1,67,w-2,9,col);R(g,sx0+2,68,w-4,7,'#1a162e');ptext(g,tx,sx0+3,69,col);if(s.stamp.ok){const q='ADA '+P.sec,qw=ptw(q)+4,qx=Math.max(2,Math.min(WW-qw-2,X-qw/2));R(g,qx-1,78,qw+2,11,col);R(g,qx,79,qw,9,'#1a162e');ptext(g,q,qx+2,81,'#fff6c8')}}}}
+function drawStamp(s,cam,close){const X=Math.round(s.x-cam),P=SPEC[s.type];
+ if(s.stamp&&s.stamp.t<1.6){const u=Math.min(1,s.stamp.t*6),col=s.stamp.ok?MINT:CORAL,tx=s.stamp.ok?'PASS':'REDO',w=ptw(tx)+6,sx0=close?Math.max(2,Math.min(WW-w-2,X-w/2)):Math.round(X-w/2);
+  if(u>=1){R(g,sx0,66,w,11,'#1a162e');R(g,sx0+1,67,w-2,9,col);R(g,sx0+2,68,w-4,7,'#1a162e');ptext(g,tx,sx0+3,69,col);if(s.stamp.ok){const q='ADA '+P.sec,qw=ptw(q)+4,qx=close?Math.max(2,Math.min(WW-qw-2,X-qw/2)):Math.round(X-qw/2);R(g,qx-1,78,qw+2,11,col);R(g,qx,79,qw,9,'#1a162e');ptext(g,q,qx+2,81,'#fff6c8')}}}}
 function bubble(X,y,t,pat){const b=Math.round(Math.sin(t*5)*1.5);R(g,X-4,y+b,9,10,CORAL);R(g,X-5,y+1+b,11,8,CORAL);R(g,X-1,y+10+b,3,2,CORAL);R(g,X-1,y+2+b,3,5,'#fff');R(g,X-1,y+8+b,3,1,'#fff');
  R(g,X-6,y+14,13,3,'#1a162e');R(g,X-5,y+15,Math.round(11*Math.max(0,pat)),1,pat<.3?CORAL:pat<.6?AMBER:MINT)}
 const IDLE=(t,k)=>({legs:stand2,arms:[{ua:4,fa:8},{ua:-4,fa:2}],lean:2,dy:Math.sin(t*2+k)>.6?-1:0,face:((t+k)%3.4)<.12?'closed':'n',mouth:'smile'});
@@ -1157,7 +1157,7 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
  ents.forEach(f=>f());
  for(const p of G.parts)if(p.f===F)px(g,p.x-cam,p.y,p.col);
  for(const f of G.floats)if(f.f===F)ptext(g,f.text,close?Math.max(1,Math.min(WW-ptw(f.text)-1,f.x-cam)):f.x-cam,f.y,f.col);
- for(const s of G.sites)if(s.f===F&&s.stamp&&s.stamp.t<1.6)drawStamp(s,cam);
+ for(const s of G.sites)if(s.f===F&&s.stamp&&s.stamp.t<1.6)drawStamp(s,cam,close);
  if(!close)return;
  for(const s of G.sites){if(s.f!==F||s.st!=='open')continue;const X=s.x-cam;if(X<-4){ptext(g,'<!',2,84,CORAL)}else if(X>WW+4){ptext(g,'!>',WW-9,84,CORAL)}}
  if(G.diy){const d=G.diy,bx=Math.round(KX-20),by=62,pos=.5+.5*Math.sin(d.ph*2.2);R(g,bx-1,by-1,42,7,'#1a162e');R(g,bx,by,40,5,'#4a4668');R(g,bx+12,by,16,5,AMBER);R(g,bx+17,by,6,5,MINT);R(g,bx+Math.round(pos*38),by-2,2,9,'#fff')}}
