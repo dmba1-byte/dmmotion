@@ -906,7 +906,8 @@ function update(dt){G.time+=dt;const k=G.kit;
  const want=(G.sheet&&G.sheet.t==='order')||G.diy||G.zhold>0?1:0;G.zhold=Math.max(0,G.zhold-dt);G.z+=(want-G.z)*Math.min(1,dt*7);if(Math.abs(want-G.z)<.004)G.z=want;
  let ix=locked?0:((keys.d||keys.arrowright||dk.r)?1:0)-((keys.a||keys.arrowleft||dk.l)?1:0);
  k.moving=!!ix;if(ix){k.dir=ix;k.x=Math.max(14,Math.min(FWID-14,k.x+ix*speed()*dt));k.dist+=speed()*dt;if(G.tut===0)G.tut=1}
- G.cam+=(Math.max(0,Math.min(FWID-WW,k.x-WW/2+k.dir*10))-G.cam)*Math.min(1,dt*6);
+ const fs=G.diy?G.diy.s:(G.sheet&&G.sheet.t==='order'?G.sheet.s:null),cx0=fs?(guestX(fs)+siteStand(fs))/2:k.x+k.dir*10;
+ G.cam+=(Math.max(0,Math.min(FWID-WW,cx0-WW/2))-G.cam)*Math.min(1,dt*6);
  if(G.ride){G.ride.u+=dt/(.45+.2*Math.abs(G.ride.to-G.ride.from));if(G.ride.u>=1){G.f=G.ride.to;G.ride=null;k.x=LIFT+16;k.dir=1}}
  if(!locked&&Math.abs(k.x-LIFT)<16){const dv=((keys.w||keys.arrowup)?1:0)-((keys.s||keys.arrowdown)?1:0);if(dv)ride(G.f+dv)}
  // nearest thing
@@ -934,7 +935,7 @@ function update(dt){G.time+=dt;const k=G.kit;
  G.shake=Math.max(0,G.shake-dt);
  if(!G.over&&G.sites.every(s=>s.st==='done'))endDay(true)}
 const POS={reach:[14,-1,-22],counter:[26,-1,-30],sign:[14,-1,-20],bar:[14,-1,-28],table:[22,-1,-24],rail:[44,-1,-30],ramp:[14,-1,-98],force:[32,-1,-30]};
-const guestX=s=>s.x+POS[s.type][2];
+const guestX=s=>s.type==='ramp'?s.x-Math.round((s.st==='build'?lerp(s.from,s.target,ease(s.prog)):s.v)*5)-16:s.x+POS[s.type][2];
 function elev(F,x){let e=0;if(!G)return 0;for(const s of G.sites){if(s.f!==F||s.st==='wait')continue;
   if(s.type==='ramp'){const v=s.st==='build'?lerp(s.from,s.target,ease(s.prog)):s.v,run=v*5;if(x>=s.x&&x<=s.x+40)e=6;else if(x>s.x-run&&x<s.x)e=6*(x-(s.x-run))/run}
   if(s.type==='rail'&&x>=s.x&&x<s.x+30)e=Math.min(12,4*(Math.floor((x-s.x)/8)+1))}return Math.round(e)}
@@ -1140,7 +1141,7 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
  g.clearRect(0,0,WW,WH);floorBase(F,cam,t,u);
  for(const s of G.sites)if(s.f===F&&s.st!=='wait')drawSite(s,cam,t);
  const ents=[];
- for(const s of G.sites){if(s.f!==F||s.st==='wait'||s.guest.gone)continue;const gx=s.x+POS[s.type][2]-cam;if(gx<-40||gx>WW+40)continue;
+ for(const s of G.sites){if(s.f!==F||s.st==='wait'||s.guest.gone)continue;const gx=guestX(s)-cam;if(gx<-40||gx>WW+40)continue;
   ents.push(()=>{const L=LOOK[s.guest.look],happy=s.st==='done';let P;
    if(s.chair){const ty=hY(Math.min(s.v,60))-OY;P=s.type==='reach'&&!happy?seated({mode:'reach',target:[CX+22,Math.max(GY-40,ty)],face:'n',mouth:'flat',lean:10}):roll(t,happy?t*14:0,false);if(!happy&&P.mouth)P.mouth='flat'}
    else P=happy&&s.guest.joy>0?CHEER(t):Object.assign(IDLE(t,s.id),{mouth:happy?'smile':'flat'});
