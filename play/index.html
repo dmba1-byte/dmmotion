@@ -863,18 +863,18 @@ const LETTERS=[
  ['Kit,','A building is a promise you make to people you will never meet. Keep mine. And leave the lobby light on. Love, Grandma Odessa.'],
 ];
 const SHOP=[
- {k:'shoes',name:'Running shoes',d:'Kit moves faster',cost:[20,35,55]},
- {k:'crew',name:'Hire another crew',d:'One more crew to call',cost:[30,60]},
- {k:'tools',name:'Power tools',d:'Every job builds faster',cost:[25,45]},
- {k:'coffee',name:'Lobby coffee bar',d:'Guests stay patient longer',cost:[20,40]},
+ {k:'shoes',name:'Running shoes',d:'Kit moves faster',cost:[25,45,70]},
+ {k:'crew',name:'Hire another crew',d:'One more crew to call',cost:[40,80]},
+ {k:'tools',name:'Power tools',d:'Every job builds faster',cost:[30,55]},
+ {k:'coffee',name:'Lobby coffee bar',d:'Guests stay patient longer',cost:[25,45]},
 ];
 
 const OUTFITS=[
  {k:'classic',name:'Hoodie',d:'Kit\'s everyday fit. No perk.',cost:0,look:{}},
  {k:'hivis',name:'Hi-vis + hard hat',d:'Hands-on jobs are 25% more forgiving.',cost:0,gift:1,look:{top:'#e8703a',topL:'#f6e04a',pants:'#3a4660'},hat:1},
- {k:'track',name:'Tracksuit',d:'Walk 20% faster.',cost:45,look:{top:'#2f9c7a',topL:'#6df2c4',pants:'#1f6a55',shoe:'#fff6e0'}},
- {k:'suit',name:'Manager suit',d:'Guests tip 25% more.',cost:60,look:{top:'#2a2f55',topL:'#5a62a8',pants:'#22264a',shoe:'#121016'}},
- {k:'coat',name:'Concierge coat',d:'The rating drops 30% slower.',cost:80,look:{top:'#8a2f3f',topL:'#d9b34a',pants:'#1f1d26',shoe:'#121016'}}];
+ {k:'track',name:'Tracksuit',d:'Walk 20% faster.',cost:60,look:{top:'#2f9c7a',topL:'#6df2c4',pants:'#1f6a55',shoe:'#fff6e0'}},
+ {k:'suit',name:'Manager suit',d:'Guests tip 25% more.',cost:85,look:{top:'#2a2f55',topL:'#5a62a8',pants:'#22264a',shoe:'#121016'}},
+ {k:'coat',name:'Concierge coat',d:'The rating drops 30% slower.',cost:120,look:{top:'#8a2f3f',topL:'#d9b34a',pants:'#1f1d26',shoe:'#121016'}}];
 const curFit=()=>OUTFITS.find(o=>o.k===SV.fit)||OUTFITS[0];
 function kitd(P,ox,oy,flip){const o=curFit();P.nobag=false;return person(P,ox,oy,o.look,o.hat?hardhat:null,flip)}
 LOOK.gran=Object.assign({},LOOK.judy,{hair:'#d8d8e2',top:'#7a5aa0',topL:'#9a7ac0'});
@@ -998,7 +998,7 @@ function drawSheet(){const sh=G.sheet,el=$('sheet');if(!sh){el.classList.remove(
   <div class="lbl">${P.verb} to:</div>
   <div class="vals">${P.vals.map(v=>`<button class="chip${sh.sel===v?' sel':''}${s.tried.includes(v)?' x':''}" ${v===s.v||s.tried.includes(v)?'disabled':''} data-v="${v}">${fmt(v)}</button>`).join('')}</div>
   <div class="note">${sh.hint||(known?'BINDER: '+P.rule:'Pick a size. Watch the outline next to the guest.')}</div>
-  <div class="row"><button class="go" id="b_me" ${sh.sel==null?'disabled':''}>KIT BUILDS IT<small>free · you swing the hammer</small></button>
+  <div class="row"><button class="go" id="b_me" ${sh.sel==null?'disabled':''}>KIT DOES IT<small>free · you do the job</small></button>
   <button class="go alt" id="b_crew" ${sh.sel==null||!crewFree||bal()<cost?'disabled':''}>CALL CREW<small>${crewFree?'★'+cost+' · they work, you move on':'all crews busy'}</small></button></div>
   <div class="row"><button class="ghost" id="shx">Not now</button><button class="ghost gold" id="b_hint" ${G.hints&&!known&&!sh.hint?'':'disabled'}>GRANDMA'S BINDER · ${G.hints}</button></div>`;
  el.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{sh.sel=+b.dataset.v;sfx.tick();drawSheet()});
@@ -1020,7 +1020,7 @@ function finish(s){s.prog=1;s.v=s.target;const P=SPEC[s.type],ok=P.ok(s.v);
  if(s.crew){s.crew.st='back';s.crew=null}
  s.stamp={ok,t:0};const here=s.f===G.f;if(here&&(s.by==='kit'||Math.abs(G.kit.x-s.x)<70))G.zhold=1.9;
  if(ok){s.st='done';const first=!s.tried.length;if(first){G.combo++;G.firsts++}else G.combo=0;
-  const tip=s.guest.gone?3:Math.round((8+rnd(0,6)+(first?G.combo*3:0))*(SV.fit==='suit'?1.25:1)*G.B.tip);G.tips+=tip;if(!s.guest.gone&&(here||G.z<.5))flyCoins(tip,s);G.rating=Math.min(100,G.rating+(s.guest.gone?3:10));s.guest.joy=3;
+  const tip=s.guest.gone?3:Math.round((8+rnd(0,6)+(first?Math.min(G.combo,4)*2:0))*(SV.fit==='suit'?1.25:1)*G.B.tip);G.tips+=tip;if(!s.guest.gone&&(here||G.z<.5))flyCoins(tip,s);G.rating=Math.min(100,G.rating+(s.guest.gone?3:10));s.guest.joy=3;
   if(!SV.notes.includes(s.type)){SV.notes.push(s.type);save();setTimeout(()=>toast('NEW PAGE IN THE BINDER'),900)}
   if(here){sfx.pass();G.shake=.2;for(let i=0;i<14;i++)G.parts.push({f:s.f,x:s.x-6,y:84,vx:rnd(-40,40),vy:rnd(-80,-30),life:rnd(.5,1),col:pick([MINT,AMBER,'#fff6c8',CORAL])})}else toast('CREW FINISHED: '+s.name+' PASSED');
   G.floats.push({f:s.f,x:s.x-8,y:104,text:'+'+tip+'*'+(G.combo>1&&first?' X'+G.combo:''),col:AMBER,life:1.4});setTimeout(sfx.coin,350);
@@ -1148,7 +1148,7 @@ function endDay(won){G.over=true;G.paused=true;closeSheet();document.querySelect
  if(letter)h+=`<div class="letter"><i>From the desk drawer, page ${G.day+1} of 5</i><b>${letter[0]}</b>${letter[1]}</div>`;
  if(G.day===4&&!G.b)h+=`<p><b>Inspector Vale signs the certificate.</b> The Meridian stays open, and Crane's offer goes in the bin.</p><div class="gift"><div><i>NEXT DOOR</i><b>Atlas Tower needs you</b><span>${SV.up.crew>=2?'Your three crews are ready. Switch buildings from the title screen.':'Hire three crews in the Locker, then take on the office tower next door. Tenants are impatient, but they tip more.'}</span></div></div>`;
  if(G.day===4&&G.b)h+=`<p><b>Atlas Tower passes inspection.</b> Two buildings on the block are up to code because of you.</p>`;
- if(gift)h+=`<div class="gift"><canvas id="giftcv" width="64" height="80"></canvas><div><i>FREE OUTFIT UNLOCKED</i><b>Hi-vis + hard hat</b><span>Your hammer hits build 25% more.</span><button class="go" id="wear">WEAR IT</button></div></div>`;
+ if(gift)h+=`<div class="gift"><canvas id="giftcv" width="64" height="80"></canvas><div><i>FREE OUTFIT UNLOCKED</i><b>Hi-vis + hard hat</b><span>Hands-on jobs are 25% more forgiving.</span><button class="go" id="wear">WEAR IT</button></div></div>`;
  h+=`<button class="btn alt" id="lockb">Locker: outfits and upgrades · ★${SV.stars}</button><div class="dim2">Progress saved.</div>`;
  h+=`<button class="btn" id="next">${unlock?'Day '+(nd+1)+': open the '+unlock+' ▶':'Start Day '+(nd+1)+' ▶'}</button>`;
  $('end').innerHTML=h;show('end');$('next').onclick=startDay;$('lockb').onclick=()=>openLocker('end');
