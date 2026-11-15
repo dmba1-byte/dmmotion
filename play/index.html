@@ -1096,11 +1096,11 @@ function jobLevel(d,t){const s=d.s,F=JY(92),H=Math.round(Math.min(46,Math.max(22
  R(g,14,JY(22),92,14,'#1a162e');R(g,16,JY(24),88,10,'#bfe8c8');R(g,16,JY(24),88,2,'#e6fff0');
  const zw=Math.round(d.zone*40);R(g,60-zw,JY(24),zw*2,10,'#8fd8a8');R(g,60-zw-1,JY(23),1,12,'#1a162e');R(g,60+zw,JY(23),1,12,'#1a162e');
  const bx=Math.round(60+d.b*38),inz=Math.abs(d.b)<=d.zone;R(g,bx-5,JY(25),10,8,inz?'#fff6c8':'#ffffff');R(g,bx-6,JY(26),12,6,inz?'#fff6c8':'#ffffff');R(g,bx-3,JY(26),3,2,'#fff');
- ptext(g,'<',5,JY(27),a2c(d.a<-.5));ptext(g,'>',111,JY(27),a2c(d.a>.5));
+ chev(5,JY(27),-1,a2c(d.a<-.5));chev(111,JY(27),1,a2c(d.a>.5));
  jobHead(d,'LEVEL THE '+(s.type==='knee'?'DESK':s.type.toUpperCase()))}
-const a2c=on=>on?AMBER:'#6a668a';
-function jobRamp(d,t){const s=d.s,F=JY(92),sx=.72,sy=2.2,px1=108,top=Math.round(F-d.rise*sy),x0=Math.round(px1-d.run*sx);
- for(let y=17;y<92;y++)R(g,0,JY(y),WW,1,mixc('#bfe3f2','#eaf4e4',(y-17)/75));R(g,0,F,WW,8,'#8a857a');R(g,0,F,WW,1,'#55514a');
+const a2c=on=>on?'#e8703a':'#8a86a8';function chev(x,y,dir,c){for(let i=0;i<3;i++){const xx=x+(dir<0?2-i:i);R(g,xx,y+i,2,1,c);R(g,xx,y+4-i,2,1,c)}}
+function jobRamp(d,t){const s=d.s,F=JY(76),sx=.72,sy=2.2,px1=108,top=Math.round(F-d.rise*sy),x0=Math.round(px1-d.run*sx);
+ for(let y=17;y<76;y++)R(g,0,JY(y),WW,1,mixc('#bfe3f2','#eaf4e4',(y-17)/59));R(g,0,F,WW,24,'#8a857a');R(g,0,F,WW,1,'#55514a');
  R(g,px1,top,12,F-top,'#9a8f84');R(g,px1,top,12,1,'#d8d0c4');R(g,px1+3,top-30,9,30,'#8a6640');R(g,px1+4,top-28,7,26,'#9a744a');px(g,px1+5,top-14,'#e0b24a');
  for(let x=x0;x<px1;x++){const h=Math.round((x-x0)/(px1-x0)*(F-top));R(g,x,F-h,1,h,'#b8b2a4');px(g,x,F-h,'#e8e2d4')}
  R(g,x0-2,F-3,4,4,CORAL);px(g,x0-1,F-2,'#fff');
@@ -1118,8 +1118,8 @@ function jobForce(d,t){const s=d.s,T=s.target,cx=60,cy=JY(74),r=30;
  for(let v=0;v<=20;v+=5){const a=ang(v);line(g,cx+Math.cos(a)*(r-7),cy-Math.sin(a)*(r-7),cx+Math.cos(a)*(r+1),cy-Math.sin(a)*(r+1),1,'#fff6c8');const q=String(v);ptext(g,q,Math.round(cx+Math.cos(a)*(r+7)-ptw(q)/2),Math.round(cy-Math.sin(a)*(r+7)-2),'#fff6c8')}
  const a=ang(Math.max(0,Math.min(20,d.read)));line(g,cx,cy,cx+Math.cos(a)*(r-6),cy-Math.sin(a)*(r-6),1,Math.abs(d.read-T)<=d.tol?MINT:CORAL);R(g,cx-2,cy-2,5,5,'#fff6c8');
  const q=(Math.round(d.read*10)/10)+' LB';ptext(g,q,cx-ptw(q)/2,cy+6,'#fff6c8');
- R(g,19,JY(32),82,5,'#1a162e');R(g,20,JY(33),Math.round(80*Math.min(1,d.hold/d.need)),3,MINT);
- ptext(g,'<',5,cy-8,a2c(true));ptext(g,'>',111,cy-8,a2c(true));
+ {const hh=Math.round(38*Math.min(1,d.hold/d.need));R(g,2,JY(40),6,40,'#1a162e');R(g,3,JY(41)+38-hh,4,hh,MINT)}
+ chev(11,cy-8,-1,a2c(d.set>d.s.target));chev(111,cy-8,1,a2c(d.set<d.s.target));
  jobHead(d,'SET CLOSER TO '+T+' LB')}
 function drawJob(t){const d=G.diy;g.clearRect(0,0,WW,WH);({mark:jobMark,level:jobLevel,ramp:jobRamp,force:jobForce})[d.k](d,t);jobFoot(d)}
 const JOBTIP={mark:'Drag the mark to the height on the tape, then <b>MARK</b>',level:'Hold <b>◀ ▶</b> to shim. <b>LOCK</b> when the bubble is centered',ramp:'Drag the ramp out. Rise × slope = run. Then <b>BUILD</b>',force:'Hold <b>◀ ▶</b> to turn the screw. Keep the needle in the green'};
