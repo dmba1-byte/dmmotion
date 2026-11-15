@@ -63,8 +63,8 @@ p{margin:0;font-size:13px;line-height:1.5;font-weight:400;font-family:system-ui,
 .go small{font:400 9px system-ui,sans-serif}.go.alt{background:var(--gold)}.go:disabled{opacity:.35}
 /* cards */
 .card{background:var(--panel);border:3px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
-#lore{justify-content:center;min-height:70vh;text-align:center;gap:16px}#lore .yr{font-size:30px;color:var(--gold)}#lore p{font-size:16px;line-height:1.55}.dots{color:var(--gray);font-size:10px}
-#end,#notes{background:var(--panel);border:3px solid var(--line);border-radius:12px;padding:14px;margin-top:6px}
+#lore{justify-content:center;text-align:center;gap:12px;padding-top:6px}#lore .yr{font-size:28px;color:var(--gold);line-height:1.1}#lore p{font-size:16px;line-height:1.45}#lore .row>.ghost{flex:0 0 90px}.dots{color:var(--gray);font-size:10px}
+#end,#notes,#locker{background:var(--panel);border:3px solid var(--line);border-radius:12px;padding:14px;margin-top:6px}
 .stars{font-size:34px;color:var(--gold);letter-spacing:6px}.stars span{color:var(--line)}
 .letter{background:#f4e9d0;color:#3a2a1c;border-radius:6px;padding:12px;font:400 13px/1.55 Georgia,serif;display:flex;flex-direction:column;gap:5px;box-shadow:0 3px 0 #b8a888}
 .letter i{font:700 9px var(--fp);font-style:normal;color:#9a7a4a;letter-spacing:.08em}
@@ -74,6 +74,15 @@ p{margin:0;font-size:13px;line-height:1.5;font-weight:400;font-family:system-ui,
 .shop em{font-style:normal;color:var(--gold);font-size:13px;align-self:center}.shop u{text-decoration:none;font-size:8px;color:var(--green);grid-column:1/3}.shop:disabled{opacity:.45}
 .pg{background:#f4e9d0;color:#3a2a1c;border-radius:6px;padding:9px 11px;font:400 13px/1.4 Georgia,serif;display:flex;flex-direction:column;gap:3px}.pg b{font-weight:700}.pg i{font:700 9px var(--fp);font-style:normal;color:#9a7a4a}.pg.q{background:#221d3c;color:var(--gray);text-align:center;font:700 12px var(--fp)}
 .foot{font:400 10px system-ui,sans-serif;color:var(--gray);text-align:center}
+button.chip0{font-family:var(--fp);font-weight:700;cursor:pointer;color:var(--gold)}button.chip0.bump{animation:bump .25s}@keyframes bump{50%{transform:scale(1.25);background:#4a3a10}}
+.coinfx{position:fixed;left:0;top:0;width:14px;height:14px;background:#f0c24a;border:2px solid #7a5a12;border-radius:3px;box-shadow:inset -3px -3px 0 #c79a1c,inset 2px 2px 0 #fff0b0;z-index:90;pointer-events:none}
+.btn.alt{background:var(--gold);box-shadow:0 4px 0 #a8862a}.dim2{font:400 11px system-ui,sans-serif;color:var(--gray);text-align:center}
+.gift{display:flex;gap:12px;align-items:center;background:#14332c;border:3px solid var(--green);border-radius:12px;padding:10px 12px}.gift canvas{width:96px;height:120px;image-rendering:pixelated;flex:none}
+.gift div{display:flex;flex-direction:column;gap:4px;align-items:flex-start}.gift i{font-style:normal;font-size:10px;color:var(--green);letter-spacing:.1em}.gift b{font-size:14px}.gift span{font:400 12px system-ui,sans-serif;color:#d8d0e8}.gift .go{min-height:36px;padding:7px 14px}
+.balance{background:#221d3c;border:3px solid var(--gold);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}.balance i{font-style:normal;font-size:10px;color:var(--gray);letter-spacing:.14em}.balance b{font-size:28px;color:var(--gold);grid-row:1/3;grid-column:2}.balance span{font:400 12px system-ui,sans-serif;color:var(--gray)}
+.fits{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px}
+.fit{background:#221d3c;border:2px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:4px;align-items:center;text-align:center}.fit.on{border-color:var(--green);background:#14332c}
+.fit canvas{width:96px;height:120px;image-rendering:pixelated}.fit b{font-size:11px}.fit span{font:400 11px/1.3 system-ui,sans-serif;color:var(--gray);min-height:29px}.fit .go{width:100%;min-height:36px;padding:6px;font-size:11px}
 /* desktop: wide stage, big canvas on the left, controls and work orders in a side panel */
 .kb{display:none}
 @media (min-width:900px) and (min-height:560px){
@@ -89,7 +98,7 @@ p{margin:0;font-size:13px;line-height:1.5;font-weight:400;font-family:system-ui,
  .sheet{position:static;margin-top:0;order:-1}.sheet.show~.kb{display:none}
  #title.on{display:grid;grid-template-columns:1.25fr 1fr;gap:10px 36px;align-items:center;align-content:center;min-height:calc(100vh - 40px)}
  #title canvas{grid-row:1/6}#title h1{font-size:56px;align-self:end}
- #lore,#end,#notes{max-width:620px;margin-inline:auto;width:100%}
+ #lore,#end,#notes,#locker{max-width:620px;margin-inline:auto;width:100%}
 }
 </style>
 <div class="stage">
@@ -97,12 +106,13 @@ p{margin:0;font-size:13px;line-height:1.5;font-weight:400;font-family:system-ui,
   <canvas class="px" id="tcv" width="120" height="100"></canvas>
   <h1>UP TO <b>CODE</b></h1><div class="sub" id="t_sub"></div>
   <button class="btn" id="play">▶ Start</button>
+  <div class="row"><button class="ghost" id="b_how">How to play</button><button class="ghost gold" id="b_lock" style="display:none">Locker</button></div>
   <button class="ghost" id="reset" style="display:none">Start over from Day 1</button>
   <div class="foot">Ages 13+ · © 2026 David Mba · DM Motion™ · <a href="../privacy.html" style="color:inherit">Privacy</a> · <a href="../" style="color:inherit">dmmotion</a><br>Measurements follow the 2010 ADA Standards for Accessible Design.</div>
  </section>
  <section class="scr" id="lore"></section>
  <section class="scr" id="game" style="gap:6px">
-  <div class="hud"><span class="chip0 g" id="h_day">DAY 1</span><div class="meter"><i id="h_fill"></i><b id="h_txt"></b></div><span class="combo" id="h_combo"></span><span class="chip0 y" id="h_star">★ 0</span><button class="ghost" id="b_notes" style="min-height:0;padding:5px 7px">BINDER</button></div>
+  <div class="hud"><span class="chip0 g" id="h_day">DAY 1</span><div class="meter"><i id="h_fill"></i><b id="h_txt"></b></div><span class="combo" id="h_combo"></span><button class="chip0 y" id="h_star" aria-label="Balance and locker">★ 0</button><button class="ghost" id="b_notes" style="min-height:0;padding:5px 7px">BINDER</button></div>
   <div class="floors" id="floors"></div>
   <div class="view"><canvas class="px" id="cv" width="480" height="400"></canvas><div class="toast" id="toast"></div><div class="prompt" id="prompt"></div></div>
   <div class="dock">
@@ -115,6 +125,7 @@ p{margin:0;font-size:13px;line-height:1.5;font-weight:400;font-family:system-ui,
  </section>
  <section class="scr" id="end"></section>
  <section class="scr" id="notes"></section>
+ <section class="scr" id="locker"></section>
 </div>
 <canvas id=c width=64 height=80 style="display:none"></canvas><canvas id=out width=8 height=8 style="display:none"></canvas><script>
 
@@ -767,7 +778,7 @@ function snow(g,t,n,cam){for(let k=0;k<n;k++){const sp=7+(k%5)*2.5,x=(((k*37+11)
 // ===== UP TO CODE : The Meridian — side-view hotel game on the reel engine =====
 Object.assign(GL,{'!':[2,2,2,0,2],':':[0,2,0,2,0],'/':[1,1,2,4,4],"'":[2,2,0,0,0],',':[0,0,0,2,4],'*':[5,2,7,2,5],' ':[0,0,0,0,0]});
 const $=id=>document.getElementById(id);
-const cv=$('cv'),cg2=cv.getContext('2d');const VY=50,VH=100,FWID=372,IN=.5,LIFT=30;
+const cv=$('cv'),cg2=cv.getContext('2d');const VY=50,VH=100,FWID=400,IN=.5,LIFT=30;
 const g=wg;const hY=v=>FL-v*IN;
 const rnd=(a,b)=>a+Math.random()*(b-a),pick=a=>a[Math.random()*a.length|0];
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -793,17 +804,17 @@ const SPEC={
 };
 const SITES=[
  {f:0,x:62,type:'reach',cur:60,name:'LIFT CALL BUTTON',chair:1,say:'I can see the button. I just can\'t reach it.'},
- {f:0,x:150,type:'counter',cur:46,name:'FRONT DESK',chair:1,say:'Hello? Anyone up there? All I see is wood.'},
- {f:0,x:222,type:'force',cur:15,name:'RESTROOM DOOR',chair:0,say:'That door pushes back harder than I do.'},
- {f:0,x:346,type:'ramp',cur:6,name:'ENTRY RAMP',chair:1,say:'That ramp is a ski jump.'},
+ {f:0,x:132,type:'counter',cur:46,name:'FRONT DESK',chair:1,say:'Hello? Anyone up there? All I see is wood.'},
+ {f:0,x:204,type:'force',cur:15,name:'RESTROOM DOOR',chair:0,say:'That door pushes back harder than I do.'},
+ {f:0,x:350,type:'ramp',cur:6,name:'ENTRY RAMP',chair:1,say:'That ramp is a ski jump.'},
  {f:1,x:96,type:'sign',cur:74,name:'ROOM SIGN',chair:0,cane:1,say:'I read room numbers by touch. Where is it?'},
  {f:1,x:166,type:'reach',cur:60,name:'THERMOSTAT',chair:1,say:'It\'s freezing and the dial is up by the ceiling.'},
  {f:1,x:246,type:'bar',cur:48,name:'GRAB BAR',chair:0,say:'That grab bar is a towel rack up there.'},
  {f:1,x:322,type:'reach',cur:54,name:'LIGHT SWITCH',chair:1,say:'I sat in the dark all night.'},
- {f:2,x:76,type:'reach',cur:66,name:'TOWEL BOX',chair:1,say:'Dripping wet and the towels are up there.'},
- {f:2,x:208,type:'ramp',cur:4,name:'POOL DECK RAMP',chair:1,say:'I\'m not climbing that. That\'s a wall.'},
- {f:2,x:268,type:'rail',cur:22,name:'POOL STEPS RAIL',chair:0,say:'That rail hits my knee. Who is it for?'},
- {f:2,x:336,type:'table',cur:44,name:'SNACK TABLE',chair:1,say:'My fries are above my head.'},
+ {f:2,x:64,type:'reach',cur:66,name:'TOWEL BOX',chair:1,say:'Dripping wet and the towels are up there.'},
+ {f:2,x:200,type:'ramp',cur:4,name:'POOL DECK RAMP',chair:1,say:'I\'m not climbing that. That\'s a wall.'},
+ {f:2,x:272,type:'rail',cur:22,name:'POOL STEPS RAIL',chair:0,say:'That rail hits my knee. Who is it for?'},
+ {f:2,x:356,type:'table',cur:44,name:'SNACK TABLE',chair:1,say:'My fries are above my head.'},
  {f:3,x:92,type:'table',cur:40,name:'DINING TABLE',chair:1,say:'I\'m eating dinner off my lap.'},
  {f:3,x:176,type:'counter',cur:50,name:'ROOF BAR',chair:1,say:'I\'ve been waving at the bartender for ten minutes.'},
  {f:3,x:262,type:'rail',cur:50,name:'TERRACE RAIL',chair:0,say:'I can\'t even get my hand up to that rail.'},
@@ -827,8 +838,17 @@ const SHOP=[
  {k:'coffee',name:'Lobby coffee bar',d:'Guests stay patient longer',cost:[20,40]},
 ];
 
+const OUTFITS=[
+ {k:'classic',name:'Hoodie',d:'Kit\'s everyday fit. No perk.',cost:0,look:{}},
+ {k:'hivis',name:'Hi-vis + hard hat',d:'Your hammer hits build 25% more.',cost:0,gift:1,look:{top:'#e8703a',topL:'#f6e04a',pants:'#3a4660'},hat:1},
+ {k:'track',name:'Tracksuit',d:'Walk 20% faster.',cost:45,look:{top:'#2f9c7a',topL:'#6df2c4',pants:'#1f6a55',shoe:'#fff6e0'}},
+ {k:'suit',name:'Manager suit',d:'Guests tip 25% more.',cost:60,look:{top:'#2a2f55',topL:'#5a62a8',pants:'#22264a',shoe:'#121016'}},
+ {k:'coat',name:'Concierge coat',d:'The rating drops 30% slower.',cost:80,look:{top:'#8a2f3f',topL:'#d9b34a',pants:'#1f1d26',shoe:'#121016'}}];
+const curFit=()=>OUTFITS.find(o=>o.k===SV.fit)||OUTFITS[0];
+function kitd(P,ox,oy,flip){const o=curFit();P.nobag=false;return person(P,ox,oy,o.look,o.hat?hardhat:null,flip)}
+LOOK.gran=Object.assign({},LOOK.judy,{hair:'#d8d8e2',top:'#7a5aa0',topL:'#9a7ac0'});
 /* ---------- save ---------- */
-let SV={day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:0,seenIntro:0};
+let SV={day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:0,seenIntro:0,fits:['classic'],fit:'classic'};
 try{const s=JSON.parse(localStorage.getItem('utc2')||'null');if(s)SV=Object.assign(SV,s)}catch(e){}
 const save=()=>{try{localStorage.setItem('utc2',JSON.stringify(SV))}catch(e){}};
 
@@ -873,7 +893,9 @@ function spawn(){if(!G.queue.length)return;const s=site(G.queue.shift());s.st='o
  if(G.time>2){sfx.alert();toast(s.f===G.f?'NEW GUEST ON THIS FLOOR':'GUEST WAITING: '+(s.f+1)+' '+FLN[s.f])}
  G.spawnIn=G.queue.length?G.gap:1e9}
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2400)}
-const speed=()=>(G&&G.z<.5?64:46)*(1+.16*SV.up.shoes),buildMul=()=>Math.pow(.78,SV.up.tools),patMul=()=>Math.pow(1.25,SV.up.coffee);
+const bal=()=>SV.stars+(G&&!G.over?G.tips:0);
+function spend(c){if(bal()<c)return false;if(G&&!G.over){const t=Math.min(G.tips,c);G.tips-=t;c-=t}SV.stars-=c;save();return true}
+const speed=()=>(G&&G.z<.5?64:46)*(1+.16*SV.up.shoes)*(SV.fit==='track'?1.2:1),buildMul=()=>Math.pow(.78,SV.up.tools),patMul=()=>Math.pow(1.25,SV.up.coffee);
 
 /* ---------- loop ---------- */
 function loop(t){const dt=Math.min(.05,(t-last)/1000);last=t;TT=t/1000;
@@ -888,19 +910,20 @@ function update(dt){G.time+=dt;const k=G.kit;
  if(G.ride){G.ride.u+=dt/(.45+.2*Math.abs(G.ride.to-G.ride.from));if(G.ride.u>=1){G.f=G.ride.to;G.ride=null;k.x=LIFT+16;k.dir=1}}
  if(!locked&&Math.abs(k.x-LIFT)<16){const dv=((keys.w||keys.arrowup)?1:0)-((keys.s||keys.arrowdown)?1:0);if(dv)ride(G.f+dv)}
  // nearest thing
- G.near=null;if(!locked){let best=20;
-  for(const s of G.sites){if(s.f!==G.f||s.st!=='open')continue;const d=Math.abs(siteStand(s)-k.x);if(d<best){best=d;G.near={t:'site',s}}}
-  if(!G.near&&Math.abs(k.x-LIFT)<16)G.near={t:'lift'}}
+ G.near=null;if(!locked){let best=24;
+  for(const s of G.sites){if(s.f!==G.f||s.st!=='open')continue;const d=Math.min(Math.abs(siteStand(s)-k.x),Math.abs(guestX(s)-k.x));if(d<best){best=d;G.near={t:'site',s}}}
+  if(!G.near&&Math.abs(k.x-LIFT)<16)G.near={t:'lift'}
+  if(G.near&&G.near.t==='site'&&!ix)k.dir=Math.sign(guestX(G.near.s)-k.x)||k.dir}
  // spawning + patience + rating
  G.spawnIn-=dt;if(G.spawnIn<=0)spawn();
  let waiting=0;
  for(const s of G.sites){
   if(s.st==='open'&&!s.guest.gone){waiting++;s.pat-=dt/(70*patMul());
-   if(s.pat<=0){s.guest.gone=true;G.rating-=12;G.combo=0;sfx.angry();toast(s.guest.name+' GAVE UP AND LEFT');if(s.f===G.f)G.shake=.3}}
+   if(s.pat<=0){s.guest.gone=true;G.rating-=8+G.day;G.combo=0;sfx.angry();toast(s.guest.name+' GAVE UP AND LEFT');if(s.f===G.f)G.shake=.3}}
   if(s.st==='build'&&s.by==='crew'&&s.crew.st==='work'){s.prog+=dt/(9*buildMul());if(Math.random()<dt*7&&s.f===G.f)dust(s);if(Math.random()<dt*3&&s.f===G.f)sfx.hit();if(s.prog>=1)finish(s)}
   if(s.guest.joy>0)s.guest.joy-=dt;
   if(s.stamp)s.stamp.t+=dt}
- G.rating-=dt*.32*waiting;if(G.rating<=0){G.rating=0;endDay(false)}
+ G.rating-=dt*Math.min(.42,.10+.06*G.day)*waiting/(SV.fit==='coat'?1.3:1);if(G.rating<=0){G.rating=0;endDay(false)}
  // crews
  for(const c of G.crews){if(c.st==='go'){const tx=siteStand(c.site);const d=tx-c.x;c.dir=Math.sign(d)||1;c.x+=c.dir*56*dt;c.dist=(c.dist||0)+56*dt;if(Math.abs(d)<2){c.x=tx;c.st='work';c.dir=POS[c.site.type][1]}}
   else if(c.st==='back'){c.dir=-1;c.x-=56*dt;c.dist+=56*dt;if(c.x<=LIFT){c.st='idle';c.site=null}}}
@@ -910,7 +933,11 @@ function update(dt){G.time+=dt;const k=G.kit;
  for(const f of G.floats){f.y-=dt*10;f.life-=dt}G.floats=G.floats.filter(f=>f.life>0);
  G.shake=Math.max(0,G.shake-dt);
  if(!G.over&&G.sites.every(s=>s.st==='done'))endDay(true)}
-const POS={reach:[14,-1,-22],counter:[26,-1,-30],sign:[14,-1,-20],bar:[14,-1,-28],table:[22,-1,-24],rail:[-10,1,-30],ramp:[-108,1,-132],force:[-20,1,-40]};
+const POS={reach:[14,-1,-22],counter:[26,-1,-30],sign:[14,-1,-20],bar:[14,-1,-28],table:[22,-1,-24],rail:[44,-1,-30],ramp:[14,-1,-98],force:[32,-1,-30]};
+const guestX=s=>s.x+POS[s.type][2];
+function elev(F,x){let e=0;if(!G)return 0;for(const s of G.sites){if(s.f!==F||s.st==='wait')continue;
+  if(s.type==='ramp'){const v=s.st==='build'?lerp(s.from,s.target,ease(s.prog)):s.v,run=v*5;if(x>=s.x&&x<=s.x+40)e=6;else if(x>s.x-run&&x<s.x)e=6*(x-(s.x-run))/run}
+  if(s.type==='rail'&&x>=s.x&&x<s.x+30)e=Math.min(12,4*(Math.floor((x-s.x)/8)+1))}return Math.round(e)}
 const siteStand=s=>s.x+POS[s.type][0];
 const workOff=s=>-POS[s.type][0];
 function dust(s){for(let i=0;i<2;i++)G.parts.push({f:s.f,x:s.x+rnd(-5,5),y:hY(s.type==='ramp'?6:Math.min(s.v,40))+rnd(-4,4),vx:rnd(-14,14),vy:rnd(-30,-8),life:rnd(.3,.6),col:pick(['#e8dcc8','#f0c24a','#cfc6b6'])})}
@@ -919,7 +946,7 @@ function dust(s){for(let i=0;i<2;i++)G.parts.push({f:s.f,x:s.x+rnd(-5,5),y:hY(s.
 function act(){if(!G||G.over||G.paused||G.ride)return;try{AC&&AC.resume()}catch(e){}
  if(G.diy)return swing();if(G.sheet)return;const n=G.near;if(!n)return;
  if(n.t==='lift')openLift();else openOrder(n.s)}
-function openOrder(s){G.sheet={t:'order',s,sel:null,t0:TT};sfx.tape();if(G.tut<2)G.tut=2;drawSheet()}
+function openOrder(s){G.kit.x=siteStand(s);G.kit.dir=POS[s.type][1];G.sheet={t:'order',s,sel:null,t0:TT};sfx.tape();if(G.tut<2)G.tut=2;drawSheet()}
 function drawSheet(){const sh=G.sheet,el=$('sheet');if(!sh){el.classList.remove('show');$('pad').style.visibility='visible';return}
  $('pad').style.visibility='hidden';el.classList.add('show');
  if(sh.t==='lift'){el.innerHTML='<div class="sh-h">LIFT<span>where to?</span></div><div class="lift">'+[3,2,1,0].map(f=>{const D=DAYS[Math.min(G.day,4)];const lock=f>=D.floors;
@@ -934,7 +961,7 @@ function drawSheet(){const sh=G.sheet,el=$('sheet');if(!sh){el.classList.remove(
   <div class="vals">${P.vals.map(v=>`<button class="chip${sh.sel===v?' sel':''}${s.tried.includes(v)?' x':''}" ${v===s.v||s.tried.includes(v)?'disabled':''} data-v="${v}">${fmt(v)}</button>`).join('')}</div>
   <div class="note">${sh.hint||(known?'BINDER: '+P.rule:'Pick a size. Watch the outline next to the guest.')}</div>
   <div class="row"><button class="go" id="b_me" ${sh.sel==null?'disabled':''}>KIT BUILDS IT<small>free · you swing the hammer</small></button>
-  <button class="go alt" id="b_crew" ${sh.sel==null||!crewFree||G.tips+SV.stars<cost?'disabled':''}>CALL CREW<small>${crewFree?'★'+cost+' · they work, you move on':'all crews busy'}</small></button></div>
+  <button class="go alt" id="b_crew" ${sh.sel==null||!crewFree||bal()<cost?'disabled':''}>CALL CREW<small>${crewFree?'★'+cost+' · they work, you move on':'all crews busy'}</small></button></div>
   <div class="row"><button class="ghost" id="shx">Not now</button><button class="ghost gold" id="b_hint" ${G.hints&&!known&&!sh.hint?'':'disabled'}>GRANDMA'S BINDER · ${G.hints}</button></div>`;
  el.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{sh.sel=+b.dataset.v;sfx.tick();drawSheet()});
  $('shx').onclick=closeSheet;$('b_me').onclick=()=>begin('kit');$('b_crew').onclick=()=>begin('crew');
@@ -948,51 +975,71 @@ function closeSheet(){if(G)G.sheet=null;drawSheet()}
 function openLift(){G.sheet={t:'lift'};drawSheet()}
 function ride(f){const D=DAYS[Math.min(G.day,4)];if(f>=D.floors||f<0||G.ride)return;closeSheet();if(f===G.f)return;G.ride={from:G.f,to:f,u:0};sfx.lift()}
 function begin(by){const sh=G.sheet,s=sh.s;if(sh.sel==null)return;s.from=s.v;s.target=sh.sel;s.prog=0;s.by=by;s.st='build';closeSheet();
- if(by==='crew'){const c=G.crews.find(c=>c.st==='idle');if(!c)return;if(G.tips>=6)G.tips-=6;else{SV.stars-=6-G.tips;G.tips=0}
+ if(by==='crew'){const c=G.crews.find(c=>c.st==='idle');if(!c||!spend(6))return;
   c.site=s;c.st='go';c.f=s.f;c.x=LIFT;c.dist=0;s.crew=c;toast('CREW ON THE WAY')}
  else{G.kit.x=siteStand(s);G.kit.dir=POS[s.type][1];G.diy={s,ph:0,spd:1.5+G.day*.12,cool:0,swing:0,msg:''};if(G.tut<3)G.tut=3}}
 function swing(){const d=G.diy;if(d.cool>0)return;const pos=.5+.5*Math.sin(d.ph*2.2),off=Math.abs(pos-.5);d.cool=.22;d.swing=1;
  let gain;if(off<.07){gain=.4;d.msg='PERFECT';sfx.perfect();G.shake=.12}else if(off<.2){gain=.26;d.msg='GOOD';sfx.hit()}else{gain=.08;d.msg='MISS';sfx.miss()}
- d.s.prog+=gain/Math.max(.6,buildMul());for(let i=0;i<4;i++)dust(d.s);
+ d.s.prog+=gain*(SV.fit==='hivis'?1.25:1)/Math.max(.6,buildMul());for(let i=0;i<4;i++)dust(d.s);
  G.floats.push({f:d.s.f,x:G.kit.x+8,y:70,text:d.msg,col:off<.07?MINT:off<.2?AMBER:CORAL,life:.6});
  if(d.s.prog>=1){G.diy=null;finish(d.s)}}
 function finish(s){s.prog=1;s.v=s.target;const P=SPEC[s.type],ok=P.ok(s.v);
  if(s.crew){s.crew.st='back';s.crew=null}
  s.stamp={ok,t:0};const here=s.f===G.f;if(here&&(s.by==='kit'||Math.abs(G.kit.x-s.x)<70))G.zhold=1.9;
  if(ok){s.st='done';const first=!s.tried.length;if(first){G.combo++;G.firsts++}else G.combo=0;
-  const tip=s.guest.gone?3:Math.round(8+rnd(0,6)+(first?G.combo*3:0));G.tips+=tip;G.rating=Math.min(100,G.rating+(s.guest.gone?3:10));s.guest.joy=3;
+  const tip=s.guest.gone?3:Math.round((8+rnd(0,6)+(first?G.combo*3:0))*(SV.fit==='suit'?1.25:1));G.tips+=tip;if(!s.guest.gone&&(here||G.z<.5))flyCoins(tip,s);G.rating=Math.min(100,G.rating+(s.guest.gone?3:10));s.guest.joy=3;
   if(!SV.notes.includes(s.type)){SV.notes.push(s.type);save();setTimeout(()=>toast('NEW PAGE IN THE BINDER'),900)}
   if(here){sfx.pass();G.shake=.2;for(let i=0;i<14;i++)G.parts.push({f:s.f,x:s.x-6,y:84,vx:rnd(-40,40),vy:rnd(-80,-30),life:rnd(.5,1),col:pick([MINT,AMBER,'#fff6c8',CORAL])})}else toast('CREW FINISHED: '+s.name+' PASSED');
   G.floats.push({f:s.f,x:s.x-8,y:104,text:'+'+tip+'*'+(G.combo>1&&first?' X'+G.combo:''),col:AMBER,life:1.4});setTimeout(sfx.coin,350);
   if(G.tut<4)G.tut=4}
- else{s.st='open';s.tried.push(s.v);G.fails++;G.combo=0;G.rating-=8;const high=s.v>P.vals.filter(P.ok).slice(-1)[0];s.gripe=high?P.hi:P.lo;
+ else{s.st='open';s.tried.push(s.v);G.fails++;G.combo=0;G.rating-=6;const high=s.v>P.vals.filter(P.ok).slice(-1)[0];s.gripe=high?P.hi:P.lo;
   if(here){sfx.fail();G.shake=.3}toast(here?'FAILED INSPECTION':'CREW FINISHED: '+s.name+' FAILED');
   G.floats.push({f:s.f,x:s.x-8,y:104,text:'REDO',col:CORAL,life:1.4})}}
+
+/* ---------- money that visibly moves ---------- */
+function scrPos(f,wx,wy){const r=cv.getBoundingClientRect(),sc=r.width/480;const x=G.z>.5?(wx-G.cam)*4:HX+wx,y=G.z>.5?(wy-VY)*4:FTOP[f]+(wy-56)-(f===3?6:0);return[r.left+x*sc,r.top+y*sc]}
+function flyCoins(amount,s){const chip=$('h_star').getBoundingClientRect(),[sx,sy]=scrPos(s.f,guestX(s),92),n=Math.min(8,Math.max(3,Math.round(amount/3)));
+ G.pend=(G.pend||0)+amount;const each=amount/n;
+ for(let i=0;i<n;i++){const d=document.createElement('div');d.className='coinfx';document.body.appendChild(d);
+  const tx=chip.left+chip.width/2-7,ty=chip.top+chip.height/2-7,mx=(sx+tx)/2+rnd(-30,30),my=Math.min(sy,ty)-rnd(30,70);
+  const a=d.animate([{transform:`translate(${sx}px,${sy}px) scale(.6)`},{transform:`translate(${mx}px,${my}px) scale(1.2)`,offset:.45},{transform:`translate(${tx}px,${ty}px) scale(.8)`}],{duration:620,delay:250+i*70,easing:'ease-in-out',fill:'both'});
+  const land=()=>{d.remove();if(G)G.pend=Math.max(0,(G.pend||0)-each);sfx.coin();const c=$('h_star');c.classList.remove('bump');void c.offsetWidth;c.classList.add('bump')};
+  a.onfinish=land;a.oncancel=land}}
 
 /* ---------- end of day ---------- */
 function endDay(won){G.over=true;G.paused=true;closeSheet();
  if(!won){sfx.lose();$('end').innerHTML=`<h2 class="lose">THE GUESTS CHECKED OUT</h2><p>The Meridian's rating hit zero on Day ${G.day+1}. Inspector Vale is not impressed, and Sterling Crane is circling.</p><p class="dim">Tip: call a crew for one job while you hammer another.</p><button class="btn" id="again">Try the day again</button>`;
   show('end');$('again').onclick=startDay;return}
  sfx.win();const stars=G.rating>=80?3:G.rating>=55?2:1,bonus=stars*5,total=G.tips+bonus;SV.stars+=total;SV.best=Math.max(SV.best,G.day+1);
- const letter=G.day<5&&SV.letters<=G.day?LETTERS[G.day]:null;if(letter)SV.letters=G.day+1;SV.day=G.day+1;save();
+ const letter=G.day<5&&SV.letters<=G.day?LETTERS[G.day]:null;if(letter)SV.letters=G.day+1;const gift=G.day===0&&!SV.fits.includes('hivis');if(gift)SV.fits.push('hivis');G.pend=0;SV.day=G.day+1;save();
  const nextD=DAYS[Math.min(SV.day,4)],unlock=SV.day<4&&nextD.floors>DAYS[G.day].floors?FLN[nextD.floors-1]:null;
  let h=`<h2 class="win">DAY ${G.day+1} UP TO CODE</h2><div class="stars">${'★'.repeat(stars)}<span>${'★'.repeat(3-stars)}</span></div>
   <p>${G.sites.length} jobs passed inspection · ${G.firsts} right the first time${G.fails?' · '+G.fails+' redone':''}<br>Tips ★${G.tips} + rating bonus ★${bonus} = <b>★${total}</b></p>`;
  if(letter)h+=`<div class="letter"><i>From the desk drawer, page ${G.day+1} of 5</i><b>${letter[0]}</b>${letter[1]}</div>`;
  if(G.day===4)h+=`<p><b>Inspector Vale signs the certificate.</b> The Meridian stays open, and Crane's offer goes in the bin. Guests keep coming, though, and so do the problems.</p>`;
- h+=`<div class="lbl">Spend your ★${SV.stars}</div><div id="shop"></div>`;
+ if(gift)h+=`<div class="gift"><canvas id="giftcv" width="64" height="80"></canvas><div><i>FREE OUTFIT UNLOCKED</i><b>Hi-vis + hard hat</b><span>Your hammer hits build 25% more.</span><button class="go" id="wear">WEAR IT</button></div></div>`;
+ h+=`<button class="btn alt" id="lockb">Locker: outfits and upgrades · ★${SV.stars}</button><div class="dim2">Progress saved.</div>`;
  h+=`<button class="btn" id="next">${unlock?'Day '+(SV.day+1)+': open the '+unlock+' ▶':'Start Day '+(SV.day+1)+' ▶'}</button>`;
- $('end').innerHTML=h;drawShop();show('end');$('next').onclick=startDay}
-function drawShop(){const el=$('shop');if(!el)return;el.innerHTML=SHOP.map(it=>{const lv=SV.up[it.k],c=it.cost[lv];
-  return `<button class="shop" data-k="${it.k}" ${c==null||SV.stars<c?'disabled':''}><span><b>${it.name}</b>${it.d}</span><em>${c==null?'MAX':'★'+c}</em><u>${'■'.repeat(lv)}${'□'.repeat(it.cost.length-lv)}</u></button>`}).join('');
- el.querySelectorAll('.shop').forEach(b=>b.onclick=()=>{const it=SHOP.find(i=>i.k===b.dataset.k),c=it.cost[SV.up[it.k]];if(SV.stars<c)return;SV.stars-=c;SV.up[it.k]++;save();sfx.coin();drawShop();
-  const l=document.querySelector('#end .lbl');if(l)l.textContent='Spend your ★'+SV.stars})}
+ $('end').innerHTML=h;show('end');$('next').onclick=startDay;$('lockb').onclick=()=>openLocker('end');
+ if(gift){fitSprite(OUTFITS[1],$('giftcv'));$('wear').onclick=()=>{SV.fit='hivis';save();sfx.coin();$('wear').textContent='WEARING IT';$('wear').disabled=true}}}
+function fitSprite(o,c){const sv=Object.assign({},K);Object.assign(K,o.look);const sp=charFrame(FCHEER(.3,0),'f');Object.assign(K,sv);const x=c.getContext('2d');x.imageSmoothingEnabled=false;x.clearRect(0,0,64,80);x.drawImage(sp,0,0);
+ if(o.hat){const d=x.getImageData(0,0,64,80).data;let top=80,l=64,r=0;for(let y=0;y<80&&top===80;y++)for(let i=0;i<64;i++)if(d[(y*64+i)*4+3]){top=y;break}for(let i=0;i<64;i++)if(d[((top+3)*64+i)*4+3]){l=Math.min(l,i);r=Math.max(r,i)}
+  x.fillStyle='#1a162e';x.fillRect(l-2,top-3,r-l+5,6);x.fillRect(l-3,top+2,r-l+7,3);x.fillStyle=AMBER;x.fillRect(l-1,top-2,r-l+3,5);x.fillRect(l-2,top+2,r-l+5,2);x.fillStyle='#fff0b0';x.fillRect(l-1,top-2,r-l+3,1)}}
+function openLocker(from){if(G&&!G.over)G.paused=true;const back=()=>{if(from==='end'){const b=$('lockb');if(b)b.textContent='Locker: outfits and upgrades · ★'+SV.stars;show('end')}else if(from==='title'){boot()}else{show('game');G.paused=false;last=performance.now()}};
+ const draw=()=>{$('locker').innerHTML=`<h2>LOCKER</h2><div class="balance"><i>BALANCE</i><b>★ ${bal()}</b><span>Guests pay you when a job passes inspection.</span></div><div class="lbl">OUTFITS</div><div class="fits">`+OUTFITS.map((o,i)=>{const own=SV.fits.includes(o.k),on=SV.fit===o.k;
+   return `<div class="fit${on?' on':''}"><canvas width="64" height="80" data-i="${i}"></canvas><b>${o.name}</b><span>${o.d}</span><button class="go${own?'':' alt'}" data-o="${o.k}" ${on||(!own&&(o.gift||bal()<o.cost))?'disabled':''}>${on?'WEARING':own?'WEAR':o.gift?'BEAT DAY 1':'BUY ★'+o.cost}</button></div>`}).join('')+`</div><div class="lbl">UPGRADES</div><div id="shop"></div><button class="btn" id="lkb">Back</button>`;
+  $('locker').querySelectorAll('canvas').forEach(c=>fitSprite(OUTFITS[+c.dataset.i],c));drawShop(draw);$('lkb').onclick=back;
+  $('locker').querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>{const o=OUTFITS.find(q=>q.k===b.dataset.o);if(!SV.fits.includes(o.k)){if(!spend(o.cost))return;SV.fits.push(o.k)}SV.fit=o.k;save();sfx.coin();draw()})};
+ draw();show('locker')}
+function drawShop(after){const el=$('shop');if(!el)return;el.innerHTML=SHOP.map(it=>{const lv=SV.up[it.k],c=it.cost[lv];
+  return `<button class="shop" data-k="${it.k}" ${c==null||bal()<c?'disabled':''}><span><b>${it.name}</b>${it.d}</span><em>${c==null?'MAX':'★'+c}</em><u>${'■'.repeat(lv)}${'□'.repeat(it.cost.length-lv)}</u></button>`}).join('');
+ el.querySelectorAll('.shop').forEach(b=>b.onclick=()=>{const it=SHOP.find(i=>i.k===b.dataset.k),c=it.cost[SV.up[it.k]];if(!spend(c))return;SV.up[it.k]++;save();sfx.coin();if(it.k==='crew'&&G&&!G.over)G.crews.push({site:null,x:LIFT,f:0,st:'idle'});after?after():drawShop()})}
 
 /* ---------- screens ---------- */
-function show(id){['title','lore','game','end','notes'].forEach(k=>$(k).classList.toggle('on',k===id))}
+function show(id){['title','lore','game','end','notes','locker'].forEach(k=>$(k).classList.toggle('on',k===id))}
 function hud(){$('h_day').textContent='DAY '+(G.day+1);const p=Math.round(G.rating);$('h_fill').style.width=p+'%';
  $('h_fill').style.background=p<30?'var(--red)':p<55?'var(--gold)':'var(--green)';$('h_txt').textContent='RATING '+p;
- $('h_star').textContent='★ '+(SV.stars+G.tips);$('h_combo').textContent=G.combo>1?'X'+G.combo:'';
+ $('h_star').textContent='★ '+Math.max(0,bal()-(G.pend||0));$('h_combo').textContent=G.combo>1?'X'+G.combo:'';
  const D=DAYS[Math.min(G.day,4)];let h='';for(let f=0;f<4;f++){const n=G.sites.filter(s=>s.f===f&&s.st==='open').length,b=G.sites.filter(s=>s.f===f&&s.st==='build').length;
   h+=`<div class="fl${f===G.f?' here':''}${n&&f!==G.f?' alert':''}${f>=D.floors?' lock':''}">${f+1} ${FLN[f]}${n?' !'.repeat(Math.min(n,3)):''}${b?' ⚒':''}</div>`}
  if($('floors').dataset.h!==h){$('floors').innerHTML=h;$('floors').dataset.h=h}
@@ -1027,7 +1074,7 @@ function floorBase(f,cam,t,u){
   [[100,0],[270,1]].forEach(([x,pl])=>{const X=wx(x);if(X<-30||X>WW)return;R(g,X,106,24,10,'#b85a6a');R(g,X,102,24,5,'#d06a7a');R(g,X-2,104,3,12,'#9a4a5a');R(g,X+23,104,3,12,'#9a4a5a');R(g,X+1,116,2,4,'#3a2a30');R(g,X+21,116,2,4,'#3a2a30');
    if(pl){R(g,X+32,110,8,10,'#9a5a3a');R(g,X+30,96,12,14,'#2f9c63');R(g,X+33,92,6,6,'#49d08a')}});
   // entry door right
-  const dx=wx(356);if(dx<WW){R(g,dx,62,16,58,'#1c1830');R(g,dx+1,63,14,57,'#9fc0e0');R(g,dx+8,63,1,57,'#1c1830');ptext(g,'EXIT',dx+1,56,MINT)}
+  const dx=wx(384);if(dx<WW){R(g,dx,62,16,58,'#1c1830');R(g,dx+1,63,14,57,'#9fc0e0');R(g,dx+8,63,1,57,'#1c1830');ptext(g,'EXIT',dx+1,56,MINT)}
   for(let y=120;y<150;y++)for(let x=0;x<WW;x++){}
   R(g,0,120,WW,30,'#d8cdb4');for(let y=120;y<150;y+=6){const row=(y-120)/6;for(let x=-((cam+row*6)%12);x<WW;x+=12)R(g,x,y,6,6,'#c4b89c')}R(g,0,120,WW,1,'#8a7e66')}
  if(f===1){ // rooms corridor
@@ -1067,7 +1114,7 @@ function drawSite(s,cam,t){const X=Math.round(s.x-cam),P=SPEC[s.type];if(X<-110|
   if(s.type==='table'){if(gh){R(g,X-11,y,22,1,MINT)}else{R(g,X-11,y,22,2,'#efe6d0');R(g,X-11,y,22,1,'#fffaf0');R(g,X-1,y+2,2,FL-y-2,'#5a4030');R(g,X-5,FL-1,10,1,'#5a4030');R(g,X+2,y-4,4,4,CORAL);R(g,X-6,y-2,5,2,'#f0c24a')}}
   if(s.type==='rail'){for(let k=0;k<3;k++){if(!gh)R(g,X+k*8,FL-(k+1)*4,30-k*8,4,k%2?'#b8ae98':'#cfc6b0')}
    const y0=y,y1=y-12;line(g,X-2,y0,X+22,y1,1,c('#d9b34a'));if(!gh){line(g,X-2,y0+1,X+22,y1+1,1,'#8a6a2a');R(g,X-2,y0,1,FL-y0,'#8a6a2a');R(g,X+22,y1,1,FL-12-y1,'#8a6a2a')}}
-  if(s.type==='ramp'){const run=val*6;if(!gh){R(g,X,FL-6,40,6,'#b8ae98');R(g,X,FL-6,40,1,'#e0d8c4')}
+  if(s.type==='ramp'){const run=val*5;if(!gh){R(g,X,FL-6,40,6,'#b8ae98');R(g,X,FL-6,40,1,'#e0d8c4')}
    for(let i=0;i<run;i++){const hh=Math.round(6*(i+1)/run);if(gh)px(g,X-run+i,FL-hh,MINT);else{R(g,X-run+i,FL-hh,1,hh,'#a89e88');px(g,X-run+i,FL-hh,'#e0d8c4')}}}
   if(s.type==='force'){if(!gh){R(g,X-1,64,20,56,'#2a2440');R(g,X,65,18,55,'#7a8fb8');R(g,X+2,68,14,20,'#6a7fa8');R(g,X+14,94,2,4,'#d9b34a');ptext(g,'WC',X+5,72,'#f6f0e2');R(g,X+4,61,10,3,'#3a3456')}
    R(g,X-12,74,10,9,c('#1c1830'));if(!gh){R(g,X-11,75,8,7,'#f6f0e2');const a=Math.PI*(1-Math.min(1,val/20)*.9);line(g,X-7,81,X-7+Math.cos(a)*3,81-Math.sin(a)*4,1,CORAL)}}
@@ -1102,10 +1149,10 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
    if(s.st==='open')bubble(gx,58,t+s.id,s.pat)})}
  for(const c of G.crews){if(c.st==='idle'||c.f!==F)continue;const X=c.x-cam;if(X<-40||X>WW+40)continue;
   ents.push(()=>{const sw=c.st==='work'?.5+.5*Math.sin(t*11):0;const P=c.st==='work'?HAMMER(sw):walkP(c.dist||0);
-   const fl=c.dir<0;const inf=person(P,X-CX,0,LOOK.p2,hardhat,fl);if(c.st==='work'){const h=handW(inf,0,X-CX,fl);hammerProp(h[0],h[1],sw,fl)}})}
+   const fl=c.dir<0,ey=-elev(F,c.x);const inf=person(P,X-CX,ey,LOOK.p2,hardhat,fl);if(c.st==='work'){const h=handW(inf,0,X-CX,fl);hammerProp(h[0],h[1]+ey,sw,fl)}})}
  const k=G.kit,KX=k.x-cam;
- if(F===G.f&&!G.ride&&KX>-40&&KX<WW+40)ents.push(()=>{let P,inf;if(G.diy){const sw=G.diy.swing;const fl=k.dir<0;P=HAMMER(1-sw);inf=kitp(P,KX-CX,0,fl);const h=handW(inf,0,KX-CX,fl);hammerProp(h[0],h[1],1-sw,fl)}
-  else{P=k.moving?walkP(k.dist):IDLE(t,0);kitp(P,KX-CX,0,k.dir<0)}});
+ if(F===G.f&&!G.ride&&KX>-40&&KX<WW+40)ents.push(()=>{let P,inf;const ey=-elev(F,k.x);if(G.diy){const sw=G.diy.swing;const fl=k.dir<0;P=HAMMER(1-sw);inf=kitd(P,KX-CX,ey,fl);const h=handW(inf,0,KX-CX,fl);hammerProp(h[0],h[1]+ey,1-sw,fl)}
+  else{P=k.moving?walkP(k.dist):IDLE(t,0);kitd(P,KX-CX,ey,k.dir<0)}});
  ents.forEach(f=>f());
  for(const p of G.parts)if(p.f===F)px(g,p.x-cam,p.y,p.col);
  for(const f of G.floats)if(f.f===F)ptext(g,f.text,close?Math.max(1,Math.min(WW-ptw(f.text)-1,f.x-cam)):f.x-cam,f.y,f.col);
@@ -1115,7 +1162,7 @@ function drawWorld(F,cam,t,close){QA.chars.length=0;QA.solids.length=0;const u=c
  if(G.diy){const d=G.diy,bx=Math.round(KX-20),by=62,pos=.5+.5*Math.sin(d.ph*2.2);R(g,bx-1,by-1,42,7,'#1a162e');R(g,bx,by,40,5,'#4a4668');R(g,bx+12,by,16,5,AMBER);R(g,bx+17,by,6,5,MINT);R(g,bx+Math.round(pos*38),by-2,2,9,'#fff')}}
 
 /* ---------- the whole building, zoomed out ---------- */
-const BW=480,BH=400,HX=54,SH=70,FTOP=[268,194,120,46];   // top y of each floor strip in the building view
+const BW=480,BH=400,HX=40,SH=70,FTOP=[268,194,120,46];   // top y of each floor strip in the building view
 const strips=[0,1,2,3].map(()=>{const c=document.createElement('canvas');c.width=FWID;c.height=76;return c});
 const bcv=document.createElement('canvas');bcv.width=BW;bcv.height=BH;const bg=bcv.getContext('2d');
 let stripTurn=0;
@@ -1157,30 +1204,56 @@ function render(t){const cam=Math.round(G.cam),sh=G.shake>0?Math.round(Math.sin(
  cg2.setTransform(1,0,0,1,0,0);cg2.fillStyle='#0a0818';cg2.fillRect(0,0,BW,BH);cg2.setTransform(sc,0,0,sc,tx+sh,ty);cg2.drawImage(bcv,0,0);cg2.setTransform(1,0,0,1,0,0)}
 
 /* ---------- title art ---------- */
-function titleArt(t){g.clearRect(0,0,WW,WH);for(let y=50;y<150;y++)R(g,0,y,WW,1,mixc('#14112a','#3a3f7a',(y-50)/100));
+function titleArt(t,tc){g.clearRect(0,0,WW,WH);for(let y=50;y<150;y++)R(g,0,y,WW,1,mixc('#14112a','#3a3f7a',(y-50)/100));
  for(let i=0;i<30;i++)if((i+Math.floor(t*2))%6)px(g,(i*37)%WW,52+(i*13)%40,'#f6f8ff');R(g,96,58,7,7,'#f2f0d8');
  skyline(0,0,132,'#1c1a3a',2);
  R(g,30,62,60,70,'#4a3f6e');R(g,28,60,64,3,'#6a5f92');R(g,30,62,2,70,'#3a305a');
  for(let f=0;f<4;f++)for(let c=0;c<5;c++){const lit=((f*5+c+Math.floor(t/1.7))*7)%9>2;R(g,35+c*11,67+f*15,7,9,lit?'#f4d27a':'#241f3b');if(lit){g.globalAlpha=.12;R(g,33+c*11,65+f*15,11,13,'#fff2c8');g.globalAlpha=1}}
  R(g,52,124,16,8,'#9fc0e0');R(g,46,121,28,3,'#b85a6a');R(g,36,54,48,7,'#1a162e');ptext(g,'THE MERIDIAN',37,55,'#d9b34a');
  R(g,0,132,WW,18,'#2a2846');R(g,0,132,WW,1,'#46446a');
- QA.chars.length=0;const P=IDLE(t,0);const sv=FL;wg.save();wg.translate(0,12);kitp(P,18-CX,0,false);wg.restore();
- const c=$('tcv').getContext('2d');c.drawImage(wc,0,-VY)}
+ QA.chars.length=0;const P=IDLE(t,0);const sv=FL;wg.save();wg.translate(0,12);kitd(P,18-CX,0,false);wg.restore();
+ const c=(tc||$('tcv')).getContext('2d');c.imageSmoothingEnabled=false;if(tc)c.drawImage(wc,0,VY,WW,VH,0,0,tc.width,tc.height);else c.drawImage(wc,0,-VY)}
 let titleRaf=0;function titleLoop(t){if(!$('title').classList.contains('on'))return;titleArt(t/1000);titleRaf=requestAnimationFrame(titleLoop)}
 
 /* ---------- boot ---------- */
 function audioOn(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}}
-$('play').onclick=()=>{audioOn();if(!SV.seenIntro){SV.seenIntro=1;save();loreStep(0)}else startDay()};
-const LORE=[['1958','Your grandmother Odessa opened the Meridian Hotel and swore every guest would feel at home.'],
- ['LAST YEAR','After a stroke she came home in a wheelchair, and found she could not get past her own lobby.'],
- ['TODAY','She left the hotel to you, Kit. Inspector Vale gives you five days to bring it up to code. Fail, and Sterling Crane turns it into a parking deck.'],
- ['HOW','Walk to a guest. Measure the problem. Pick the right size. Then swing the hammer yourself or call a crew, and pass inspection.']];
-function loreStep(i){if(i>=LORE.length)return startDay();$('lore').innerHTML=`<div class="yr">${LORE[i][0]}</div><p>${LORE[i][1]}</p><button class="btn" id="ln">${i===LORE.length-1?'Start Day 1 ▶':'Next ▶'}</button><div class="dots">${LORE.map((_,k)=>k===i?'●':'○').join(' ')}</div>`;show('lore');$('ln').onclick=()=>loreStep(i+1)}
+$('play').onclick=()=>{audioOn();if(!SV.seenIntro)howStep(0);else startDay()};
+$('b_how').onclick=()=>{audioOn();howStep(0)};$('b_lock').onclick=()=>openLocker('title');$('h_star').onclick=()=>{if(G&&!G.over&&!G.diy&&!G.ride)openLocker('game')};
+const HOW=[
+ {cap:'1958',line:'Grandma Odessa opens the Meridian Hotel.',k:'hotel'},
+ {cap:'LAST YEAR',line:'She comes home in a wheelchair. Her own lobby stops her.',k:'reach'},
+ {cap:'5 DAYS',line:'Bring it up to code, or Sterling Crane paves it.',k:'tower'},
+ {cap:'WALK TO THE !',line:'Use the arrows, or A and D.',k:'walk'},
+ {cap:'PICK THE SIZE',line:'Watch the outline next to the guest.',k:'pick'},
+ {cap:'HIT IN THE GREEN',line:'Or pay a crew and keep moving.',k:'hammer'},
+ {cap:'PASS = PAID',line:'Wrong size? You build it again.',k:'pass'}];
+let howI=0,howRaf=0;
+function demoG(){const mk=(i,st,lk)=>Object.assign({id:i,st,v:SITES[i].cur,prog:0,tried:[],pat:.8,guest:{name:'',look:lk,gone:false,joy:0},stamp:null},SITES[i]);
+ G={day:0,f:0,kit:{x:76,dir:-1,dist:0,moving:false},cam:8,rating:75,tips:0,combo:0,time:60,sites:[mk(0,'open','a1'),mk(5,'open','a3'),mk(9,'open','a2'),mk(12,'open','a4'),mk(6,'open','judy')],queue:[],crews:[],z:1,zhold:0,ride:null,parts:[],floats:[],sheet:null,diy:null,over:true,paused:true,near:null,shake:0}}
+function howFrame(ms){const H=HOW[howI],t=ms/1000,u=t%4,s=G.sites[0],k=G.kit,c=$('howcv').getContext('2d');c.imageSmoothingEnabled=false;
+ s.st='open';s.v=60;s.stamp=null;s.guest.joy=0;s.guest.look='a1';G.sheet=null;G.diy=null;k.moving=false;k.x=76;k.dir=-1;G.z=1;G.f=0;G.time=60;
+ if(H.k==='hotel'){titleArt(t,$('howcv'));howRaf=requestAnimationFrame(howFrame);return}
+ if(H.k==='tower'){G.z=0;G.time=150;k.x=120+Math.sin(t)*60;k.moving=true;k.dist=t*40;k.dir=Math.cos(t)>0?1:-1;for(let f=0;f<4;f++)updateStrip(f,t);drawBuilding(t);c.drawImage(bcv,0,0);
+  if(u>1){c.fillStyle='#1a162e';c.fillRect(150,150,180,70);c.fillStyle=CORAL;c.fillRect(156,156,168,58);c.fillStyle='#1a162e';c.fillRect(162,162,156,46);c.fillStyle=CORAL;c.font='700 30px Silk';c.textBaseline='top';c.fillText('5 DAYS',172,170)}
+  howRaf=requestAnimationFrame(howFrame);return}
+ if(H.k==='reach'){k.x=-90;s.guest.look='gran'}
+ if(H.k==='walk'){k.x=Math.max(76,176-u*34);k.moving=k.x>76;k.dist=u*46;G.cam=Math.max(0,Math.min(60,k.x-70))}else G.cam=8;
+ if(H.k==='pick')G.sheet={t:'order',s,sel:[66,54,48][Math.floor(u/1.34)%3],t0:TT-9};
+ if(H.k==='hammer'){s.st='build';s.from=60;s.target=48;s.prog=u/4;s.by='kit';const ph=t*1.6;G.diy={s,ph,spd:1.6,cool:0,swing:Math.max(0,1-(((ph*2.2+Math.PI/2)/Math.PI)%1)*4)}}
+ if(H.k==='pass'){s.st='done';s.v=48;s.guest.joy=1;s.stamp={ok:true,t:Math.min(1.5,.2+u)}}
+ TT=t;drawWorld(0,Math.round(G.cam),t,true);
+ if(H.k==='walk'){const on=k.moving;R(g,44,128,14,14,'#1a162e');R(g,45,129,12,12,on?MINT:'#4a4668');ptext(g,'<',49,133,'#1a162e');R(g,62,128,14,14,'#1a162e');R(g,63,129,12,12,'#4a4668');ptext(g,'>',67,133,'#1a162e')}
+ if(H.k==='pick'){[66,54,48].forEach((v,i)=>{const x=26+i*24,on=G.sheet.sel===v;R(g,x,128,22,13,'#1a162e');R(g,x+1,129,20,11,on?MINT:'#4a4668');ptext(g,v+'IN',x+3,132,on?'#1a162e':'#f4e9d0')})}
+ if(H.k==='pass'&&u>.6){for(let i=0;i<5;i++){const q=cl01((u-.6-i*.12)/.9);if(q>0&&q<1){const x=lerp(guestX(s)-G.cam,112,q),y=lerp(92,54,q)-Math.sin(q*Math.PI)*16;R(g,x-2,y-2,5,5,'#7a5a12');R(g,x-1,y-1,3,3,AMBER)}}}
+ c.fillStyle='#0a0818';c.fillRect(0,0,480,400);c.drawImage(wc,0,VY,WW,VH,0,0,480,400);howRaf=requestAnimationFrame(howFrame)}
+function howStep(i){cancelAnimationFrame(howRaf);if(i>=HOW.length){SV.seenIntro=1;save();return startDay()}howI=i;demoG();const H=HOW[i];
+ $('lore').innerHTML=`<canvas class="px" id="howcv" width="480" height="400"></canvas><div class="yr">${H.cap}</div><p>${H.line}</p><div class="row"><button class="ghost" id="lskip">Skip</button><button class="btn" id="ln">${i===HOW.length-1?'Start ▶':'Next ▶'}</button></div><div class="dots">${HOW.map((_,k)=>k===i?'●':'○').join(' ')}</div>`;
+ show('lore');$('ln').onclick=()=>howStep(i+1);$('lskip').onclick=()=>howStep(HOW.length);howRaf=requestAnimationFrame(howFrame)}
 $('b_notes').onclick=()=>{if(G)G.paused=true;$('notes').innerHTML='<h2>GRANDMA\'S BINDER</h2><p class="dim">'+SV.notes.length+' of '+Object.keys(SPEC).length+' pages found. Pass an inspection to earn a page.</p>'+Object.keys(SPEC).map(k=>SV.notes.includes(k)?`<div class="pg"><b>${SPEC[k].rule}</b><i>ADA 2010 Standards §${SPEC[k].sec}</i></div>`:'<div class="pg q">? ? ?</div>').join('')+'<button class="btn" id="nb">Back to work</button>';
  show('notes');$('nb').onclick=()=>{show('game');G.paused=false;last=performance.now()}};
-function boot(){$('t_sub').textContent=SV.day?'Continue · Day '+(SV.day+1)+' · ★'+SV.stars:'A hotel. A promise. Five days.';$('play').textContent=SV.day?'▶ Continue':'▶ Start';
+function boot(){cancelAnimationFrame(howRaf);$('t_sub').textContent=SV.day?'Saved game · Day '+(SV.day+1)+' · ★'+SV.stars:'A hotel. A promise. Five days.';$('play').textContent=SV.day?'▶ Continue Day '+(SV.day+1):'▶ Start';$('b_lock').style.display=SV.day?'block':'none';
  $('reset').style.display=SV.day?'block':'none';show('title');requestAnimationFrame(titleLoop)}
-$('reset').onclick=()=>{SV={day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:SV.best,seenIntro:0};save();boot()};
+$('reset').onclick=()=>{SV={day:0,stars:10,up:{shoes:0,crew:0,tools:0,coffee:0},notes:[],letters:0,best:SV.best,seenIntro:0,fits:['classic'],fit:'classic'};save();boot()};
 boot();
 </script>
 </body></html>
