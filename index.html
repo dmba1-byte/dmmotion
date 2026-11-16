@@ -10,7 +10,7 @@
 :root{--sky:#14112a;--sky2:#2a2f62;--panel:#1c1836;--panel2:#241f44;--line:#3a3456;--cream:#f4e9d0;--muted:#b3acd0;--mint:#6df2c4;--mint2:#2f9c7a;--coral:#e8806f;--amber:#f0c24a;--ink:#0a0818;
  --px:'Silk',ui-monospace,Menlo,monospace;--sans:"Helvetica Neue",Helvetica,Arial,system-ui,sans-serif;color-scheme:dark}
 *{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--sky);color:var(--cream);font-family:var(--sans);line-height:1.55;overflow-x:hidden}
+body{margin:0;background:var(--sky);color:var(--cream);font-family:var(--sans);line-height:1.55;overflow-x:hidden;padding-bottom:64px}
 a{color:inherit}img,video{max-width:100%;display:block}
 .wrap{max-width:1120px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
 /* sky that sits behind everything */
@@ -114,7 +114,7 @@ footer{background:#14112a;padding:26px 0 96px;color:var(--muted);font-size:14px}
 #lift a{font-family:var(--px);font-size:10px;width:34px;height:34px;display:grid;place-items:center;background:var(--ink);border:3px solid var(--line);border-radius:8px;color:var(--muted);text-decoration:none}
 #lift a.on{border-color:var(--mint);color:var(--mint);box-shadow:0 0 14px #6df2c466}
 @media(max-width:900px){.hero,.game,.ask,.sheetrow{grid-template-columns:1fr}.hero{padding-top:26px;gap:44px}.heroart{order:-1;margin:0 14px}.next,.steps,.faq{grid-template-columns:1fr}.game .phone{max-width:280px;margin:0 auto}
- header nav{display:none}header .n{margin-right:auto}.band{grid-template-columns:1fr}.band form{flex-direction:column}.band input{min-width:0}#lift{display:none}.ask .sp{display:none}.pages{justify-content:center;padding:0}.pages img{width:30vw;max-width:150px}
+ header nav{display:none}header .n{margin-right:auto}.band{grid-template-columns:1fr}.band form{flex-direction:column}.band input{min-width:0}#lift{display:none}.ask .sp{display:none}#rider{display:none}#rail{height:34px}.pages{justify-content:center;padding:0}.pages img{width:30vw;max-width:150px}
  .steps{grid-template-columns:repeat(3,minmax(200px,1fr));overflow-x:auto;padding-bottom:8px}.floor{padding:54px 0 46px}}
 @media(prefers-reduced-motion:reduce){.sp,.car,.heroart .bub{animation:none}.rv{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
 </style></head><body id="top">
