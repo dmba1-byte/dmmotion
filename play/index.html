@@ -911,19 +911,20 @@ $('act').addEventListener('pointerdown',e=>{e.preventDefault();act()});
 
 /* ---------- state ---------- */
 let G=null,last=0,raf=0,TT=0;
-function startDay(){const B=BD(),SS=B.sites(),cd=curDay(),D=DAYS[Math.min(cd,DAYS.length-1)],extra=Math.max(0,cd-4);
+function startDay(){const B=BD(),SS=B.sites(),cd=curDay(),D=DAYS[Math.min(cd,DAYS.length-1)],extra=Math.min(2,Math.max(0,cd-4));
  const pool=shuffle(SS.map((s,i)=>i).filter(i=>SS[i].f<D.floors));
  let ids=pool.slice(0,Math.min(pool.length,D.n+extra));
  if(cd===0)ids=[0,1,2];
  const names=shuffle(B.names().slice());
  G={day:cd,b:SV.b||0,B,fln:B.fln,bname:B.name,f:0,kit:{x:110,dir:1,dist:0,moving:false},cam:60,rating:75,tips:0,combo:0,time:0,hints:2,
   sites:ids.map((i,k)=>Object.assign({id:i,st:'wait',v:SS[i].cur,prog:0,tried:[],pat:1,guest:{name:names[k%names.length],look:B.looks[(i+k)%5],gone:false,joy:0},stamp:null},SS[i])),
-  queue:ids.slice(),spawnIn:1,gap:Math.max(7,D.gap-extra),crews:Array.from({length:1+SV.up.crew},()=>({site:null,x:LIFT,f:0,st:'idle'})),
+  queue:ids.slice(),spawnIn:1,gap:Math.max(9,D.gap-extra),crews:Array.from({length:1+SV.up.crew},()=>({site:null,x:LIFT,f:0,st:'idle'})),
   z:0,zhold:0,ride:null,parts:[],floats:[],sheet:null,diy:null,over:false,paused:false,near:null,shake:0,fade:0,firsts:0,fails:0,tut:cd===0&&!SV.b?0:9,clock:0};
  if(cd===0){G.sites.sort((a,b)=>a.id-b.id);G.queue=[0,1,2]}
  show('game');closeSheet();cancelAnimationFrame(raf);last=performance.now();raf=requestAnimationFrame(loop)}
 const site=id=>G.sites.find(s=>s.id===id);
-function spawn(){if(!G.queue.length)return;const s=site(G.queue.shift());s.st='open';s.pat=1;
+function spawn(){if(!G.queue.length)return;
+ if(G.sites.filter(s=>s.st==='open'&&!s.guest.gone).length>=4){G.spawnIn=4;return}const s=site(G.queue.shift());s.st='open';s.pat=1;
  if(G.time>2){sfx.alert();toast(s.f===G.f?'NEW GUEST ON THIS FLOOR':'GUEST WAITING: '+(s.f+1)+' '+G.fln[s.f])}
  G.spawnIn=G.queue.length?G.gap:1e9}
 function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2400)}
@@ -961,7 +962,7 @@ function update(dt){G.time+=dt;const k=G.kit;
   if(s.st==='build'&&s.by==='crew'&&s.crew.st==='work'){s.prog+=dt/(9*buildMul());if(Math.random()<dt*7&&s.f===G.f)dust(s);if(Math.random()<dt*3&&s.f===G.f)sfx.hit();if(s.prog>=1)finish(s)}
   if(s.guest.joy>0)s.guest.joy-=dt;
   if(s.stamp)s.stamp.t+=dt}
- G.rating-=dt*Math.min(.42,.10+.06*G.day)*waiting/(SV.fit==='coat'?1.3:1);if(G.rating<=0){G.rating=0;endDay(false)}
+ G.rating-=dt*Math.min(.34,.10+.06*Math.min(G.day,4))*Math.min(waiting,3)/(SV.fit==='coat'?1.3:1);if(G.rating<=0){G.rating=0;endDay(false)}
  // crews
  for(const c of G.crews){if(c.st==='go'){const tx=siteStand(c.site);const d=tx-c.x;c.dir=Math.sign(d)||1;c.x+=c.dir*56*dt;c.dist=(c.dist||0)+56*dt;if(Math.abs(d)<2){c.x=tx;c.st='work';c.dir=POS[c.site.type][1]}}
   else if(c.st==='back'){c.dir=-1;c.x-=56*dt;c.dist+=56*dt;if(c.x<=LIFT){c.st='idle';c.site=null}}}
