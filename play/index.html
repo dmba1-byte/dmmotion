@@ -46,6 +46,12 @@ p{margin:0;font-size:13px;line-height:1.5;font-weight:400;font-family:system-ui,
 .act:disabled{opacity:.4;border-color:var(--line);color:var(--gray);background:var(--panel);box-shadow:0 5px 0 #0a0818}
 .act:active:not(:disabled){transform:translateY(4px);box-shadow:0 1px 0 var(--green2)}
 .keys{font:400 10px system-ui,sans-serif;color:var(--gray);text-align:center;margin-top:4px}
+#cardov{position:fixed;inset:0;background:#06040fe8;display:none;align-items:center;justify-content:center;padding:16px;z-index:40}
+#cardov.on{display:flex}
+#cardov .cardbox{display:flex;flex-direction:column;gap:10px;align-items:center;max-width:420px;width:100%}
+#cardov img{width:100%;max-width:340px;image-rendering:pixelated;border-radius:10px}
+#cardov .row{display:flex;gap:8px;width:100%;justify-content:center}
+#cardov .go{min-height:44px;padding:10px 18px}
 /* work order sheet */
 .sheet{display:none;position:absolute;inset:0;background:var(--panel);border:3px solid var(--line);border-radius:12px;padding:10px;flex-direction:column;gap:7px;margin-top:6px;height:max-content;z-index:3}
 .sheet.show{display:flex}
@@ -1178,13 +1184,20 @@ function cardCanvas(){
  const big=document.createElement('canvas');big.width=1080;big.height=1080;const b=big.getContext('2d');
  b.imageSmoothingEnabled=false;b.drawImage(c,0,0,W,H,0,0,1080,1080);return big}
 function shareCard(){
- const cv2=cardCanvas();
- cv2.toBlob(async bl=>{
+ const cv2=cardCanvas(),url=cv2.toDataURL('image/png');
+ let ov=document.getElementById('cardov');
+ if(!ov){ov=document.createElement('div');ov.id='cardov';document.body.appendChild(ov)}
+ ov.innerHTML='<div class="cardbox"><img id="cardimg" alt="Your result card"><p class="dim2">Long-press the card to save it, or use the buttons.</p><div class="row"><button class="go" id="cardshare">SHARE</button><button class="ghost" id="cardsave">SAVE PNG</button><button class="ghost" id="cardx">CLOSE</button></div></div>';
+ ov.className='on';document.getElementById('cardimg').src=url;
+ const close=()=>{ov.className='';ov.innerHTML=''};
+ document.getElementById('cardx').onclick=close;
+ document.getElementById('cardsave').onclick=()=>cv2.toBlob(bl=>{const a2=document.createElement('a');a2.href=URL.createObjectURL(bl);a2.download='up-to-code-day'+(G.day+1)+'.png';a2.click();setTimeout(()=>URL.revokeObjectURL(a2.href),4000)},'image/png');
+ document.getElementById('cardshare').onclick=()=>cv2.toBlob(async bl=>{
   const file=new File([bl],'up-to-code.png',{type:'image/png'});
-  const txt='Day '+(G.day+1)+' at '+(G.b?'Atlas Tower':'the Meridian')+' - rating '+Math.round(G.rating)+'. Up To Code, free in your browser.';
+  const txt='Day '+(G.day+1)+' at '+(G.b?'Atlas Tower':'the Meridian')+' - rating '+Math.round(G.rating)+'. Up To Code, free in your browser: https://dmba1-byte.github.io/dmmotion/play/';
   try{ if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:txt});return} }catch(e){}
-  const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='up-to-code-day'+(G.day+1)+'.png';a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('CARD SAVED TO YOUR PHOTOS')
+  try{ await navigator.clipboard.writeText(txt);toast('LINK COPIED');return }catch(e){}
+  toast('LONG-PRESS THE CARD TO SAVE IT')
  },'image/png')}
 function fitSprite(o,c){const sv=Object.assign({},K);Object.assign(K,o.look);const sp=charFrame(FCHEER(.3,0),'f');Object.assign(K,sv);const x=c.getContext('2d');x.imageSmoothingEnabled=false;x.clearRect(0,0,64,80);x.drawImage(sp,0,0);
  if(o.hat){const d=x.getImageData(0,0,64,80).data;let top=80,l=64,r=0;for(let y=0;y<80&&top===80;y++)for(let i=0;i<64;i++)if(d[(y*64+i)*4+3]){top=y;break}for(let i=0;i<64;i++)if(d[((top+3)*64+i)*4+3]){l=Math.min(l,i);r=Math.max(r,i)}
