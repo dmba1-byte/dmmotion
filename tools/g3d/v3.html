@@ -68,10 +68,10 @@ const S={
   car(210,238,0,'#d9695f','sedan');car(-420,238,0,'#f4d27a','taxi');car(330,318,Math.PI,'#3f7c6c','suv');car(-330,158,0,'#a88be0','sedan');car(300,158,0,'#f3ecd8','van');who('n_girl_ri',-120,84,KERB);who('n_a4_di',60,70,KERB);who('n_a1_ri',-150,104,KERB,true);
   bicycle(-170,214,0,'#d9695f');who('n_p1_ri',-170-m(.1),214,m(.42));
   cam.fov=30;cam.position.set(cx+120,200,cz+380);cam.lookAt(cx-40,46,cz-60);HUD={rank:'PROJECT ARCHITECT',xp:.62,next:'ASSOCIATE',cash:'12,900',obj:'Ride anything you own: bike, motorcycle, car',tag:'GARAGE',btn:['PARK','HORN']}},
- async dog(){await city();const kx=-190,kz=600;who('ktan_ri',kx,kz,0);const d=new T.Sprite(new T.SpriteMaterial({map:dogTex(0),alphaTest:.5}));d.scale.set(26,18,1);d.center.set(.5,0);d.position.set(kx+52,1,kz+8);scene.add(d);blob(kx+52,kz+8,11,4,.4);
+ async dog(){await city();const kx=-40,kz=800;who('ktan_ri',kx,kz,0);const d=new T.Sprite(new T.SpriteMaterial({map:dogTex(0),alphaTest:.5}));d.scale.set(26,18,1);d.center.set(.5,0);d.position.set(kx+52,1,kz+8);scene.add(d);blob(kx+52,kz+8,11,4,.4);
   rope([kx+10,m(.95),kz+2],[kx+62,m(.42),kz+8],7,'#d9695f');who('n_a3_di',150+2,640,m(.2));who('n_girl_ri',40,548,0,true);who('n_p2_ri',-200,700,0);who('n_a1_di',-150-2,740,m(.2));
   car(-200,238,0,'#d9695f','sedan');car(260,318,Math.PI,'#f4d27a','taxi');
-  cam.fov=30;cam.position.set(kx+90,180,kz+390);cam.lookAt(kx+40,44,kz-50);HUD={rank:'JUNIOR DESIGNER',xp:.35,next:'PROJECT ARCHITECT',cash:'1,240',obj:'Walk Biscuit around Odessa Park  -  2 of 3 laps',tag:'DAILY',btn:['PET','WHISTLE']}},
+  cam.fov=30;cam.position.set(kx+110,170,kz+380);cam.lookAt(kx+36,48,kz-60);HUD={rank:'JUNIOR DESIGNER',xp:.35,next:'PROJECT ARCHITECT',cash:'1,240',obj:'Walk Biscuit around Odessa Park  -  2 of 3 laps',tag:'DAILY',btn:['PET','WHISTLE']}},
  async lobby(){const names=['tile','wallup','marq','marq_e','kit_ui','kit_di','n_a2_di','n_girl_ri','n_p2_di','n_judy_ri','dec_cat'];await Promise.all(names.map(tex));mkGlow();scene.background=new T.Color('#1a1430');
   const RW=648,RD=430,WH=176;scene.add(new T.AmbientLight('#fff4e8',.62));scene.add(new T.HemisphereLight('#ffe8c8','#4a3f72',.3));sun(RW/2-160,620,520,'#ffe0b0',.42,560,RW/2,180);
   const fl=new T.Mesh(new T.PlaneGeometry(RW,RD+300),lam({map:rep('tile',RW/48,(RD+300)/48)}));fl.rotation.x=-Math.PI/2;fl.position.set(RW/2,0,(RD+300)/2);fl.receiveShadow=true;scene.add(fl);
